@@ -1,0 +1,25 @@
+{
+  "@class": "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId": "^https?://(localhost|127\\.0\\.0\\.1|192\\.168\\.168\\.167):5000/(login|logout)/?\\?next=.*",
+  "name": "OSF",
+  "id": 203948234207230,
+  "evaluationOrder": 20,
+  "logo": "",
+  "attributeReleasePolicy": {
+    "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
+    "allowedAttributes": [
+      "java.util.ArrayList",
+      [
+        "guid",
+        "mail",
+        "givenName",
+        "sn"
+      ]
+    ]
+  },
+  "usernameAttributeProvider" : {
+    "@class" : "org.apereo.cas.services.PrincipalAttributeRegisteredServiceUsernameProvider",
+    "usernameAttribute" : "guid",
+    "canonicalizationMode" : "LOWER"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "@class": "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId": "^https?://(localhost|127\\.0\\.0\\.1):5000/(login|logout)/?\\?next=https?(%3A|:)(%2F|/)(%2F|/)(localhost|127\\.0\\.0\\.1)(%3A|:)5000(%2F|/)preprints($|%2F|/).*",
+  "name": "OSF Preprints",
+  "id": 203948234207240,
+  "evaluationOrder": 15,
+  "logo": "",
+  "attributeReleasePolicy": {
+    "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
+    "allowedAttributes": [
+      "java.util.ArrayList",
+      [
+        "guid",
+        "mail",
+        "givenName",
+        "sn"
+      ]
+    ]
+  },
+  "usernameAttributeProvider" : {
+    "@class" : "org.apereo.cas.services.PrincipalAttributeRegisteredServiceUsernameProvider",
+    "usernameAttribute" : "guid",
+    "canonicalizationMode" : "LOWER"
+  }
+}
