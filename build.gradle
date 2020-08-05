@@ -59,7 +59,17 @@ project.ext."casServerVersion" = casServerVersion
 project.ext."casWebApplicationBinaryName" = casWebApplicationBinaryName
 
 apply plugin: "io.freefair.war-overlay"
+
 apply plugin: "io.freefair.lombok"
+lombok {
+    config["config.stopBubbling"] = "true"
+    config["lombok.addLombokGeneratedAnnotation"] = "true"
+    config["lombok.equalsAndHashCode.doNotUseGetters"] = "true"
+    config["lombok.log.fieldName"] = "LOGGER"
+    config["lombok.log.fieldIsStatic"] = "true"
+    config["lombok.toString.doNotUseGetters"] = "true"
+}
+
 apply from: rootProject.file("gradle/tasks.gradle")
 
 apply plugin: "war"
