@@ -83,6 +83,7 @@ dependencies {
     // Other CAS dependencies/modules may be listed here...
     implementation "org.apereo.cas:cas-server-support-generic:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-support-json-service-registry:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-pac4j-webflow:${project.'cas.version'}"
 }
 
 tasks.findByName("jibDockerBuild")
