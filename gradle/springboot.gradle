@@ -74,11 +74,13 @@ bootWar {
     excludeDevtools = false
 
     entryCompression = ZipEntryCompression.STORED
+
     /*
-        attachClasses = true 
+        attachClasses = true
         classesClassifier = 'classes'
         archiveClasses = true
     */
+
     overlays {
         /*
             https://docs.freefair.io/gradle-plugins/current/reference/#_io_freefair_war_overlay
@@ -88,14 +90,13 @@ bootWar {
         */
         cas {
             from "org.apereo.cas:cas-server-webapp${project.appServer}:${casServerVersion}@war"
+            enabled = true
+            // skip = false     // the same as enabled = true
             provided = false
-            /*
-            excludes = ["WEB-INF/lib/somejar-1.0*"]
             enableCompilation = true
-            includes = ["*.xyz"]
-            targetPath = "sub-path/bar"
-            skip = false
-            */
+            // excludes = []
+            // includes = []
+            // targetPath = ""  //  the content of the overlay is added in the root structure of the webapp by default
         }
     }
 }
