@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">CAS &#8211; Central Authentication Service</title>
+    <title layout:title-pattern="$LAYOUT_TITLE &#124; $CONTENT_TITLE">OSF</title>
 
     <!--/* Core CAS CSS */-->
     <link rel="stylesheet" type="text/css" href="../static/css/normalize.css" th:href="@{#{webjars.normalize.css}}" />
@@ -22,7 +22,7 @@
 <script th:replace="fragments/scripts" />
 
 <div th:replace="fragments/header :: header">
-    <a href="fragments/header.html">Header</a> fragment will go here
+    <a href="fragments/header.html"></a>
 </div>
 
 <div class="mdc-drawer-scrim"></div>
@@ -30,13 +30,12 @@
 <div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust d-flex justify-content-center">
     <main role="main" id="main-content" class="container-lg py-4">
         <div layout:fragment="content" id="content">
-            CAS content will go here
         </div>
     </main>
 </div>
 
 <div th:replace="fragments/footer :: footer">
-    <a href="fragments/footer.html">Footer</a> fragment will go here
+    <a href="fragments/footer.html"></a>
 </div>
 
 </body>
