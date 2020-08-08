@@ -15,21 +15,23 @@ import org.pac4j.scribe.model.OrcidToken;
  * This class is the Orcid profile definition.
  *
  * @author Jens Tinglev
+ * @author Longze Chen
  * @since 1.6.0
+ * @version 4.0.3
  */
 public class OrcidProfileDefinition extends OAuth20ProfileDefinition<OrcidProfile, OAuth20Configuration> {
 
-    public static final String ORCID = "path";
-    public static final String FIRST_NAME = "given-names";
-    public static final String FAMILY_NAME = "family-name";
-    public static final String URI = "uri";
-    public static final String CREATION_METHOD = "creation-method";
-    public static final String CLAIMED = "claimed";
+    public static final String ORCID = "common:path";
+    public static final String GIVEN_NAME = "personal-details:given-names";
+    public static final String FAMILY_NAME = "personal-details:family-name";
+    public static final String URI = "common:uri";
+    public static final String CREATION_METHOD = "history:creation-method";
+    public static final String CLAIMED = "history:claimed";
 
     public OrcidProfileDefinition() {
         super(x -> new OrcidProfile());
         primary(ORCID, Converters.STRING);
-        primary(FIRST_NAME, Converters.STRING);
+        primary(GIVEN_NAME, Converters.STRING);
         primary(FAMILY_NAME, Converters.STRING);
         primary(URI, Converters.URL);
         primary(CREATION_METHOD, Converters.STRING);
@@ -39,8 +41,7 @@ public class OrcidProfileDefinition extends OAuth20ProfileDefinition<OrcidProfil
     @Override
     public String getProfileUrl(final OAuth2AccessToken accessToken, final OAuth20Configuration configuration) {
         if (accessToken instanceof OrcidToken) {
-            return String.format("https://api.orcid.org/v1.1/%s/orcid-profile",
-                    ((OrcidToken) accessToken).getOrcid());
+            return String.format("https://pub.orcid.org/v2.0/%s/record", ((OrcidToken) accessToken).getOrcid());
         } else {
             throw new OAuthException("Token in getProfileUrl is not an OrcidToken");
         }
@@ -52,7 +53,7 @@ public class OrcidProfileDefinition extends OAuth20ProfileDefinition<OrcidProfil
         if (body == null || body.isEmpty()) {
             raiseProfileExtractionError(body);
         }
-        profile.setId(CommonHelper.substringBetween(body, "<path>", "</path>"));
+        profile.setId(CommonHelper.substringBetween(body, "<" + ORCID + ">", "</" + ORCID + ">"));
         for(final String attribute : getPrimaryAttributes()) {
             convertAndAdd(profile, PROFILE_ATTRIBUTE, attribute,
                     CommonHelper.substringBetween(body, "<" + attribute + ">", "</" + attribute + ">"));

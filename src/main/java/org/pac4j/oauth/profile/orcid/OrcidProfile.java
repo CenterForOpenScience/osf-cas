@@ -9,7 +9,9 @@ import java.net.URI;
  * <p>It is returned by the {@link org.pac4j.oauth.client.OrcidClient}.</p>
  *
  * @author Jens Tinglev
+ * @author Longze Chen
  * @since 1.6.0
+ * @version 4.0.3
  */
 
 public class OrcidProfile extends OAuth20Profile {
@@ -26,6 +28,13 @@ public class OrcidProfile extends OAuth20Profile {
 
     public String getCreationMethod() {
         return (String) getAttribute(OrcidProfileDefinition.CREATION_METHOD);
+    }
+
+    @Override
+    public String getTypedId() {
+        // Get the user identifier with a prefix which is the profile type using simple class name without package.
+        // As for OrcidProfile, this identifier is unique through all providers.
+        return this.getClass().getSimpleName() + SEPARATOR + this.getId();
     }
 
     @Override
