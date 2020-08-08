@@ -14,14 +14,17 @@
         "guid",
         "mail",
         "givenName",
-        "sn"
+        "sn",
+        "familyName",
+        "accessToken",
+        "username"
       ]
     ]
   },
   "usernameAttributeProvider": {
     "@class": "org.apereo.cas.services.PrincipalAttributeRegisteredServiceUsernameProvider",
-    "usernameAttribute": "guid",
-    "canonicalizationMode": "LOWER"
+    "usernameAttribute": "username",
+    "canonicalizationMode": "NONE"
   },
   "accessStrategy": {
     "@class": "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
