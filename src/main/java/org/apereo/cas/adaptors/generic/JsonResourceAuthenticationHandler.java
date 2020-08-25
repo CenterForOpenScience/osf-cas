@@ -2,6 +2,7 @@ package org.apereo.cas.adaptors.generic;
 
 import org.apereo.cas.DefaultMessageDescriptor;
 import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
+import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.MessageDescriptor;
 import org.apereo.cas.authentication.PreventedException;
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
@@ -15,8 +16,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.BooleanUtils;
+
 import org.springframework.core.io.Resource;
 
 import javax.security.auth.login.AccountExpiredException;
@@ -35,16 +42,22 @@ import java.util.Map;
  * This is {@link JsonResourceAuthenticationHandler}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.3.0
  */
 @Slf4j
 public class JsonResourceAuthenticationHandler extends AbstractUsernamePasswordAuthenticationHandler {
+
     private final ObjectMapper mapper;
     private final Resource resource;
 
-    public JsonResourceAuthenticationHandler(final String name, final ServicesManager servicesManager,
-                                             final PrincipalFactory principalFactory,
-                                             final Integer order, final Resource resource) {
+    public JsonResourceAuthenticationHandler(
+            final String name,
+            final ServicesManager servicesManager,
+            final PrincipalFactory principalFactory,
+            final Integer order,
+            final Resource resource
+    ) {
         super(name, servicesManager, principalFactory, order);
         this.resource = resource;
         this.mapper = new ObjectMapper()
@@ -55,17 +68,34 @@ public class JsonResourceAuthenticationHandler extends AbstractUsernamePasswordA
                 .enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
     }
 
+    @SneakyThrows
     @Override
-    protected AuthenticationHandlerExecutionResult authenticateUsernamePasswordInternal(final UsernamePasswordCredential credential,
-                                                                                        final String originalPassword)
-            throws GeneralSecurityException, PreventedException {
+    protected AuthenticationHandlerExecutionResult doAuthentication(final Credential credential) {
+
+        val originalUserPass = (UsernamePasswordCredential) credential;
+        val userPass = (UsernamePasswordCredential) credential.getClass().getDeclaredConstructor().newInstance();
+        BeanUtils.copyProperties(userPass, originalUserPass);
+
+        transformUsername(userPass);
+        transformPassword(userPass);
+
+        LOGGER.debug("Attempting authentication internally for transformed credential [{}]", userPass);
+        return authenticateUsernamePasswordInternal(userPass, originalUserPass.getPassword());
+    }
+
+    @Override
+    protected AuthenticationHandlerExecutionResult authenticateUsernamePasswordInternal(
+            final UsernamePasswordCredential credential,
+            final String originalPassword
+    ) throws GeneralSecurityException, PreventedException {
+
         val map = readAccountsFromResource();
         val username = credential.getUsername();
-        val password = credential.getPassword();
         if (!map.containsKey(username)) {
             throw new AccountNotFoundException();
         }
 
+        val password = credential.getPassword();
         val account = map.get(username);
         if (matches(password, account.getPassword())) {
             switch (account.getStatus()) {
@@ -105,6 +135,36 @@ public class JsonResourceAuthenticationHandler extends AbstractUsernamePasswordA
         }
 
         throw new FailedLoginException();
+    }
+
+    @Override
+    public boolean supports(final Class<? extends Credential> clazz) {
+        return UsernamePasswordCredential.class.isAssignableFrom(clazz);
+    }
+
+    @Override
+    public boolean supports(final Credential credential) {
+        if (!UsernamePasswordCredential.class.isInstance(credential)) {
+            LOGGER.debug("Credential is not one of username/password and is not accepted by handler [{}]", getName());
+            return false;
+        }
+        if (this.credentialSelectionPredicate == null) {
+            LOGGER.debug(
+                    "No credential selection criteria is defined for handler [{}]. " +
+                            "Credential is accepted for further processing",
+                    getName()
+            );
+            return true;
+        }
+        LOGGER.debug("Examining credential [{}] eligibility for authentication handler [{}]", credential, getName());
+        val result = this.credentialSelectionPredicate.test(credential);
+        LOGGER.debug(
+                "Credential [{}] eligibility is [{}] for authentication handler [{}]",
+                credential,
+                getName(),
+                BooleanUtils.toStringTrueFalse(result)
+        );
+        return result;
     }
 
     private Map<String, CasUserAccount> readAccountsFromResource() throws PreventedException {
