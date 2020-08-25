@@ -1,10 +1,13 @@
 package org.apereo.cas.web.flow;
 
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+
+import org.apereo.cas.adaptors.osf.web.flow.OsfCasWebflowConstants;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.web.flow.configurer.AbstractCasWebflowConfigurer;
 import org.apereo.cas.web.support.WebUtils;
 
-import lombok.val;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
@@ -18,8 +21,10 @@ import org.springframework.webflow.execution.RequestContext;
  * adjusting the CAS webflow context for pac4j integration.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 4.2
  */
+@Slf4j
 public class DelegatedAuthenticationWebflowConfigurer extends AbstractCasWebflowConfigurer {
     private static final String DECISION_STATE_CHECK_DELEGATED_AUTHN_FAILURE = "checkDelegatedAuthnFailureDecision";
 
@@ -53,7 +58,7 @@ public class DelegatedAuthenticationWebflowConfigurer extends AbstractCasWebflow
                 createEvaluateAction(CasWebflowConstants.ACTION_ID_DELEGATED_AUTHENTICATION));
 
         val transitionSet = actionState.getTransitionSet();
-        transitionSet.add(createTransition(CasWebflowConstants.TRANSITION_ID_SUCCESS, CasWebflowConstants.STATE_ID_CREATE_TICKET_GRANTING_TICKET));
+        transitionSet.add(createTransition(CasWebflowConstants.TRANSITION_ID_SUCCESS, OsfCasWebflowConstants.STATE_ID_OSF_NON_INTERACTIVE_AUTHENTICATION_CHECK));
 
         val currentStartState = getStartState(flow).getId();
         transitionSet.add(createTransition(CasWebflowConstants.TRANSITION_ID_ERROR, currentStartState));
