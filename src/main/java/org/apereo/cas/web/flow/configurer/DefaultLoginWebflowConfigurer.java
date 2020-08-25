@@ -1,5 +1,9 @@
 package org.apereo.cas.web.flow.configurer;
 
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+
+import org.apereo.cas.adaptors.osf.web.flow.OsfCasWebflowConstants;
 import org.apereo.cas.authentication.PrincipalException;
 import org.apereo.cas.authentication.adaptive.UnauthorizedAuthenticationException;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
@@ -17,7 +21,6 @@ import org.apereo.cas.ticket.UnsatisfiedAuthenticationPolicyException;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.web.flow.CasWebflowConstants;
 
-import lombok.val;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.engine.Flow;
@@ -33,10 +36,12 @@ import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
 import javax.security.auth.login.FailedLoginException;
 
+@Slf4j
 /**
  * This is {@link DefaultLoginWebflowConfigurer}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.0.0
  */
 public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer {
@@ -171,6 +176,9 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
         createHandleAuthenticationFailureAction(flow);
         createTerminateSessionAction(flow);
         createTicketGrantingTicketCheckAction(flow);
+
+        // OSF CAS customization: create the non-interactive authentication action
+        createOsfNonInteractiveAuthenticationCheckAction(flow);
     }
 
     /**
@@ -203,6 +211,34 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
                 CasWebflowConstants.STATE_ID_TERMINATE_SESSION);
         createTransitionForState(action, CasWebflowConstants.TRANSITION_ID_TICKET_GRANTING_TICKET_VALID,
                 CasWebflowConstants.STATE_ID_HAS_SERVICE_CHECK);
+    }
+
+    /**
+     * Create the customized non-interactive authentication check action for OSF CAS.
+     *
+     * @param flow the flow
+     */
+    protected void createOsfNonInteractiveAuthenticationCheckAction(final Flow flow) {
+        val action = createActionState(
+                flow,
+                OsfCasWebflowConstants.STATE_ID_OSF_NON_INTERACTIVE_AUTHENTICATION_CHECK,
+                OsfCasWebflowConstants.ACTION_ID_OSF_NON_INTERACTIVE_AUTHENTICATION_CHECK
+        );
+        createTransitionForState(
+                action,
+                CasWebflowConstants.TRANSITION_ID_SUCCESS,
+                CasWebflowConstants.STATE_ID_CREATE_TICKET_GRANTING_TICKET
+        );
+        createTransitionForState(
+                action,
+                CasWebflowConstants.TRANSITION_ID_ERROR,
+                CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM
+        );
+        createTransitionForState(
+                action,
+                CasWebflowConstants.TRANSITION_ID_AUTHENTICATION_FAILURE,
+                CasWebflowConstants.STATE_ID_HANDLE_AUTHN_FAILURE
+        );
     }
 
     /**
@@ -318,12 +354,19 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
     /**
      * Create service authorization check action.
      *
+     * OSF CAS customization: The {@link OsfCasWebflowConstants#STATE_ID_OSF_NON_INTERACTIVE_AUTHENTICATION_CHECK}
+     * state intercepts this state by checking and validating existing non-interactive authentication first. See
+     * {@link #createOsfNonInteractiveAuthenticationCheckAction(Flow)} for more info.
+     *
      * @param flow the flow
      */
     protected void createServiceAuthorizationCheckAction(final Flow flow) {
         val serviceAuthorizationCheck = createActionState(flow,
                 CasWebflowConstants.STATE_ID_SERVICE_AUTHZ_CHECK, "serviceAuthorizationCheck");
-        createStateDefaultTransition(serviceAuthorizationCheck, CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM);
+        createStateDefaultTransition(
+                serviceAuthorizationCheck,
+                OsfCasWebflowConstants.STATE_ID_OSF_NON_INTERACTIVE_AUTHENTICATION_CHECK
+        );
     }
 
     /**

@@ -1,6 +1,10 @@
 package org.apereo.cas.web.config;
 
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+
 import org.apereo.cas.CentralAuthenticationService;
+import org.apereo.cas.adaptors.osf.web.flow.login.OsfPrincipalFromNonInteractiveCredentialsAction;
 import org.apereo.cas.audit.AuditableExecution;
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlan;
 import org.apereo.cas.authentication.AuthenticationServiceSelectionPlan;
@@ -43,7 +47,6 @@ import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.impl.CasWebflowEventResolutionConfigurationContext;
 import org.apereo.cas.web.support.ArgumentExtractor;
 
-import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -62,8 +65,10 @@ import org.springframework.webflow.execution.Action;
  * This is {@link CasSupportActionsConfiguration}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.0.0
  */
+@Slf4j
 @Configuration(value = "casSupportActionsConfiguration", proxyBeanMethods = false)
 @EnableConfigurationProperties(CasConfigurationProperties.class)
 @EnableTransactionManagement(proxyTargetClass = true)
@@ -314,6 +319,23 @@ public class CasSupportActionsConfiguration {
     @ConditionalOnMissingBean(name = "ticketGrantingTicketCheckAction")
     public Action ticketGrantingTicketCheckAction() {
         return new TicketGrantingTicketCheckAction(this.centralAuthenticationService.getObject());
+    }
+
+    /**
+     * OSF CAS customized bean config for {@link OsfPrincipalFromNonInteractiveCredentialsAction}.
+     *
+     * @return the initialized action
+     */
+    @Bean
+    @ConditionalOnMissingBean(name = "osfNonInteractiveAuthenticationCheckAction")
+    @RefreshScope
+    public Action osfNonInteractiveAuthenticationCheckAction() {
+        return new OsfPrincipalFromNonInteractiveCredentialsAction(
+                initialAuthenticationAttemptWebflowEventResolver.getObject(),
+                serviceTicketRequestWebflowEventResolver.getObject(),
+                adaptiveAuthenticationPolicy.getObject(),
+                centralAuthenticationService.getObject()
+        );
     }
 
     @Bean
