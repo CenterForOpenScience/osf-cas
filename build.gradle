@@ -81,10 +81,19 @@ apply from: rootProject.file("gradle/dockerjib.gradle")
 
 dependencies {
     // Other CAS dependencies/modules may be listed here...
+
+    // Whitelist Authentication
     implementation "org.apereo.cas:cas-server-support-generic:${project.'cas.version'}"
 
     // JSON Service Registry
     implementation "org.apereo.cas:cas-server-support-json-service-registry:${project.'cas.version'}"
+
+    // Web Flow Customization
+    implementation "org.apereo.cas:cas-server-core-authentication-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-util-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-web-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-webflow-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-actions:${project.'cas.version'}"
 
     // Authentication Delegation
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow:${project.'cas.version'}"
