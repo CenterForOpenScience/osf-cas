@@ -95,8 +95,10 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-webflow-api:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-support-actions:${project.'cas.version'}"
 
-    // Authentication Delegation
+    // Authentication Delegation: Vanilla
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow:${project.'cas.version'}"
+    // Authentication Delegation: Customization
+    implementation "org.apereo.cas:cas-server-support-pac4j-core:${project.'cas.version'}"
 
     // JDBC Drivers and JPA Ticket Registry
     implementation "org.apereo.cas:cas-server-support-jdbc-drivers:${project.'cas.version'}"
