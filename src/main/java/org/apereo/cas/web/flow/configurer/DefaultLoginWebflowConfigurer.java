@@ -1,13 +1,9 @@
 package org.apereo.cas.web.flow.configurer;
 
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-
+import org.apereo.cas.adaptors.osf.authentication.credential.OsfCredential;
 import org.apereo.cas.adaptors.osf.web.flow.OsfCasWebflowConstants;
 import org.apereo.cas.authentication.PrincipalException;
 import org.apereo.cas.authentication.adaptive.UnauthorizedAuthenticationException;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
-import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.apereo.cas.authentication.exceptions.AccountDisabledException;
 import org.apereo.cas.authentication.exceptions.AccountPasswordMustChangeException;
 import org.apereo.cas.authentication.exceptions.InvalidLoginLocationException;
@@ -20,6 +16,9 @@ import org.apereo.cas.services.UnauthorizedSsoServiceException;
 import org.apereo.cas.ticket.UnsatisfiedAuthenticationPolicyException;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.web.flow.CasWebflowConstants;
+
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
@@ -36,7 +35,6 @@ import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
 import javax.security.auth.login.FailedLoginException;
 
-@Slf4j
 /**
  * This is {@link DefaultLoginWebflowConfigurer}.
  *
@@ -44,6 +42,7 @@ import javax.security.auth.login.FailedLoginException;
  * @author Longze Chen
  * @since 5.0.0
  */
+@Slf4j
 public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer {
 
     /**
@@ -116,7 +115,7 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
 
         val state = createViewState(flow, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM, "casLoginView", binder);
         state.getRenderActionList().add(createEvaluateAction(CasWebflowConstants.ACTION_ID_RENDER_LOGIN_FORM));
-        createStateModelBinding(state, CasWebflowConstants.VAR_ID_CREDENTIAL, UsernamePasswordCredential.class);
+        createStateModelBinding(state, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfCredential.class);
 
         val transition = createTransitionForState(state, CasWebflowConstants.TRANSITION_ID_SUBMIT, CasWebflowConstants.STATE_ID_REAL_SUBMIT);
         val attributes = transition.getAttributes();
@@ -150,12 +149,12 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
      */
     protected void createRememberMeAuthnWebflowConfig(final Flow flow) {
         if (casProperties.getTicket().getTgt().getRememberMe().isEnabled()) {
-            createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, RememberMeUsernamePasswordCredential.class);
+            createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfCredential.class);
             val state = getState(flow, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM, ViewState.class);
             val cfg = getViewStateBinderConfiguration(state);
             cfg.addBinding(new BinderConfiguration.Binding("rememberMe", null, false));
         } else {
-            createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, UsernamePasswordCredential.class);
+            createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfCredential.class);
         }
     }
 

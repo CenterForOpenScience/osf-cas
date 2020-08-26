@@ -1,6 +1,7 @@
 package org.apereo.cas.adaptors.generic;
 
 import org.apereo.cas.DefaultMessageDescriptor;
+import org.apereo.cas.adaptors.osf.authentication.credential.OsfCredential;
 import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.MessageDescriptor;
@@ -8,9 +9,11 @@ import org.apereo.cas.authentication.PreventedException;
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.apereo.cas.authentication.exceptions.AccountDisabledException;
 import org.apereo.cas.authentication.exceptions.AccountPasswordMustChangeException;
+import org.apereo.cas.authentication.handler.PrincipalNameTransformer;
 import org.apereo.cas.authentication.handler.support.AbstractUsernamePasswordAuthenticationHandler;
 import org.apereo.cas.authentication.principal.PrincipalFactory;
 import org.apereo.cas.services.ServicesManager;
+import org.apereo.cas.util.transforms.NoOpPrincipalNameTransformer;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -23,6 +26,7 @@ import lombok.val;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.core.io.Resource;
 
@@ -50,6 +54,7 @@ public class JsonResourceAuthenticationHandler extends AbstractUsernamePasswordA
 
     private final ObjectMapper mapper;
     private final Resource resource;
+    private final PrincipalNameTransformer principalNameTransformer;
 
     public JsonResourceAuthenticationHandler(
             final String name,
@@ -66,21 +71,47 @@ public class JsonResourceAuthenticationHandler extends AbstractUsernamePasswordA
                 .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, false)
                 .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
                 .enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        this.principalNameTransformer = new NoOpPrincipalNameTransformer();
     }
 
     @SneakyThrows
     @Override
     protected AuthenticationHandlerExecutionResult doAuthentication(final Credential credential) {
 
-        val originalUserPass = (UsernamePasswordCredential) credential;
-        val userPass = (UsernamePasswordCredential) credential.getClass().getDeclaredConstructor().newInstance();
-        BeanUtils.copyProperties(userPass, originalUserPass);
+        LOGGER.debug("The credential class is [{}]", credential.getClass().getSimpleName());
+        val originalCredential = (OsfCredential) credential;
+        LOGGER.debug("The credential class has been casted to [{}]", OsfCredential.class.getSimpleName());
+        val osfCredential = (OsfCredential) credential.getClass().getDeclaredConstructor().newInstance();
+        BeanUtils.copyProperties(osfCredential, originalCredential);
+        LOGGER.debug("A new credential has been created with copied properties");
 
-        transformUsername(userPass);
-        transformPassword(userPass);
+        transformUsername(osfCredential);
+        transformPasswordOrVerificationKey(osfCredential);
+        LOGGER.debug("Attempting authentication internally for transformed credential [{}]",osfCredential);
+        return authenticateUsernamePasswordInternal(osfCredential, originalCredential.getPassword());
+    }
 
-        LOGGER.debug("Attempting authentication internally for transformed credential [{}]", userPass);
-        return authenticateUsernamePasswordInternal(userPass, originalUserPass.getPassword());
+    @SneakyThrows
+    protected void transformPasswordOrVerificationKey(final OsfCredential osfCredential) {
+
+        if (StringUtils.isNotBlank(osfCredential.getVerificationKey())) {
+            LOGGER.debug("Verification key found, deprecate password transformation");
+            LOGGER.debug(
+                    "Transforming credential verification key via [{}]",
+                    this.principalNameTransformer.getClass().getName()
+            );
+            val transformedVerificationKey
+                    = this.principalNameTransformer.transform(osfCredential.getVerificationKey());
+            if (StringUtils.isBlank(transformedVerificationKey)) {
+                throw new AccountNotFoundException("Transformed verification key null.");
+            }
+            osfCredential.setVerificationKey(transformedVerificationKey);
+            osfCredential.setPassword(null);
+        } else {
+            LOGGER.debug("Verification key is null, go on to password transformation");
+            transformPassword(osfCredential);
+            osfCredential.setVerificationKey(null);
+        }
     }
 
     @Override
@@ -96,8 +127,17 @@ public class JsonResourceAuthenticationHandler extends AbstractUsernamePasswordA
         }
 
         val password = credential.getPassword();
+        val verificationKey = ((OsfCredential) credential).getVerificationKey();
         val account = map.get(username);
-        if (matches(password, account.getPassword())) {
+        val accountVerificationKey = account.getAttributes().get("verificationKey");
+        val isVerificationKeyMatch = accountVerificationKey.contains(verificationKey);
+        val isPasswordMatch = password != null && matches(password, account.getPassword());
+        LOGGER.debug(
+                "[isPasswordMatch, isVerificationKeyMatch] = [{}, {}]",
+                isPasswordMatch,
+                isVerificationKeyMatch
+        );
+        if (isVerificationKeyMatch || isPasswordMatch) {
             switch (account.getStatus()) {
                 case DISABLED:
                     throw new AccountDisabledException();
@@ -139,13 +179,32 @@ public class JsonResourceAuthenticationHandler extends AbstractUsernamePasswordA
 
     @Override
     public boolean supports(final Class<? extends Credential> clazz) {
-        return UsernamePasswordCredential.class.isAssignableFrom(clazz);
+
+        LOGGER.debug("supports() ... ");
+
+        val isOsfCredentialAssignableFrom = OsfCredential.class.isAssignableFrom(clazz);
+        LOGGER.debug(
+                "Is [{}] assignable from [{}]? -> [{}]",
+                OsfCredential.class.getSimpleName(),
+                clazz.getSimpleName(),
+                isOsfCredentialAssignableFrom
+        );
+        return isOsfCredentialAssignableFrom;
     }
 
     @Override
     public boolean supports(final Credential credential) {
-        if (!UsernamePasswordCredential.class.isInstance(credential)) {
-            LOGGER.debug("Credential is not one of username/password and is not accepted by handler [{}]", getName());
+
+        val isInstanceOfOsfCredential = credential instanceof OsfCredential;
+        LOGGER.debug(
+                "Is [{}] an instance of [{}]? -> [{}]",
+                credential.getClass().getSimpleName(),
+                OsfCredential.class.getSimpleName(),
+                isInstanceOfOsfCredential
+        );
+
+        if (!isInstanceOfOsfCredential) {
+            LOGGER.debug("Credential is not compatible with OSF and is not accepted by handler [{}]", getName());
             return false;
         }
         if (this.credentialSelectionPredicate == null) {
