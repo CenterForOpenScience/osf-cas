@@ -27,6 +27,7 @@ import org.apereo.cas.configuration.model.support.oauth.OAuthProperties;
 import org.apereo.cas.configuration.model.support.oidc.OidcProperties;
 import org.apereo.cas.configuration.model.support.okta.OktaAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.openid.OpenIdProperties;
+import org.apereo.cas.configuration.model.support.osf.OsfJsonAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.pac4j.Pac4jDelegatedAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.passwordless.PasswordlessAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.pm.PasswordManagementProperties;
@@ -51,6 +52,7 @@ import org.apereo.cas.configuration.support.RequiresModule;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.io.Serializable;
@@ -61,6 +63,7 @@ import java.util.List;
  * This is {@link AuthenticationProperties}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.0.0
  */
 @RequiresModule(name = "cas-server-core-authentication", automated = true)
@@ -94,6 +97,12 @@ public class AuthenticationProperties implements Serializable {
      */
     @NestedConfigurationProperty
     private JsonResourceAuthenticationProperties json = new JsonResourceAuthenticationProperties();
+
+    /**
+     * OSF JSON authentication settings.
+     */
+    @NestedConfigurationProperty
+    private OsfJsonAuthenticationProperties osfJson = new OsfJsonAuthenticationProperties();
 
     /**
      * Groovy authentication settings.
