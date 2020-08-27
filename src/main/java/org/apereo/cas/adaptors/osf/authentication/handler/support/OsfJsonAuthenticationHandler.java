@@ -130,9 +130,9 @@ public class OsfJsonAuthenticationHandler extends AbstractUsernamePasswordAuthen
         final String verificationKey = ((OsfCredential) credential).getVerificationKey();
         final String password = credential.getPassword();
         final OsfCasUserAccount account = map.get(username);
-        final List<Object> accountVerificationKey = account.getAttributes().get("verificationKey");
+        final boolean isVerificationKeyMatch = verificationKey != null
+                && verificationKey.equals(account.getVerificationKey());
         final boolean isPasswordMatch = password != null && matches(password, account.getPassword());
-        final boolean isVerificationKeyMatch = accountVerificationKey.contains(verificationKey);
         LOGGER.debug(
                 "[isPasswordMatch, isVerificationKeyMatch] = [{}, {}]",
                 isPasswordMatch,

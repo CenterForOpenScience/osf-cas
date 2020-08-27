@@ -28,6 +28,7 @@ public class OsfCasUserAccount implements Serializable {
     private static final long serialVersionUID = 8765092399074285290L;
 
     private String password;
+    private String verificationKey;
     private Map<String, List<Object>> attributes = new LinkedHashMap<>(MAP_SIZE);
     private AccountStatus status = AccountStatus.OK;
     private LocalDate expirationDate;
@@ -58,5 +59,4 @@ public class OsfCasUserAccount implements Serializable {
          */
         MUST_CHANGE_PASSWORD
     }
-
 }
