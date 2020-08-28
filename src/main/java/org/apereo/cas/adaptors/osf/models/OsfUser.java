@@ -1,9 +1,16 @@
 package org.apereo.cas.adaptors.osf.models;
 
+import org.apereo.cas.adaptors.osf.hibernate.types.PostgresJsonbUserType;
+
+import com.google.gson.JsonObject;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +29,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "osf_osfuser")
+@TypeDef(name = "PostgresJsonb", typeClass = PostgresJsonbUserType.class)
 @NoArgsConstructor
 @Getter
 @ToString
@@ -59,4 +67,8 @@ public final class OsfUser extends AbstractOsfModel {
     @ManyToOne
     @JoinColumn(name = "merged_by_id")
     private OsfUser mergedBy;
+
+    @Column(name = "external_identity")
+    @Type(type = "PostgresJsonb")
+    private JsonObject externalIdentity;
 }

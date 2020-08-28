@@ -98,17 +98,25 @@ dependencies {
     // Authentication Customization
     implementation "org.apereo.cas:cas-server-core-authentication-api:${project.'cas.version'}"
 
-    // JPA for OSF PostgreSQL
-    implementation "org.apereo.cas:cas-server-support-jpa-util:${project.'cas.version'}"
-
     // Authentication Delegation: Vanilla
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow:${project.'cas.version'}"
     // Authentication Delegation: Customization
     implementation "org.apereo.cas:cas-server-support-pac4j-core:${project.'cas.version'}"
 
-    // JDBC Drivers and JPA Ticket Registry
+    // JDBC Drivers
     implementation "org.apereo.cas:cas-server-support-jdbc-drivers:${project.'cas.version'}"
+
+    // JPA OSF PostgreSQL
+    implementation "org.apereo.cas:cas-server-support-jpa-util:${project.'cas.version'}"
+
+    // JPA Ticket Registry
     implementation "org.apereo.cas:cas-server-support-jpa-ticket-registry:${project.'cas.version'}"
+
+    // Hibernate
+    implementation "org.hibernate:hibernate-core:${hibernateCoreVersion}"
+
+    // Google GSON
+    implementation "com.google.code.gson:gson:${gsonVersion}"
 }
 
 tasks.findByName("jibDockerBuild")
