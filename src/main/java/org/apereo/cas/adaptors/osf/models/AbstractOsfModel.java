@@ -7,6 +7,7 @@ import javax.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -20,6 +21,7 @@ import java.io.Serializable;
 @MappedSuperclass
 @NoArgsConstructor
 @Setter
+@ToString
 @Slf4j
 public abstract class AbstractOsfModel implements Serializable {
 

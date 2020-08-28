@@ -2,6 +2,7 @@ package org.apereo.cas.adaptors.osf.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import javax.persistence.Table;
 @Table(name = "osf_email")
 @NoArgsConstructor
 @Getter
+@ToString
 @Slf4j
 public final class OsfEmail extends AbstractOsfModel {
 

@@ -3,6 +3,7 @@ package org.apereo.cas.adaptors.osf.daos;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.adaptors.osf.models.OsfEmail;
+import org.apereo.cas.adaptors.osf.models.OsfGuid;
 import org.apereo.cas.adaptors.osf.models.OsfUser;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +50,25 @@ public class JpaOsfDao extends AbstractOsfDao {
                     OsfEmail.class
             );
             query.setParameter("address", emailAddress);
+            return query.getSingleResult();
+        } catch (final PersistenceException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public OsfGuid findGuidByUser(final OsfUser osfUser) {
+        try {
+            final TypedQuery<OsfGuid> query = entityManager.createQuery(
+                    "select g from OsfGuid g where"
+                            + " g.objectId = :userId"
+                            + " and g.djangoContentType.appLabel = :appLable"
+                            + " and g.djangoContentType.model = :model",
+                    OsfGuid.class
+            );
+            query.setParameter("userId", osfUser.getId());
+            query.setParameter("appLable", "osf");
+            query.setParameter("model", "osfuser");
             return query.getSingleResult();
         } catch (final PersistenceException e) {
             return null;
