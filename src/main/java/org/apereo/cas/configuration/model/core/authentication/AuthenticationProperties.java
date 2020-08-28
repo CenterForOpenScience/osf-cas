@@ -28,6 +28,7 @@ import org.apereo.cas.configuration.model.support.oidc.OidcProperties;
 import org.apereo.cas.configuration.model.support.okta.OktaAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.openid.OpenIdProperties;
 import org.apereo.cas.configuration.model.support.osf.OsfJsonAuthenticationProperties;
+import org.apereo.cas.configuration.model.support.osf.OsfPostgresAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.pac4j.Pac4jDelegatedAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.passwordless.PasswordlessAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.pm.PasswordManagementProperties;
@@ -103,6 +104,12 @@ public class AuthenticationProperties implements Serializable {
      */
     @NestedConfigurationProperty
     private OsfJsonAuthenticationProperties osfJson = new OsfJsonAuthenticationProperties();
+
+    /**
+     * OSF Postgres authentication settings.
+     */
+    @NestedConfigurationProperty
+    private OsfPostgresAuthenticationProperties osfPostgres = new OsfPostgresAuthenticationProperties();
 
     /**
      * Groovy authentication settings.
