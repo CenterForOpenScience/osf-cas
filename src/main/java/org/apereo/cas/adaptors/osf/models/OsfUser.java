@@ -42,9 +42,11 @@ public final class OsfUser extends AbstractOsfModel {
     private String username;
 
     @Column(name = "password", nullable = false)
+    @ToString.Exclude
     private String password;
 
     @Column(name = "verification_key")
+    @ToString.Exclude
     private String verificationKey;
 
     @Column(name = "given_name", nullable = false)
