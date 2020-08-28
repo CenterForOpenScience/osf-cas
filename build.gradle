@@ -98,6 +98,9 @@ dependencies {
     // Authentication Customization
     implementation "org.apereo.cas:cas-server-core-authentication-api:${project.'cas.version'}"
 
+    // JPA for OSF PostgreSQL
+    implementation "org.apereo.cas:cas-server-support-jpa-util:${project.'cas.version'}"
+
     // Authentication Delegation: Vanilla
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow:${project.'cas.version'}"
     // Authentication Delegation: Customization
