@@ -1,10 +1,13 @@
 package org.apereo.cas.adaptors.osf.daos;
 
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.adaptors.osf.models.OsfEmail;
 import org.apereo.cas.adaptors.osf.models.OsfGuid;
+import org.apereo.cas.adaptors.osf.models.OsfTotp;
 import org.apereo.cas.adaptors.osf.models.OsfUser;
+
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -69,6 +72,20 @@ public class JpaOsfDao extends AbstractOsfDao {
             query.setParameter("userId", osfUser.getId());
             query.setParameter("appLable", "osf");
             query.setParameter("model", "osfuser");
+            return query.getSingleResult();
+        } catch (final PersistenceException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public OsfTotp findOneTotpByOwnerId(final Integer ownerId) {
+        try {
+            final TypedQuery<OsfTotp> query = entityManager.createQuery(
+                    "select p from OsfTotp p where p.owner.id = :ownerId",
+                    OsfTotp.class
+            );
+            query.setParameter("ownerId", ownerId);
             return query.getSingleResult();
         } catch (final PersistenceException e) {
             return null;

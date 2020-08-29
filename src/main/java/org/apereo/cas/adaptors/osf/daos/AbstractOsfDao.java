@@ -1,6 +1,8 @@
 package org.apereo.cas.adaptors.osf.daos;
 
 import lombok.NoArgsConstructor;
+
+import org.apereo.cas.adaptors.osf.models.OsfTotp;
 import org.apereo.cas.adaptors.osf.models.OsfEmail;
 import org.apereo.cas.adaptors.osf.models.OsfGuid;
 import org.apereo.cas.adaptors.osf.models.OsfUser;
@@ -32,4 +34,6 @@ public abstract class AbstractOsfDao {
     protected abstract OsfUser findOneUserByUsername(String username);
 
     protected abstract OsfEmail findOneEmailByAddress(String emailAddress);
+
+    protected abstract OsfTotp findOneTotpByOwnerId(final Integer ownerId);
 }
