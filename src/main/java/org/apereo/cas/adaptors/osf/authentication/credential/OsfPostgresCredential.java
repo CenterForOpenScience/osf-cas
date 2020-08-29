@@ -32,6 +32,11 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
      */
     private String verificationKey;
 
+    /**
+     * The time-based one-time password (TOTP) for OSF two-factor authentication.
+     */
+    private String oneTimePassword;
+
     @Override
     public String getId() {
         return this.getUsername();

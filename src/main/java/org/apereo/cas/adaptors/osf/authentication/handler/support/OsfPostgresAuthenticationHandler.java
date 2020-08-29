@@ -69,6 +69,7 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
         OsfPostgresCredential osfPostgresCredential = (OsfPostgresCredential) credential;
         transformUsername(osfPostgresCredential);
         transformPasswordOrVerificationKey(osfPostgresCredential);
+        transformOneTimePassword(osfPostgresCredential);
         LOGGER.debug("Attempting authentication internally for transformed credential [{}]",osfPostgresCredential);
         return authenticateOsfPostgresInternal(osfPostgresCredential);
     }
@@ -90,6 +91,7 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
         final String username = credential.getUsername();
         final String plainTextPassword = credential.getPassword();
         final String verificationKey = credential.getVerificationKey();
+        final String oneTimePassword = credential.getOneTimePassword();
 
         final OsfUser osfUser = jpaOsfDao.findOneUserByEmail(username);
         if (osfUser == null) {
@@ -185,6 +187,18 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
         } else {
             transformPassword(credential);
             credential.setVerificationKey(null);
+        }
+    }
+
+    private void transformOneTimePassword(final OsfPostgresCredential credential) {
+        if (!StringUtils.isBlank(credential.getOneTimePassword())) {
+            LOGGER.debug(
+                    "Transforming credential one-time password via [{}]",
+                    this.principalNameTransformer.getClass().getName()
+            );
+            credential.setOneTimePassword(this.principalNameTransformer.transform(credential.getOneTimePassword()));
+        } else {
+            LOGGER.debug("Original one-time password is null");
         }
     }
 }

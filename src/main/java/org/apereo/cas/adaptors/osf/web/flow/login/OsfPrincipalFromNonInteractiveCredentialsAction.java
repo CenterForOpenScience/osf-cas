@@ -87,13 +87,15 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             return null;
         }
 
-        LOGGER.debug("No credential found in context, check username and verification key in request");
+        LOGGER.debug("No credential found in context, check username, verification key and one-time password");
         final OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
         final String username = request.getParameter("username");
         final String verification_key = request.getParameter("verification_key");
+        final String oneTimePassword = request.getParameter("2fa_passcode");
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(verification_key)) {
             osfPostgresCredential.setUsername(username);
             osfPostgresCredential.setVerificationKey(verification_key);
+            osfPostgresCredential.setOneTimePassword(oneTimePassword);
             osfPostgresCredential.setRememberMe(true);
             LOGGER.debug("User [{}] found in request w/ one-time verification key [{}]", username, verification_key);
             return osfPostgresCredential;
