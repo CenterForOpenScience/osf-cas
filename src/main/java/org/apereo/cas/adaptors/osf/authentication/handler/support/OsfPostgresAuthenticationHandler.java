@@ -3,8 +3,10 @@ package org.apereo.cas.adaptors.osf.authentication.handler.support;
 import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredential;
 import org.apereo.cas.adaptors.osf.authentication.support.AuthenticationUtils;
 import org.apereo.cas.adaptors.osf.authentication.support.OsfUserStatus;
+import org.apereo.cas.adaptors.osf.authentication.support.TotpUtils;
 import org.apereo.cas.adaptors.osf.daos.JpaOsfDao;
 import org.apereo.cas.adaptors.osf.models.OsfGuid;
+import org.apereo.cas.adaptors.osf.models.OsfTotp;
 import org.apereo.cas.adaptors.osf.models.OsfUser;
 import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
 import org.apereo.cas.authentication.Credential;
@@ -113,6 +115,21 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
             }
         } else {
             throw new FailedLoginException("Missing credential for user with username [" + username + "]");
+        }
+
+        final OsfTotp osfTotp = jpaOsfDao.findOneTotpByOwnerId(osfUser.getId());
+        if (osfTotp != null && osfTotp.isActive()) {
+            if (oneTimePassword == null) {
+                throw new FailedLoginException("2FA TOTP required for user [" + username + "]");
+            }
+            try {
+                final long transformedOneTimePassword = Long.parseLong(oneTimePassword);
+                if (!TotpUtils.checkCode(osfTotp.getTotpSecretBase32(), transformedOneTimePassword)) {
+                    throw new FailedLoginException("Invalid 2FA TOTP for user [" + username + "] (Type 1)");
+                }
+            } catch (final Exception e) {
+                throw new FailedLoginException("Invalid 2FA TOTP for user [" + username + "] (Type 2)");
+            }
         }
 
         if (OsfUserStatus.USER_NOT_CONFIRMED_OSF.equals(userStatus)) {
