@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This is {@link OsfCasUserAccount}.
+ * This is {@link OsfJsonUserAccount}.
  *
  * Stores information about an OSF user.
  *
@@ -22,13 +22,12 @@ import java.util.Map;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 @Getter
 @Setter
-public class OsfCasUserAccount implements Serializable {
+public class OsfJsonUserAccount implements Serializable {
 
     private static final int MAP_SIZE = 8;
     private static final long serialVersionUID = 8765092399074285290L;
 
     private String password;
-    private String verificationKey;
     private Map<String, List<Object>> attributes = new LinkedHashMap<>(MAP_SIZE);
     private AccountStatus status = AccountStatus.OK;
     private LocalDate expirationDate;

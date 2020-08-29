@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,9 +56,9 @@ public class OsfJsonAuthenticationEventExecutionPlanConfiguration {
         return PrincipalFactoryUtils.newPrincipalFactory();
     }
 
-    @RefreshScope
+    @ConditionalOnMissingBean(name = "osfJsonAuthenticationHandler")
     @Bean
-    public AuthenticationHandler jsonResourceAuthenticationHandler() {
+    public AuthenticationHandler osfJsonAuthenticationHandler() {
         OsfJsonAuthenticationProperties jsonProps = casProperties.getAuthn().getOsfJson();
         OsfJsonAuthenticationHandler authenticationHandler = new OsfJsonAuthenticationHandler(
                 jsonProps.getName(),
@@ -87,10 +86,11 @@ public class OsfJsonAuthenticationEventExecutionPlanConfiguration {
     public AuthenticationEventExecutionPlanConfigurer osfJsonAuthenticationEventExecutionPlanConfigurer() {
         return plan -> {
             Resource file = casProperties.getAuthn().getOsfJson().getLocation();
-            if (file != null) {
+            boolean isEnabled = casProperties.getAuthn().getOsfJson().isEnabled();
+            if (isEnabled && file != null) {
                 LOGGER.debug("Added JSON resource authentication handler for the target file [{}]", file.getFilename());
                 plan.registerAuthenticationHandlerWithPrincipalResolver(
-                        jsonResourceAuthenticationHandler(),
+                        osfJsonAuthenticationHandler(),
                         defaultPrincipalResolver.getObject()
                 );
             }

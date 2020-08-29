@@ -1,5 +1,6 @@
 package org.apereo.cas.configuration.model.support.osf;
 
+import org.apereo.cas.adaptors.osf.authentication.handler.support.OsfJsonAuthenticationHandler;
 import org.apereo.cas.configuration.model.core.authentication.PasswordEncoderProperties;
 import org.apereo.cas.configuration.model.core.authentication.PasswordPolicyProperties;
 import org.apereo.cas.configuration.model.core.authentication.PrincipalTransformationProperties;
@@ -42,12 +43,17 @@ public class OsfJsonAuthenticationProperties extends SpringResourceProperties {
     private PrincipalTransformationProperties principalTransformation = new PrincipalTransformationProperties();
 
     /**
-     * Authentication handler name used to verify credentials in the file.
+     * The name of the authentication handler.
      */
-    private String name;
+    private String name = OsfJsonAuthenticationHandler.class.getSimpleName();
 
     /**
-     * The order of the authentication handler,.
+     * The flag to enable / disable the authentication handler.
+     */
+    private boolean enabled = Boolean.TRUE;
+
+    /**
+     * Nested JPA properties for OSF PostgreSQL database.
      */
     private int order;
 }

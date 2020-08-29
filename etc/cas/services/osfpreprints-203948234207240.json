@@ -11,20 +11,11 @@
     "allowedAttributes": [
       "java.util.ArrayList",
       [
-        "guid",
-        "mail",
         "givenName",
-        "sn",
         "familyName",
-        "accessToken",
         "username"
       ]
     ]
-  },
-  "usernameAttributeProvider": {
-    "@class": "org.apereo.cas.services.PrincipalAttributeRegisteredServiceUsernameProvider",
-    "usernameAttribute": "username",
-    "canonicalizationMode": "NONE"
   },
   "accessStrategy": {
     "@class": "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
@@ -33,6 +24,7 @@
       "allowedProviders": [
         "java.util.ArrayList",
         [
+          "orcid",
           "oldcas"
         ]
       ]
