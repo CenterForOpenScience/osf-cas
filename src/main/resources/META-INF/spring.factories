@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.apereo.cas.adaptors.osf.config.OsfJsonAuthenticationEventExecutionPlanConfiguration,\
+  org.apereo.cas.adaptors.osf.config.OsfPostgresAuthenticationEventExecutionPlanConfiguration,\
   org.apereo.cas.adaptors.osf.config.JpaOsfDaoConfiguration

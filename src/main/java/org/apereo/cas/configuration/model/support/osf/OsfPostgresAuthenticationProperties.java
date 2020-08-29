@@ -1,5 +1,7 @@
 package org.apereo.cas.configuration.model.support.osf;
 
+import org.apereo.cas.adaptors.osf.authentication.handler.support.OsfPostgresAuthenticationHandler;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -26,7 +28,7 @@ public class OsfPostgresAuthenticationProperties implements Serializable {
     /**
      * The name of the authentication handler.
      */
-    private String name;
+    private String name = OsfPostgresAuthenticationHandler.class.getSimpleName();
 
     /**
      * The flag to enable / disable the authentication handler.
