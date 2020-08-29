@@ -1,8 +1,9 @@
 package org.apereo.cas.adaptors.osf.authentication.handler.support;
 
 import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredential;
-import org.apereo.cas.adaptors.osf.authentication.support.AuthenticationUtils;
 import org.apereo.cas.adaptors.osf.authentication.support.OsfUserStatus;
+import org.apereo.cas.adaptors.osf.authentication.support.OsfUserUtils;
+import org.apereo.cas.adaptors.osf.authentication.support.OsfPasswordUtils;
 import org.apereo.cas.adaptors.osf.authentication.support.TotpUtils;
 import org.apereo.cas.adaptors.osf.daos.JpaOsfDao;
 import org.apereo.cas.adaptors.osf.models.OsfGuid;
@@ -103,10 +104,10 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
         if (osfGuid == null) {
             throw new FailedLoginException("User with username [" + username + "] does not have a valid OSF GUID");
         }
-        final String userStatus = AuthenticationUtils.verifyUserStatus(osfUser);
+        final String userStatus = OsfUserUtils.verifyUserStatus(osfUser);
 
         if (plainTextPassword != null) {
-            if (!AuthenticationUtils.verifyPassword(plainTextPassword, osfUser.getPassword())) {
+            if (!OsfPasswordUtils.verifyPassword(plainTextPassword, osfUser.getPassword())) {
                 throw new FailedLoginException("Invalid password for user with username [" + username + "]");
             }
         } else if (verificationKey != null) {
