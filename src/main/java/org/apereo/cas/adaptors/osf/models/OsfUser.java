@@ -73,4 +73,24 @@ public final class OsfUser extends AbstractOsfModel {
     @Column(name = "external_identity")
     @Type(type = "PostgresJsonb")
     private JsonObject externalIdentity;
+
+    public Boolean isRegistered() {
+        return registered;
+    }
+
+    public Boolean isMerged() {
+        return mergedBy != null;
+    }
+
+    public Boolean isConfirmed() {
+        return dateConfirmed != null;
+    }
+
+    public Boolean isDisabled() {
+        return dateDisabled != null;
+    }
+
+    public Boolean isActive() {
+        return isRegistered() && !isMerged() && !isDisabled() && isConfirmed();
+    }
 }
