@@ -4,6 +4,7 @@ import org.apereo.cas.adaptors.osf.hibernate.types.PostgresJsonbUserType;
 
 import com.google.gson.JsonObject;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -56,6 +57,7 @@ public final class OsfUser extends AbstractOsfModel {
     private String familyName;
 
     @Column(name = "is_registered", nullable = false)
+    @Getter(AccessLevel.NONE)
     private Boolean registered;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -78,19 +80,19 @@ public final class OsfUser extends AbstractOsfModel {
         return registered;
     }
 
-    public Boolean isMerged() {
+    public boolean isMerged() {
         return mergedBy != null;
     }
 
-    public Boolean isConfirmed() {
+    public boolean isConfirmed() {
         return dateConfirmed != null;
     }
 
-    public Boolean isDisabled() {
+    public boolean isDisabled() {
         return dateDisabled != null;
     }
 
-    public Boolean isActive() {
+    public boolean isActive() {
         return isRegistered() && !isMerged() && !isDisabled() && isConfirmed();
     }
 }

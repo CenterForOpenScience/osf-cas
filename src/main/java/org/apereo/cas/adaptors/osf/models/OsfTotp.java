@@ -47,7 +47,7 @@ public class OsfTotp extends AbstractOsfModel {
     @Column(name = "deleted")
     private Date deleted;
 
-    private Boolean isDeleted() {
+    private boolean isDeleted() {
         return deleted != null;
     }
 
@@ -56,7 +56,7 @@ public class OsfTotp extends AbstractOsfModel {
         return new Base32().encodeAsString(bytes);
     }
 
-    public Boolean isActive() {
+    public boolean isActive() {
         return totpSecret != null && confirmed && !isDeleted();
     }
 }
