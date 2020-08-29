@@ -1,6 +1,6 @@
 package org.apereo.cas.web.flow.configurer;
 
-import org.apereo.cas.adaptors.osf.authentication.credential.OsfCredential;
+import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredential;
 import org.apereo.cas.adaptors.osf.web.flow.OsfCasWebflowConstants;
 import org.apereo.cas.authentication.PrincipalException;
 import org.apereo.cas.authentication.adaptive.UnauthorizedAuthenticationException;
@@ -115,7 +115,7 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
 
         val state = createViewState(flow, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM, "casLoginView", binder);
         state.getRenderActionList().add(createEvaluateAction(CasWebflowConstants.ACTION_ID_RENDER_LOGIN_FORM));
-        createStateModelBinding(state, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfCredential.class);
+        createStateModelBinding(state, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfPostgresCredential.class);
 
         val transition = createTransitionForState(state, CasWebflowConstants.TRANSITION_ID_SUBMIT, CasWebflowConstants.STATE_ID_REAL_SUBMIT);
         val attributes = transition.getAttributes();
@@ -149,12 +149,12 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
      */
     protected void createRememberMeAuthnWebflowConfig(final Flow flow) {
         if (casProperties.getTicket().getTgt().getRememberMe().isEnabled()) {
-            createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfCredential.class);
+            createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfPostgresCredential.class);
             val state = getState(flow, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM, ViewState.class);
             val cfg = getViewStateBinderConfiguration(state);
             cfg.addBinding(new BinderConfiguration.Binding("rememberMe", null, false));
         } else {
-            createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfCredential.class);
+            createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfPostgresCredential.class);
         }
     }
 

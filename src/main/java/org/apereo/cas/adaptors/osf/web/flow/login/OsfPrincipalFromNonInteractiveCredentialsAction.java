@@ -1,7 +1,7 @@
 package org.apereo.cas.adaptors.osf.web.flow.login;
 
 import org.apereo.cas.CentralAuthenticationService;
-import org.apereo.cas.adaptors.osf.authentication.credential.OsfCredential;
+import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredential;
 import org.apereo.cas.authentication.adaptive.AdaptiveAuthenticationPolicy;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.principal.ClientCredential;
@@ -87,16 +87,16 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             return null;
         }
 
-        LOGGER.debug("No credential not found in context, check username and verification key in request");
-        final OsfCredential osfCredential = new OsfCredential();
+        LOGGER.debug("No credential found in context, check username and verification key in request");
+        final OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
         final String username = request.getParameter("username");
         final String verification_key = request.getParameter("verification_key");
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(verification_key)) {
-            osfCredential.setUsername(username);
-            osfCredential.setVerificationKey(verification_key);
-            osfCredential.setRememberMe(true);
+            osfPostgresCredential.setUsername(username);
+            osfPostgresCredential.setVerificationKey(verification_key);
+            osfPostgresCredential.setRememberMe(true);
             LOGGER.debug("User [{}] found in request w/ one-time verification key [{}]", username, verification_key);
-            return osfCredential;
+            return osfPostgresCredential;
         }
         LOGGER.debug("No user with username and verification key found in request");
         return null;
