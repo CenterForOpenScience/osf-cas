@@ -1,6 +1,11 @@
 package org.apereo.cas.web.flow.configurer;
 
 import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredential;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedIdpException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedOsfException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidUserStatusException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidVerificationKeyException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.OneTimePasswordRequiredException;
 import org.apereo.cas.adaptors.osf.web.flow.OsfCasWebflowConstants;
 import org.apereo.cas.authentication.PrincipalException;
 import org.apereo.cas.authentication.adaptive.UnauthorizedAuthenticationException;
@@ -96,6 +101,34 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
     protected void createDefaultViewStates(final Flow flow) {
         createLoginFormView(flow);
         createAuthenticationWarningMessagesView(flow);
+
+        // OSF CAS customization: create view states for OSF PostgreSQL authentication exceptions
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_ACCOUNT_NOT_CONFIRMED_IDP,
+                OsfCasWebflowConstants.VIEW_ID_ACCOUNT_NOT_CONFIRMED_IDP
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_ACCOUNT_NOT_CONFIRMED_OSF,
+                OsfCasWebflowConstants.VIEW_ID_ACCOUNT_NOT_CONFIRMED_OSF
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_INVALID_USER_STATUS,
+                OsfCasWebflowConstants.VIEW_ID_INVALID_USER_STATUS
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_INVALID_VERIFICATION_KEY,
+                OsfCasWebflowConstants.VIEW_ID_INVALID_VERIFICATION_KEY
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED,
+                OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED
+        );
+        // End of OSF CAS customization
     }
 
     /**
@@ -115,6 +148,7 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
 
         val state = createViewState(flow, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM, "casLoginView", binder);
         state.getRenderActionList().add(createEvaluateAction(CasWebflowConstants.ACTION_ID_RENDER_LOGIN_FORM));
+        // OSF CAS Customization: bind OsfPostgresCredential instead of RememberMeUsernamePasswordCredential
         createStateModelBinding(state, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfPostgresCredential.class);
 
         val transition = createTransitionForState(state, CasWebflowConstants.TRANSITION_ID_SUBMIT, CasWebflowConstants.STATE_ID_REAL_SUBMIT);
@@ -149,11 +183,13 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
      */
     protected void createRememberMeAuthnWebflowConfig(final Flow flow) {
         if (casProperties.getTicket().getTgt().getRememberMe().isEnabled()) {
+            // OSF CAS Customization: bind OsfPostgresCredential instead of RememberMeUsernamePasswordCredential
             createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfPostgresCredential.class);
             val state = getState(flow, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM, ViewState.class);
             val cfg = getViewStateBinderConfiguration(state);
             cfg.addBinding(new BinderConfiguration.Binding("rememberMe", null, false));
         } else {
+            // OSF CAS Customization: bind OsfPostgresCredential instead of RememberMeUsernamePasswordCredential
             createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfPostgresCredential.class);
         }
     }
@@ -333,8 +369,36 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
         createTransitionForState(handler, UnsatisfiedAuthenticationPolicyException.class.getSimpleName(), CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM);
         createTransitionForState(handler, UnauthorizedAuthenticationException.class.getSimpleName(), CasWebflowConstants.VIEW_ID_AUTHENTICATION_BLOCKED);
         createTransitionForState(handler, CasWebflowConstants.STATE_ID_SERVICE_UNAUTHZ_CHECK, CasWebflowConstants.STATE_ID_SERVICE_UNAUTHZ_CHECK);
-        createStateDefaultTransition(handler, CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM);
 
+        // OSF CAS Customization: create transition state for OSF PostgreSQL authentication exception handling
+        createTransitionForState(
+                handler,
+                AccountNotConfirmedIdpException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_ACCOUNT_NOT_CONFIRMED_IDP
+        );
+        createTransitionForState(
+                handler,
+                AccountNotConfirmedOsfException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_ACCOUNT_NOT_CONFIRMED_OSF
+        );
+        createTransitionForState(
+                handler,
+                InvalidUserStatusException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INVALID_USER_STATUS
+        );
+        createTransitionForState(
+                handler,
+                InvalidVerificationKeyException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INVALID_VERIFICATION_KEY
+        );
+        createTransitionForState(
+                handler,
+                OneTimePasswordRequiredException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED
+        );
+        // End of OSF CAS customization
+
+        createStateDefaultTransition(handler, CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM);
     }
 
     /**

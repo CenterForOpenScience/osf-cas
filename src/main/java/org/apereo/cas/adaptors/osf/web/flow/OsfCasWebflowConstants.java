@@ -13,4 +13,14 @@ public interface OsfCasWebflowConstants {
     String ACTION_ID_OSF_NON_INTERACTIVE_AUTHENTICATION_CHECK = "osfNonInteractiveAuthenticationCheckAction";
 
     String STATE_ID_OSF_NON_INTERACTIVE_AUTHENTICATION_CHECK = "osfNonInteractiveAuthenticationCheck";
+
+    String VIEW_ID_ACCOUNT_NOT_CONFIRMED_OSF = "casAccountNotConfirmedOsfView";
+
+    String VIEW_ID_ACCOUNT_NOT_CONFIRMED_IDP = "casAccountNotConfirmedIdPView";
+
+    String VIEW_ID_INVALID_USER_STATUS = "casInvalidUserStatusView";
+
+    String VIEW_ID_INVALID_VERIFICATION_KEY = "casInvalidVerificationKeyView";
+
+    String VIEW_ID_ONE_TIME_PASSWORD_REQUIRED = "casTwoFactorLoginView";
 }
