@@ -92,6 +92,7 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-web-api:${project.'cas.version'}"
 
     // Web Flow Customization
+    implementation "org.apereo.cas:cas-server-core-webflow:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-core-webflow-api:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-support-actions:${project.'cas.version'}"
 
