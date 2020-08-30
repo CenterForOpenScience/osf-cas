@@ -1,6 +1,12 @@
 package org.apereo.cas.adaptors.osf.authentication.handler.support;
 
 import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredential;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedIdpException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedOsfException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidOneTimePasswordException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidUserStatusException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.OneTimePasswordRequiredException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidVerificationKeyException;
 import org.apereo.cas.adaptors.osf.authentication.support.OsfUserStatus;
 import org.apereo.cas.adaptors.osf.authentication.support.OsfUserUtils;
 import org.apereo.cas.adaptors.osf.authentication.support.OsfPasswordUtils;
@@ -26,7 +32,6 @@ import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 
-import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.FailedLoginException;
 import javax.validation.constraints.NotNull;
@@ -98,57 +103,57 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
 
         final OsfUser osfUser = jpaOsfDao.findOneUserByEmail(username);
         if (osfUser == null) {
-            throw new AccountNotFoundException("User with username [" + username + "] not found");
+            throw new AccountNotFoundException("User [" + username + "] not found");
         }
         final OsfGuid osfGuid = jpaOsfDao.findGuidByUser(osfUser);
         if (osfGuid == null) {
-            throw new FailedLoginException("User with username [" + username + "] does not have a valid OSF GUID");
+            throw new FailedLoginException("User [" + username + "] does not have a valid OSF GUID");
         }
         final String userStatus = OsfUserUtils.verifyUserStatus(osfUser);
 
         if (plainTextPassword != null) {
             if (!OsfPasswordUtils.verifyPassword(plainTextPassword, osfUser.getPassword())) {
-                throw new FailedLoginException("Invalid password for user with username [" + username + "]");
+                throw new FailedLoginException("Invalid password for user [" + username + "]");
             }
         } else if (verificationKey != null) {
             if (!verificationKey.equals(osfUser.getVerificationKey())) {
-                throw new FailedLoginException("Invalid verification key for user with username [" + username + "]");
+                throw new InvalidVerificationKeyException("Invalid verification key for user [" + username + "]");
             }
         } else {
-            throw new FailedLoginException("Missing credential for user with username [" + username + "]");
+            throw new FailedLoginException("Missing credential for user [" + username + "]");
         }
 
         final OsfTotp osfTotp = jpaOsfDao.findOneTotpByOwnerId(osfUser.getId());
         if (osfTotp != null && osfTotp.isActive()) {
             if (oneTimePassword == null) {
-                throw new FailedLoginException("2FA TOTP required for user [" + username + "]");
+                throw new OneTimePasswordRequiredException("2FA TOTP required for user [" + username + "]");
             }
             try {
                 final long transformedOneTimePassword = Long.parseLong(oneTimePassword);
                 if (!TotpUtils.checkCode(osfTotp.getTotpSecretBase32(), transformedOneTimePassword)) {
-                    throw new FailedLoginException("Invalid 2FA TOTP for user [" + username + "] (Type 1)");
+                    throw new InvalidOneTimePasswordException("Invalid 2FA TOTP for user [" + username + "] (Type 1)");
                 }
             } catch (final Exception e) {
-                throw new FailedLoginException("Invalid 2FA TOTP for user [" + username + "] (Type 2)");
+                throw new InvalidOneTimePasswordException("Invalid 2FA TOTP for user [" + username + "] (Type 2)");
             }
         }
 
         if (OsfUserStatus.USER_NOT_CONFIRMED_OSF.equals(userStatus)) {
-            throw new AccountLockedException(
-                    "User with username [" + username + "] is registered via OSF sign-up but not confirmed"
+            throw new AccountNotConfirmedOsfException(
+                    "User [" + username + "] is registered via OSF but not confirmed"
             );
         } else if (OsfUserStatus.USER_NOT_CONFIRMED_IDP.equals(userStatus)) {
-            throw new AccountLockedException(
-                    "User with username [" + username + "] is registered via external IdP but not confirmed "
+            throw new AccountNotConfirmedIdpException(
+                    "User [" + username + "] is registered via external IdP but not confirmed"
             );
         }  else if (OsfUserStatus.USER_DISABLED.equals(userStatus)) {
-            throw new AccountDisabledException("User with username [" + username + "] is disabled");
+            throw new AccountDisabledException("User [" + username + "] is disabled");
         } else if (OsfUserStatus.USER_NOT_CLAIMED.equals(userStatus)) {
-            throw new AccountLockedException("User with username [" + username + "] is not claimed");
+            throw new InvalidUserStatusException("User [" + username + "] is not claimed");
         } else if (OsfUserStatus.USER_MERGED.equals(userStatus)) {
-            throw new AccountLockedException("User with username [" + username + "] has been merged into another user");
+            throw new InvalidUserStatusException("User [" + username + "] has been merged into another user");
         } else if (OsfUserStatus.USER_STATUS_UNKNOWN.equals(userStatus)) {
-            throw new AccountLockedException("User with username [" + username + "] is inactive with unknown status");
+            throw new InvalidUserStatusException("User [" + username + "] is inactive with unknown status");
         }
 
         final Map<String, List<Object>> attributesToRelease = new LinkedHashMap<>();
