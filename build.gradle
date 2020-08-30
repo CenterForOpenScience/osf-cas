@@ -97,6 +97,7 @@ dependencies {
 
     // Authentication Customization
     implementation "org.apereo.cas:cas-server-core-authentication-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-authentication-mfa-api:${project.'cas.version'}"
 
     // Authentication Delegation: Vanilla
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow:${project.'cas.version'}"
