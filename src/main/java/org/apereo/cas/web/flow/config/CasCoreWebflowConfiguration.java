@@ -1,6 +1,12 @@
 package org.apereo.cas.web.flow.config;
 
 import org.apereo.cas.CentralAuthenticationService;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedIdpException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedOsfException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidOneTimePasswordException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidUserStatusException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidVerificationKeyException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.OneTimePasswordRequiredException;
 import org.apereo.cas.audit.AuditableExecution;
 import org.apereo.cas.authentication.AuthenticationServiceSelectionPlan;
 import org.apereo.cas.authentication.AuthenticationSystemSupport;
@@ -45,7 +51,9 @@ import org.apereo.cas.web.flow.resolver.impl.ServiceTicketRequestWebflowEventRes
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -71,6 +79,7 @@ import java.util.Set;
  * This is {@link CasCoreWebflowConfiguration}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.0.0
  */
 @Configuration("casCoreWebflowConfiguration")
@@ -269,6 +278,16 @@ public class CasCoreWebflowConfiguration {
          * to be processed first, rather than presenting a more generic error associated
          */
         val errors = new LinkedHashSet<Class<? extends Throwable>>();
+
+        // OSF CAS customization: add customized OSF postgres authn exceptions to the handled authn exception list
+        errors.add(AccountNotConfirmedIdpException.class);
+        errors.add(AccountNotConfirmedOsfException.class);
+        errors.add(InvalidOneTimePasswordException.class);
+        errors.add(InvalidUserStatusException.class);
+        errors.add(InvalidVerificationKeyException.class);
+        errors.add(OneTimePasswordRequiredException.class);
+        // End of OSF CAS customization
+
         errors.add(AccountLockedException.class);
         errors.add(CredentialExpiredException.class);
         errors.add(AccountExpiredException.class);
