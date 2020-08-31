@@ -19,7 +19,7 @@ public class AccountNotConfirmedIdpException extends AccountException {
     private static final long serialVersionUID = -1890875337422244163L;
 
     /**
-     * Instantiates a new account disabled exception.
+     * Instantiates a new {@link AccountNotConfirmedIdpException}.
      *
      * @param msg the msg
      */

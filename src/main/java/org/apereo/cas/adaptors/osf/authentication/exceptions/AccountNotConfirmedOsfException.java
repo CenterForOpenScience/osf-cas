@@ -19,7 +19,7 @@ public class AccountNotConfirmedOsfException extends AccountException {
     private static final long serialVersionUID = -2906304335740165483L;
 
     /**
-     * Instantiates a new account disabled exception.
+     * Instantiates a new {@link AccountNotConfirmedOsfException}.
      *
      * @param msg the msg
      */

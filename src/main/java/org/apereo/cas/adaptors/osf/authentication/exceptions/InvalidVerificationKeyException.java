@@ -19,7 +19,7 @@ public class InvalidVerificationKeyException extends AccountException {
     private static final long serialVersionUID = -2419900805378090788L;
 
     /**
-     * Instantiates a new account disabled exception.
+     * Instantiates a new {@link InvalidVerificationKeyException}.
      *
      * @param msg the msg
      */

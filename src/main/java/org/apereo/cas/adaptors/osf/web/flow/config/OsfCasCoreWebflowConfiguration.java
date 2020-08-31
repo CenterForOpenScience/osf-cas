@@ -3,6 +3,7 @@ package org.apereo.cas.adaptors.osf.web.flow.config;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedIdpException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedOsfException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidOneTimePasswordException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidPasswordException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidUserStatusException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidVerificationKeyException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.OneTimePasswordRequiredException;
@@ -40,6 +41,7 @@ public class OsfCasCoreWebflowConfiguration extends CasCoreWebflowConfiguration 
         errors.add(AccountNotConfirmedIdpException.class);
         errors.add(AccountNotConfirmedOsfException.class);
         errors.add(InvalidOneTimePasswordException.class);
+        errors.add(InvalidPasswordException.class);
         errors.add(InvalidUserStatusException.class);
         errors.add(InvalidVerificationKeyException.class);
         errors.add(OneTimePasswordRequiredException.class);

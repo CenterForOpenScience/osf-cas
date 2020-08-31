@@ -19,7 +19,7 @@ public class InvalidUserStatusException extends AccountException {
     private static final long serialVersionUID = 5702991703923618882L;
 
     /**
-     * Instantiates a new account disabled exception.
+     * Instantiates a new {@link InvalidUserStatusException}.
      *
      * @param msg the msg
      */

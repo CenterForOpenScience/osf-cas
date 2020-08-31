@@ -19,7 +19,7 @@ public class OneTimePasswordRequiredException extends AccountException {
     private static final long serialVersionUID = 6855949828624301835L;
 
     /**
-     * Instantiates a new account disabled exception.
+     * Instantiates a new {@link OneTimePasswordRequiredException}.
      *
      * @param msg the msg
      */

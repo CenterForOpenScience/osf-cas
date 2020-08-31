@@ -4,6 +4,7 @@ import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredenti
 import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedIdpException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedOsfException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidOneTimePasswordException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidPasswordException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidUserStatusException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.OneTimePasswordRequiredException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidVerificationKeyException;
@@ -97,6 +98,7 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
     ) throws GeneralSecurityException {
 
         final String username = credential.getUsername();
+        final boolean isRememberMe = credential.isRememberMe();
         final String plainTextPassword = credential.getPassword();
         final String verificationKey = credential.getVerificationKey();
         final String oneTimePassword = credential.getOneTimePassword();
@@ -107,13 +109,13 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
         }
         final OsfGuid osfGuid = jpaOsfDao.findGuidByUser(osfUser);
         if (osfGuid == null) {
-            throw new FailedLoginException("User [" + username + "] does not have a valid OSF GUID");
+            throw new InvalidUserStatusException("User [" + username + "] does not have a valid OSF GUID");
         }
         final String userStatus = OsfUserUtils.verifyUserStatus(osfUser);
 
         if (plainTextPassword != null) {
             if (!OsfPasswordUtils.verifyPassword(plainTextPassword, osfUser.getPassword())) {
-                throw new FailedLoginException("Invalid password for user [" + username + "]");
+                throw new InvalidPasswordException("Invalid password for user [" + username + "]");
             }
         } else if (verificationKey != null) {
             if (!verificationKey.equals(osfUser.getVerificationKey())) {
@@ -180,21 +182,21 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
 
     private void transformPassword(
             final OsfPostgresCredential credential
-    ) throws FailedLoginException, AccountNotFoundException {
+    ) throws InvalidPasswordException {
         if (StringUtils.isBlank(credential.getPassword())) {
-            throw new FailedLoginException("Original password is null");
+            throw new InvalidPasswordException("Original password is null");
         }
         LOGGER.debug("Transforming credential password via [{}]", this.principalNameTransformer.getClass().getName());
         final String transformedPassword = this.principalNameTransformer.transform(credential.getPassword());
         if (StringUtils.isBlank(transformedPassword)) {
-            throw new FailedLoginException("Transformed password is null");
+            throw new InvalidPasswordException("Transformed password is null");
         }
         credential.setPassword(transformedPassword);
     }
 
     private void transformPasswordOrVerificationKey(
             final OsfPostgresCredential credential
-    ) throws FailedLoginException, AccountNotFoundException{
+    ) throws InvalidPasswordException, InvalidVerificationKeyException {
         if (StringUtils.isNotBlank(credential.getVerificationKey())) {
             LOGGER.debug(
                     "Transforming credential verification key via [{}]",
@@ -203,7 +205,7 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
             String transformedVerificationKey
                     = this.principalNameTransformer.transform(credential.getVerificationKey());
             if (StringUtils.isBlank(transformedVerificationKey)) {
-                throw new FailedLoginException("Transformed verification key null");
+                throw new InvalidVerificationKeyException("Transformed verification key null");
             }
             credential.setVerificationKey(transformedVerificationKey);
             credential.setPassword(null);
