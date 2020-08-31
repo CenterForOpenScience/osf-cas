@@ -43,6 +43,10 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
 
     private static final List<String> AUTHN_DELEGATION_CLIENT_LIST = new ArrayList<>(List.of("oldcas", "orcid"));
 
+    private static final String USERNAME_PARAMETER_NAME = "username";
+
+    private static final String VERIFICATION_KEY_PARAMETER_NAME = "verification_key";
+
     @NotNull
     private CentralAuthenticationService centralAuthenticationService;
 
@@ -87,20 +91,18 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             return null;
         }
 
-        LOGGER.debug("No credential found in context, check username, verification key and one-time password");
+        LOGGER.debug("No valid credential found in the request context.");
         final OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
-        final String username = request.getParameter("username");
-        final String verification_key = request.getParameter("verification_key");
-        final String oneTimePassword = request.getParameter("2fa_passcode");
-        if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(verification_key)) {
+        final String username = request.getParameter(USERNAME_PARAMETER_NAME);
+        final String verificationKey = request.getParameter(VERIFICATION_KEY_PARAMETER_NAME);
+        if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(verificationKey)) {
             osfPostgresCredential.setUsername(username);
-            osfPostgresCredential.setVerificationKey(verification_key);
-            osfPostgresCredential.setOneTimePassword(oneTimePassword);
+            osfPostgresCredential.setVerificationKey(verificationKey);
             osfPostgresCredential.setRememberMe(true);
-            LOGGER.debug("User [{}] found in request w/ one-time verification key [{}]", username, verification_key);
+            LOGGER.debug("User [{}] found in request w/ verificationKey", username);
             return osfPostgresCredential;
         }
-        LOGGER.debug("No user with username and verification key found in request");
+        LOGGER.debug("No username or verification key found in the request parameters.");
         return null;
     }
 
@@ -113,4 +115,17 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     protected Event doExecute(final RequestContext requestContext) {
         return super.doExecute(requestContext);
     }
+
+    /**
+     * On error.
+     *
+     * Super class {@link AbstractNonInteractiveCredentialsAction} always appends an error message to the message
+     * context when returning error, of which the default one is{@link javax.security.auth.login.FailedLoginException}.
+     * This leads to an extra error message being displayed along with the actual error message when exception happens.
+     * Thus, must override the {@link AbstractNonInteractiveCredentialsAction#onError(RequestContext)} with no-op.
+     *
+     * @param context the context
+     */
+    @Override
+    protected void onError(final RequestContext context) {}
 }
