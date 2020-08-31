@@ -3,6 +3,7 @@ package org.apereo.cas.adaptors.osf.web.flow.configurer;
 import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredential;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedIdpException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedOsfException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidOneTimePasswordException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidUserStatusException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidVerificationKeyException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.OneTimePasswordRequiredException;
@@ -19,8 +20,6 @@ import org.apereo.cas.ticket.UnsatisfiedAuthenticationPolicyException;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.web.flow.CasWebflowConstants;
 import org.apereo.cas.web.flow.configurer.DefaultLoginWebflowConfigurer;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -45,7 +44,6 @@ import java.util.List;
  * @author Longze Chen
  * @since 6.2.1
  */
-@Slf4j
 public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer {
 
     /**
@@ -70,12 +68,15 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
     protected void createDefaultViewStates(final Flow flow) {
         super.createDefaultViewStates(flow);
         // Create OSF customized view states
-        createOsfCasViewStates(flow);
+        createTwoFactorLoginFormView(flow);
+        createOsfCasAuthenticationExceptionViewStates(flow);
     }
 
     @Override
     protected void createLoginFormView(final Flow flow) {
-        List<String> propertiesToBind = CollectionUtils.wrapList("username", "password", "source");
+
+        List<String> propertiesToBind = CollectionUtils
+                .wrapList("username", "password", "verificationKey", "oneTimePassword", "source");
         BinderConfiguration binder = createStateBinderConfiguration(propertiesToBind);
         casProperties.getView().getCustomLoginFormFields()
                 .forEach((field, props) -> {
@@ -225,6 +226,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 OneTimePasswordRequiredException.class.getSimpleName(),
                 OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED
         );
+        createTransitionForState(
+                handler,
+                InvalidOneTimePasswordException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED
+        );
 
         // The default transition
         createStateDefaultTransition(handler, CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM);
@@ -274,11 +280,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
     }
 
     /**
-     * Create extra view states for OSF CAS.
+     * Create extra authentication exception view states for OSF CAS.
      *
      * @param flow the flow
      */
-    private void createOsfCasViewStates(final Flow flow) {
+    private void createOsfCasAuthenticationExceptionViewStates(final Flow flow) {
         createViewState(
                 flow,
                 OsfCasWebflowConstants.VIEW_ID_ACCOUNT_NOT_CONFIRMED_IDP,
@@ -299,10 +305,39 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 OsfCasWebflowConstants.VIEW_ID_INVALID_VERIFICATION_KEY,
                 OsfCasWebflowConstants.VIEW_ID_INVALID_VERIFICATION_KEY
         );
-        createViewState(
+    }
+
+    /**
+     * Create the customized two-factor authentication form submission view state for OSF CAS.
+     *
+     * @param flow the flow
+     */
+    private void createTwoFactorLoginFormView(final Flow flow) {
+        List<String> propertiesToBind = CollectionUtils.wrapList("oneTimePassword", "source");
+        BinderConfiguration binder = createStateBinderConfiguration(propertiesToBind);
+        casProperties.getView().getCustomLoginFormFields()
+                .forEach((field, props) -> {
+                    String fieldName = String.format("customFields[%s]", field);
+                    binder.addBinding(
+                            new BinderConfiguration.Binding(fieldName, props.getConverter(), props.isRequired())
+                    );
+                });
+        ViewState state = createViewState(
                 flow,
                 OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED,
-                OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED
+                OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED,
+                binder
         );
+        state.getRenderActionList().add(createEvaluateAction(CasWebflowConstants.ACTION_ID_RENDER_LOGIN_FORM));
+        createStateModelBinding(state, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfPostgresCredential.class);
+        Transition transition = createTransitionForState(
+                state,
+                CasWebflowConstants.TRANSITION_ID_SUBMIT,
+                CasWebflowConstants.STATE_ID_REAL_SUBMIT
+        );
+        MutableAttributeMap<Object> attributes = transition.getAttributes();
+        attributes.put("bind", Boolean.TRUE);
+        attributes.put("validate", Boolean.TRUE);
+        attributes.put("history", History.INVALIDATE);
     }
 }
