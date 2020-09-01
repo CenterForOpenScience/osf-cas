@@ -40,42 +40,43 @@
     </header>
     <aside id="app-drawer" class="mdc-drawer mdc-drawer--dismissible mdc-drawer--modal">
         <div class="mdc-drawer__header">
-            <h3 class="mdc-drawer__title">OSF CAS</h3>
-            <h6 class="mdc-drawer__subtitle">Central Authentication Service for the OSF</h6>
+            <h3 class="mdc-drawer__title">[[#{cas.drawer.title}]]</h3>
+            <h6 class="mdc-drawer__subtitle">[[#{cas.drawer.subtitle}]]</h6>
         </div>
         <div class="mdc-drawer__content">
             <nav class="mdc-list">
-                <a class="mdc-list-item" href="http://localhost:5000">
-                    <i class="mdi mdi-cogs"></i>&nbsp;
+
+                <a class="mdc-list-item" th:href="#{osf.home.url}">
+                    <i class="mdi mdi-home"></i>&nbsp;
                     <span class="mdc-list-item__text">[[#{cas.login.resources.osf.home}]]</span>
                 </a>
                 <hr class="mdc-list-divider"/>
-                <a class="mdc-list-item" href="http://localhost:5000/preprints/">
-                    <i class="mdi mdi-cogs"></i>&nbsp;
+                <a class="mdc-list-item" th:href="#{osf.preprints.home.url}">
+                    <i class="mdi mdi-star"></i>&nbsp;
                     <span class="mdc-list-item__text">[[#{cas.login.resources.osf.preprints}]]</span>
                 </a>
-                <a class="mdc-list-item" href="http://localhost:5000/registries">
-                    <i class="mdi mdi-cogs"></i>&nbsp;
+                <a class="mdc-list-item" th:href="#{osf.registries.home.url}">
+                    <i class="mdi mdi-star"></i>&nbsp;
                     <span class="mdc-list-item__text">[[#{cas.login.resources.osf.registries}]]</span>
                 </a>
-                <a class="mdc-list-item" href="http://localhost:5000/meetings">
-                    <i class="mdi mdi-cogs"></i>&nbsp;
-                    <span class="mdc-list-item__text">[[#{cas.login.resources.osf.meetings}]]</span>
-                </a>
-                <a class="mdc-list-item" href="http://localhost:5000/institutions">
-                    <i class="mdi mdi-cogs"></i>&nbsp;
+                <a class="mdc-list-item" th:href="#{osf.institutions.home.url}">
+                    <i class="mdi mdi-bank"></i>&nbsp;
                     <span class="mdc-list-item__text">[[#{cas.login.resources.osf.institutions}]]</span>
                 </a>
-                <a class="mdc-list-item" href="http://localhost:5000/support">
+                <a class="mdc-list-item" th:href="#{osf.meetings.home.url}">
+                    <i class="mdi mdi-account-group"></i>&nbsp;
+                    <span class="mdc-list-item__text">[[#{cas.login.resources.osf.meetings}]]</span>
+                </a>
+                <a class="mdc-list-item" th:href="#{osf.support.url}">
                     <i class="mdi mdi-help-circle"></i>&nbsp;
                     <span class="mdc-list-item__text">[[#{cas.login.resources.osf.support}]]</span>
                 </a>
-                <a class="mdc-list-item" href="https://www.cos.io/about/support-cos">
-                    <i class="mdi mdi-post"></i>&nbsp;
+                <a class="mdc-list-item" th:href="#{osf.cos.donation.url}">
+                    <i class="mdi mdi-heart"></i>&nbsp;
                     <span class="mdc-list-item__text">[[#{cas.login.resources.cos.donate}]]</span>
                 </a>
-                <a class="mdc-list-item" href="https://www.cos.io/">
-                    <i class="mdi mdi-information"></i>&nbsp;
+                <a class="mdc-list-item" th:href="#{osf.cos.home.url}">
+                    <i class="mdi mdi-lightbulb-on"></i>&nbsp;
                     <span class="mdc-list-item__text">[[#{cas.login.resources.cos.home}]]</span>
                 </a>
             </nav>
@@ -190,8 +191,5 @@
         })(mdc);
     </script>
 </div>
-
-
 </body>
-
 </html>
