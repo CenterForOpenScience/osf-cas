@@ -15,9 +15,21 @@
         <div>
             <br />
             <span class="fa fa-question-circle"></span>
-            <span th:utext="#{screen.pm.button.forgotpwd('http://localhost:5000/forgotpassword/')}"></span>
+            <i class="mdi mdi-shield-alert"></i>&nbsp;
+            <span><a th:href="#{osf.forgot.password.url}" th:utext="#{screen.pm.button.forgotpwd}"></a></span>
+        </div>
+        <div>
+            <br />
+            <span class="fa fa-question-circle"></span>
+            <i class="mdi mdi-account-plus"></i>&nbsp;
+            <span><a th:href="#{osf.create.account.url}" th:utext="#{screen.pm.button.createaccount}"></a></span>
+        </div>
+        <div>
+            <br />
+            <span class="fa fa-question-circle"></span>
+            <i class="mdi mdi-home"></i>&nbsp;
+            <span><a th:href="#{osf.home.url}" th:utext="#{screen.pm.button.backtoosf}"></a></span>
         </div>
     </div>
 </body>
-
 </html>

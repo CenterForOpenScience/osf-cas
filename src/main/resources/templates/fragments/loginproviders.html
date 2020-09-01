@@ -6,18 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title>loginProviders Fragment</title>
+    <title></title>
     <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
 </head>
 
 <body>
     <main role="main" class="container mt-3 mb-3">
-        <div th:fragment="loginProviders" th:remove="tag" class="login-providers">
+        <div th:fragment="loginproviders" th:remove="tag" class="login-providers">
             <div th:if="${delegatedAuthenticationProviderConfigurations}">
 
                 <h3 class="text-center mt-md-0 mt-4">
                     <i class="fas fa-user-shield"></i>
-                    <span th:utext="#{screen.welcome.label.loginwith}">External Identity Providers</span>
+                    <span th:utext="#{screen.welcome.label.loginwith}"></span>
                 </h3>
 
                 <div class="card-title" th:if="${delegatedAuthenticationProviderPrimary != null}">
