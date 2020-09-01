@@ -6,7 +6,6 @@ import org.apereo.cas.adaptors.osf.models.OsfTotp;
 import org.apereo.cas.adaptors.osf.models.OsfUser;
 
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,6 @@ import javax.validation.constraints.NotNull;
  */
 @NoArgsConstructor
 @Transactional(transactionManager = "jpaOsfDaoTransactionManager")
-@Slf4j
 public class JpaOsfDao extends AbstractOsfDao {
 
     @NotNull

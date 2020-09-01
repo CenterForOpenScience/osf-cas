@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -34,7 +33,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @ToString
-@Slf4j
 public final class OsfUser extends AbstractOsfModel {
 
     private static final long serialVersionUID = 5634562720139150055L;

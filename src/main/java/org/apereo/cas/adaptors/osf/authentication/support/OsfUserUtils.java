@@ -5,7 +5,6 @@ import org.apereo.cas.adaptors.osf.models.OsfUser;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.security.auth.login.FailedLoginException;
@@ -17,7 +16,6 @@ import java.util.Map;
  * @author Longze Chen
  * @since 6.2.1
  */
-@NoArgsConstructor
 @Slf4j
 public final class OsfUserUtils {
 

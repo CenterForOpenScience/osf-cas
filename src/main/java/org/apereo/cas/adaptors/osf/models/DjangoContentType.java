@@ -3,7 +3,6 @@ package org.apereo.cas.adaptors.osf.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +19,6 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Getter
 @ToString
-@Slf4j
 public class DjangoContentType extends AbstractOsfModel {
 
     private static final long serialVersionUID = 7532814264322554678L;

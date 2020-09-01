@@ -5,8 +5,6 @@ import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.web.flow.CasWebflowConfigurer;
 import org.apereo.cas.web.flow.config.CasWebflowContextConfiguration;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -26,7 +24,6 @@ import org.springframework.core.annotation.Order;
 @Configuration("osfCasWebflowContextConfiguration")
 @AutoConfigureBefore(CasWebflowContextConfiguration.class)
 @EnableConfigurationProperties(CasConfigurationProperties.class)
-@Slf4j
 public class OsfCasWebflowContextConfiguration extends CasWebflowContextConfiguration {
 
     private static final int DEFAULT_WEB_FLOW_CONFIGURER_ORDER = 0;

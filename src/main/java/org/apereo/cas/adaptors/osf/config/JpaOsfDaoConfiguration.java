@@ -9,8 +9,6 @@ import org.apereo.cas.configuration.support.JpaBeans;
 import org.apereo.cas.jpa.JpaBeanFactory;
 import org.apereo.cas.util.spring.ApplicationContextProvider;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
@@ -43,7 +41,6 @@ import java.util.stream.Collectors;
  */
 @Configuration("jpaOsfDaoConfiguration")
 @EnableConfigurationProperties(CasConfigurationProperties.class)
-@Slf4j
 public class JpaOsfDaoConfiguration {
 
     @Autowired

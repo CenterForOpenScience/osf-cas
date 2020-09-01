@@ -1,7 +1,5 @@
 package org.apereo.cas.adaptors.osf.authentication.support;
 
-import lombok.NoArgsConstructor;
-
 import org.apache.commons.codec.binary.Base32;
 
 import javax.crypto.Mac;
@@ -20,7 +18,6 @@ import java.security.NoSuchAlgorithmException;
  * @author Longze Chen
  * @since 6.2.1
  */
-@NoArgsConstructor
 public final class TotpUtils {
 
     private static final int[] DIGITS_POWER = {

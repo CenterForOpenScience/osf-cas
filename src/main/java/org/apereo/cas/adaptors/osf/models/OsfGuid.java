@@ -3,7 +3,6 @@ package org.apereo.cas.adaptors.osf.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +18,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @ToString
-@Slf4j
 public class OsfGuid extends AbstractOsfModel {
 
     private static final long serialVersionUID = 5782669366012776490L;

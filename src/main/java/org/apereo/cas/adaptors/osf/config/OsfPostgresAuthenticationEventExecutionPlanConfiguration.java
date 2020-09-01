@@ -11,8 +11,6 @@ import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.configuration.model.support.osf.OsfPostgresAuthenticationProperties;
 import org.apereo.cas.services.ServicesManager;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,7 +28,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration("osfPostgresAuthenticationEventExecutionPlanConfiguration")
 @EnableConfigurationProperties(CasConfigurationProperties.class)
-@Slf4j
 public class OsfPostgresAuthenticationEventExecutionPlanConfiguration {
 
     @Autowired

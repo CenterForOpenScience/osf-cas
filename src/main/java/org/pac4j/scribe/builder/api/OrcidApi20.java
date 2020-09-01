@@ -1,11 +1,13 @@
 package org.pac4j.scribe.builder.api;
 
+import org.pac4j.scribe.extractors.OrcidJsonExtractor;
+
 import com.github.scribejava.core.builder.api.DefaultApi20;
 import com.github.scribejava.core.extractors.TokenExtractor;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.Verb;
+
 import java.util.Map;
-import org.pac4j.scribe.extractors.OrcidJsonExtractor;
 
 /**
  * This class represents the OAuth API implementation for ORCiD using OAuth protocol version 2.

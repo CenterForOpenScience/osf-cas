@@ -1,8 +1,5 @@
 package org.pac4j.oauth.profile.orcid;
 
-import com.github.scribejava.core.exceptions.OAuthException;
-import com.github.scribejava.core.model.OAuth2AccessToken;
-
 import static org.pac4j.core.profile.AttributeLocation.PROFILE_ATTRIBUTE;
 
 import org.pac4j.core.profile.converter.Converters;
@@ -10,6 +7,9 @@ import org.pac4j.core.util.CommonHelper;
 import org.pac4j.oauth.config.OAuth20Configuration;
 import org.pac4j.oauth.profile.definition.OAuth20ProfileDefinition;
 import org.pac4j.scribe.model.OrcidToken;
+
+import com.github.scribejava.core.exceptions.OAuthException;
+import com.github.scribejava.core.model.OAuth2AccessToken;
 
 /**
  * This class is the Orcid profile definition.

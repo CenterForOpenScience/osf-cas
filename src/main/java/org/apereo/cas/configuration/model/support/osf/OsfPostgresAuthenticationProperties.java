@@ -5,7 +5,6 @@ import org.apereo.cas.adaptors.osf.authentication.handler.support.OsfPostgresAut
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -20,7 +19,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Accessors(chain = true)
-@Slf4j
 public class OsfPostgresAuthenticationProperties implements Serializable {
 
     private static final long serialVersionUID = -6126944686676618138L;

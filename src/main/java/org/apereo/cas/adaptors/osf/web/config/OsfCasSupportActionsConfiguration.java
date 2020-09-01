@@ -8,8 +8,6 @@ import org.apereo.cas.web.config.CasSupportActionsConfiguration;
 import org.apereo.cas.web.flow.resolver.CasDelegatingWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,7 +26,6 @@ import org.springframework.webflow.execution.Action;
 @Configuration(value = "osfCasSupportActionsConfiguration", proxyBeanMethods = false)
 @AutoConfigureBefore(CasSupportActionsConfiguration.class)
 @EnableConfigurationProperties(CasConfigurationProperties.class)
-@Slf4j
 public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfiguration {
 
     @Autowired

@@ -2,7 +2,7 @@ package org.apereo.cas.adaptors.osf.web.flow;
 
 /**
  * This is {@link OsfCasWebflowConstants}, which expands the default {@link org.apereo.cas.web.flow.CasWebflowConstants}
- * interface by adding OSF CAS customized action and state IDs.
+ * interface by adding OSF CAS customized action, state and view IDs.
  *
  * @author Longze Chen
  * @since 6.2.1

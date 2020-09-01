@@ -10,8 +10,6 @@ import org.apereo.cas.adaptors.osf.authentication.exceptions.OneTimePasswordRequ
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.web.flow.config.CasCoreWebflowConfiguration;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +27,6 @@ import java.util.Set;
 @Configuration("osfCasCoreWebflowConfiguration")
 @AutoConfigureBefore(CasCoreWebflowConfiguration.class)
 @EnableConfigurationProperties(CasConfigurationProperties.class)
-@Slf4j
 public class OsfCasCoreWebflowConfiguration extends CasCoreWebflowConfiguration {
 
     @Override

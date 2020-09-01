@@ -3,6 +3,7 @@ package org.apereo.cas.adaptors.osf.hibernate.dialects;
 import org.hibernate.dialect.PostgreSQL95Dialect;
 
 import java.sql.Types;
+
 /**
  * This is {@link OsfPostgresDialect}.
  *

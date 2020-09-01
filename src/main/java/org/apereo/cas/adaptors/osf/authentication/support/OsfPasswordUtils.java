@@ -1,6 +1,5 @@
 package org.apereo.cas.adaptors.osf.authentication.support;
 
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -14,7 +13,6 @@ import java.security.MessageDigest;
  * @author Longze Chen
  * @since 6.2.1
  */
-@NoArgsConstructor
 @Slf4j
 public final class OsfPasswordUtils {
 
