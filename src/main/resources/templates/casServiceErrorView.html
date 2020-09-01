@@ -12,9 +12,8 @@
 <body>
 <main role="main" class="container mt-3 mb-3">
     <div layout:fragment="content" class="banner banner-danger mdc-card p-4 m-auto w-lg-66">
-        <h2 th:utext="#{screen.service.error.header}">Application Not Authorized to Use CAS</h2>
-        <p th:if="${rootCauseException != null and rootCauseException.code != null}" th:utext="#{${rootCauseException.code}}">
-            rootCauseException.code</p>
+        <h2 th:utext="#{screen.service.error.header}"></h2>
+        <p th:if="${rootCauseException != null and rootCauseException.code != null}" th:utext="#{${rootCauseException.code}}"></p>
     </div>
 </main>
 </body>
