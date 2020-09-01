@@ -27,7 +27,8 @@
           "orcid",
           "oldcas"
         ]
-      ]
+      ],
+      "permitUndefined": false
     }
   }
 }

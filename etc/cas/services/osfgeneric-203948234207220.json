@@ -23,11 +23,9 @@
       "@class": "org.apereo.cas.services.DefaultRegisteredServiceDelegatedAuthenticationPolicy",
       "allowedProviders": [
         "java.util.ArrayList",
-        [
-          "orcid",
-          "oldcas"
-        ]
-      ]
+        []
+      ],
+      "permitUndefined": false
     }
   }
 }

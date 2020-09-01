@@ -5,7 +5,7 @@
   "description": "OSF is a free, open platform to support your research and enable collaboration.",
   "id": 203948234207230,
   "evaluationOrder": 20,
-  "logo": "/images/osf-banner.png",
+  "logo": "/images/osf-logo.png",
   "attributeReleasePolicy": {
     "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
     "allowedAttributes": [
@@ -27,7 +27,8 @@
           "orcid",
           "oldcas"
         ]
-      ]
+      ],
+      "permitUndefined": false
     }
   }
 }
