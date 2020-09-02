@@ -1,6 +1,6 @@
 package org.apereo.cas.web.flow;
 
-import org.apereo.cas.adaptors.osf.web.flow.OsfCasWebflowConstants;
+import io.cos.cas.osf.web.flow.support.OsfCasWebflowConstants;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.web.flow.configurer.AbstractCasWebflowConfigurer;
 import org.apereo.cas.web.support.WebUtils;
@@ -27,7 +27,7 @@ import java.util.Optional;
  *
  * The configurer is responsible for adjusting the CAS webflow context for pac4j integration. OSF CAS customizes it by
  * intercepting transition of the success event: it redirects the web flow to the non-interactive authentication check
- * state with action {@link org.apereo.cas.adaptors.osf.web.flow.login.OsfPrincipalFromNonInteractiveCredentialsAction}.
+ * state with action {@link io.cos.cas.osf.web.flow.login.OsfPrincipalFromNonInteractiveCredentialsAction}.
  *
  * @author Misagh Moayyed
  * @author Longze Chen

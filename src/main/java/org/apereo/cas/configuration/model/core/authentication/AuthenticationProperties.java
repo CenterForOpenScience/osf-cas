@@ -27,7 +27,7 @@ import org.apereo.cas.configuration.model.support.oauth.OAuthProperties;
 import org.apereo.cas.configuration.model.support.oidc.OidcProperties;
 import org.apereo.cas.configuration.model.support.okta.OktaAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.openid.OpenIdProperties;
-import org.apereo.cas.configuration.model.support.osf.OsfPostgresAuthenticationProperties;
+import io.cos.cas.osf.configuration.model.OsfPostgresAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.pac4j.Pac4jDelegatedAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.passwordless.PasswordlessAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.pm.PasswordManagementProperties;

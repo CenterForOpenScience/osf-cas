@@ -1,7 +1,7 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.apereo.cas.adaptors.osf.config.JpaOsfDaoConfiguration,\
-  org.apereo.cas.adaptors.osf.config.OsfCasCoreAuthenticationMetadataConfiguration,\
-  org.apereo.cas.adaptors.osf.config.OsfPostgresAuthenticationEventExecutionPlanConfiguration,\
-  org.apereo.cas.adaptors.osf.web.config.OsfCasSupportActionsConfiguration,\
-  org.apereo.cas.adaptors.osf.web.flow.config.OsfCasCoreWebflowConfiguration,\
-  org.apereo.cas.adaptors.osf.web.flow.config.OsfCasWebflowContextConfiguration
+  io.cos.cas.osf.config.JpaOsfDaoConfiguration,\
+  io.cos.cas.osf.config.OsfCasCoreAuthenticationMetadataConfiguration,\
+  io.cos.cas.osf.config.OsfPostgresAuthenticationEventExecutionPlanConfiguration,\
+  io.cos.cas.osf.web.config.OsfCasSupportActionsConfiguration,\
+  io.cos.cas.osf.web.flow.config.OsfCasCoreWebflowConfiguration,\
+  io.cos.cas.osf.web.flow.config.OsfCasWebflowContextConfiguration
