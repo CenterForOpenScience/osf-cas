@@ -2,6 +2,7 @@ package org.apereo.cas.adaptors.osf.web.flow.login;
 
 import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredential;
+import org.apereo.cas.adaptors.osf.authentication.support.DelegationProtocol;
 import org.apereo.cas.authentication.adaptive.AdaptiveAuthenticationPolicy;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.principal.ClientCredential;
@@ -12,6 +13,7 @@ import org.apereo.cas.web.support.WebUtils;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,8 +23,8 @@ import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is {@link OsfPrincipalFromNonInteractiveCredentialsAction}.
@@ -41,20 +43,27 @@ import java.util.List;
 @Getter
 public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNonInteractiveCredentialsAction {
 
-    private static final List<String> AUTHN_DELEGATION_CLIENT_LIST = new ArrayList<>(List.of("oldcas", "orcid"));
-
     private static final String USERNAME_PARAMETER_NAME = "username";
 
     private static final String VERIFICATION_KEY_PARAMETER_NAME = "verification_key";
 
+    private static final String AUTHENTICATION_EXCEPTION = "authnError";
+
+    public static final String INSTITUTION_CLIENTS_PARAMETER_NAME = "institutionClients";
+
+    public static final String NON_INSTITUTION_CLIENTS_PARAMETER_NAME = "nonInstitutionClients";
+
     @NotNull
     private CentralAuthenticationService centralAuthenticationService;
+
+    private Map<String, List<String>> authnDelegationClients;
 
     public OsfPrincipalFromNonInteractiveCredentialsAction(
             final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver,
             final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
             final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy,
-            final CentralAuthenticationService centralAuthenticationService
+            final CentralAuthenticationService centralAuthenticationService,
+            final Map<String, List<String>> authnDelegationClients
     ) {
         super(
                 initialAuthenticationAttemptWebflowEventResolver,
@@ -62,8 +71,10 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 adaptiveAuthenticationPolicy
         );
         this.centralAuthenticationService = centralAuthenticationService;
+        this.authnDelegationClients = authnDelegationClients;
     }
 
+    @SneakyThrows
     @Override
     protected Credential constructCredentialsFromRequest(final RequestContext context) {
 
@@ -75,14 +86,26 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             LOGGER.debug("Existing credential found in context of type [{}]", credential.getClass());
             if (credential instanceof ClientCredential) {
                 final String clientName = ((ClientCredential) credential).getClientName();
-                if (AUTHN_DELEGATION_CLIENT_LIST.contains(clientName)) {
-                    final String principalId = credential.getId();
+                if (authnDelegationClients.get(NON_INSTITUTION_CLIENTS_PARAMETER_NAME).contains(clientName)) {
                     LOGGER.debug(
-                            "Valid authn delegation client [{}] found with principal [{}], reuse credential",
+                            "Valid non-institution authn delegation client [{}] found with principal [{}]",
                             clientName,
-                            principalId
+                            credential.getId()
                     );
                     return credential;
+                }
+                if (authnDelegationClients.get(INSTITUTION_CLIENTS_PARAMETER_NAME).contains(clientName)) {
+                    LOGGER.debug(
+                            "Valid institution authn delegation client [{}] found with principal [{}]",
+                            clientName,
+                            credential.getId()
+                    );
+                    final OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
+                    osfPostgresCredential.setUsername(credential.getId());
+                    osfPostgresCredential.setInstitutionId(((ClientCredential) credential).getClientName());
+                    osfPostgresCredential.setRemotePrincipal(true);
+                    osfPostgresCredential.setDelegationProtocol(DelegationProtocol.CAS_PAC4J);
+                    return osfPostgresCredential;
                 }
                 LOGGER.debug("Unsupported delegation client [{}]", clientName);
                 return null;

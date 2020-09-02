@@ -17,6 +17,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.webflow.execution.Action;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * This is {@link OsfCasSupportActionsConfiguration}.
  *
@@ -27,6 +31,9 @@ import org.springframework.webflow.execution.Action;
 @AutoConfigureBefore(CasSupportActionsConfiguration.class)
 @EnableConfigurationProperties(CasConfigurationProperties.class)
 public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfiguration {
+
+    @Autowired
+    private CasConfigurationProperties casProperties;
 
     @Autowired
     @Qualifier("serviceTicketRequestWebflowEventResolver")
@@ -52,11 +59,21 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
      */
     @Bean
     public Action osfNonInteractiveAuthenticationCheckAction() {
+        final Map<String, List<String>> authnDelegationClients = new LinkedHashMap<>();
+        authnDelegationClients.put(
+                OsfPrincipalFromNonInteractiveCredentialsAction.INSTITUTION_CLIENTS_PARAMETER_NAME,
+                casProperties.getAuthn().getOsfPostgres().getInstitutionClients()
+        );
+        authnDelegationClients.put(
+                OsfPrincipalFromNonInteractiveCredentialsAction.NON_INSTITUTION_CLIENTS_PARAMETER_NAME,
+                casProperties.getAuthn().getOsfPostgres().getNonInstitutionClients()
+        );
         return new OsfPrincipalFromNonInteractiveCredentialsAction(
                 initialAuthenticationAttemptWebflowEventResolver.getObject(),
                 serviceTicketRequestWebflowEventResolver.getObject(),
                 adaptiveAuthenticationPolicy.getObject(),
-                centralAuthenticationService.getObject()
+                centralAuthenticationService.getObject(),
+                authnDelegationClients
         );
     }
 }

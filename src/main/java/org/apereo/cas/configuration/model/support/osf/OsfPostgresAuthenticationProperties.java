@@ -9,6 +9,8 @@ import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This is {@link OsfPostgresAuthenticationProperties}.
@@ -37,6 +39,16 @@ public class OsfPostgresAuthenticationProperties implements Serializable {
      * The order of the authentication handler.
      */
     private int order;
+
+    /**
+     * Institution authentication delegation clients.
+     */
+    private List<String> institutionClients = new LinkedList<>();
+
+    /**
+     * Non-institution authentication delegation clients.
+     */
+    private List<String> nonInstitutionClients = new LinkedList<>();
 
     /**
      * Nested JPA properties for OSF PostgreSQL database.
