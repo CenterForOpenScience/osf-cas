@@ -1,6 +1,7 @@
 package org.apereo.cas.web.flow;
 
 import io.cos.cas.osf.web.flow.support.OsfCasWebflowConstants;
+
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.web.flow.configurer.AbstractCasWebflowConfigurer;
 import org.apereo.cas.web.support.WebUtils;

@@ -1,14 +1,15 @@
 package io.cos.cas.osf.authentication.metadata;
 
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
-import org.apereo.cas.authentication.AuthenticationBuilder;
-import org.apereo.cas.authentication.AuthenticationMetaDataPopulator;
-import org.apereo.cas.authentication.AuthenticationTransaction;
-import org.apereo.cas.authentication.Credential;
 
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apereo.cas.authentication.AuthenticationBuilder;
+import org.apereo.cas.authentication.AuthenticationMetaDataPopulator;
+import org.apereo.cas.authentication.AuthenticationTransaction;
+import org.apereo.cas.authentication.Credential;
 
 /**
  * This is {@link OsfPostgresAuthenticationMetaDataPopulator}.

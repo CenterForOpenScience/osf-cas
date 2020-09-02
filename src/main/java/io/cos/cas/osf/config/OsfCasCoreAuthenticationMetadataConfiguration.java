@@ -1,12 +1,13 @@
 package io.cos.cas.osf.config;
 
 import io.cos.cas.osf.authentication.metadata.OsfPostgresAuthenticationMetaDataPopulator;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
 import org.apereo.cas.authentication.AuthenticationMetaDataPopulator;
 import org.apereo.cas.config.CasCoreAuthenticationMetadataConfiguration;
 import org.apereo.cas.configuration.CasConfigurationProperties;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

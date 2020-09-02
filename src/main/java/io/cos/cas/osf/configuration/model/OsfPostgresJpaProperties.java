@@ -1,10 +1,10 @@
 package io.cos.cas.osf.configuration.model;
 
-import org.apereo.cas.configuration.model.support.jpa.AbstractJpaProperties;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
+import org.apereo.cas.configuration.model.support.jpa.AbstractJpaProperties;
 
 /**
  * This is {@link OsfPostgresJpaProperties}.

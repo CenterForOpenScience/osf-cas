@@ -1,5 +1,11 @@
 package org.apereo.cas.configuration.model.core.authentication;
 
+import io.cos.cas.osf.configuration.model.OsfPostgresAuthenticationProperties;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import org.apereo.cas.configuration.model.core.authentication.passwordsync.PasswordSynchronizationProperties;
 import org.apereo.cas.configuration.model.support.azuread.AzureActiveDirectoryAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.cassandra.authentication.CassandraAuthenticationProperties;
@@ -27,7 +33,6 @@ import org.apereo.cas.configuration.model.support.oauth.OAuthProperties;
 import org.apereo.cas.configuration.model.support.oidc.OidcProperties;
 import org.apereo.cas.configuration.model.support.okta.OktaAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.openid.OpenIdProperties;
-import io.cos.cas.osf.configuration.model.OsfPostgresAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.pac4j.Pac4jDelegatedAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.passwordless.PasswordlessAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.pm.PasswordManagementProperties;
@@ -48,10 +53,6 @@ import org.apereo.cas.configuration.model.support.wsfed.WsFederationDelegationPr
 import org.apereo.cas.configuration.model.support.wsfed.WsFederationProperties;
 import org.apereo.cas.configuration.model.support.x509.X509Properties;
 import org.apereo.cas.configuration.support.RequiresModule;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 

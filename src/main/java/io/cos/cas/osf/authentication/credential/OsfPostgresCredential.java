@@ -1,13 +1,14 @@
 package io.cos.cas.osf.authentication.credential;
 
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

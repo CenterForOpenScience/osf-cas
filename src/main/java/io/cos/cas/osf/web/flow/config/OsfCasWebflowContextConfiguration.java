@@ -1,6 +1,7 @@
 package io.cos.cas.osf.web.flow.config;
 
 import io.cos.cas.osf.web.flow.configurer.OsfCasLoginWebflowConfigurer;
+
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.web.flow.CasWebflowConfigurer;
 import org.apereo.cas.web.flow.config.CasWebflowContextConfiguration;

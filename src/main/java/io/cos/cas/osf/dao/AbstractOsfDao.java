@@ -1,8 +1,8 @@
 package io.cos.cas.osf.dao;
 
-import io.cos.cas.osf.model.OsfTotp;
 import io.cos.cas.osf.model.OsfEmail;
 import io.cos.cas.osf.model.OsfGuid;
+import io.cos.cas.osf.model.OsfTotp;
 import io.cos.cas.osf.model.OsfUser;
 
 /**

@@ -1,8 +1,9 @@
 package io.cos.cas.osf.config;
 
-import org.apereo.cas.CentralAuthenticationService;
-import io.cos.cas.osf.model.AbstractOsfModel;
 import io.cos.cas.osf.dao.JpaOsfDao;
+import io.cos.cas.osf.model.AbstractOsfModel;
+
+import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.configuration.model.support.jpa.JpaConfigurationContext;
 import org.apereo.cas.configuration.support.JpaBeans;

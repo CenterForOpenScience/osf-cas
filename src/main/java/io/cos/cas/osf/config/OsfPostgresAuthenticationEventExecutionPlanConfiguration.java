@@ -1,14 +1,15 @@
 package io.cos.cas.osf.config;
 
 import io.cos.cas.osf.authentication.handler.support.OsfPostgresAuthenticationHandler;
+import io.cos.cas.osf.configuration.model.OsfPostgresAuthenticationProperties;
 import io.cos.cas.osf.dao.JpaOsfDao;
+
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
 import org.apereo.cas.authentication.AuthenticationHandler;
 import org.apereo.cas.authentication.principal.PrincipalFactory;
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.PrincipalResolver;
 import org.apereo.cas.configuration.CasConfigurationProperties;
-import io.cos.cas.osf.configuration.model.OsfPostgresAuthenticationProperties;
 import org.apereo.cas.services.ServicesManager;
 
 import org.springframework.beans.factory.ObjectProvider;

@@ -8,6 +8,7 @@ import io.cos.cas.osf.authentication.exception.InvalidPasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
 import io.cos.cas.osf.authentication.exception.InvalidVerificationKeyException;
 import io.cos.cas.osf.authentication.exception.OneTimePasswordRequiredException;
+
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.web.flow.config.CasCoreWebflowConfiguration;
 

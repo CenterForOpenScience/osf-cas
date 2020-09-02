@@ -1,7 +1,8 @@
 package io.cos.cas.osf.web.config;
 
-import org.apereo.cas.CentralAuthenticationService;
 import io.cos.cas.osf.web.flow.login.OsfPrincipalFromNonInteractiveCredentialsAction;
+
+import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.adaptive.AdaptiveAuthenticationPolicy;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.web.config.CasSupportActionsConfiguration;
