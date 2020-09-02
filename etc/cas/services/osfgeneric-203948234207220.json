@@ -2,7 +2,7 @@
   "@class": "org.apereo.cas.services.RegexRegisteredService",
   "serviceId": "^https?://(localhost|127\\.0\\.0\\.1|192\\.168\\.168\\.167):5000/.*",
   "name": "OSF Generic",
-  "description": "Manage and share your research with OSF – an easy, integrated platform.",
+  "description": "Manage and share your research with OSF – an free, open, easy and integrated platform to support your research and enable collaboration.",
   "id": 203948234207220,
   "evaluationOrder": 25,
   "logo": "/images/osf-logo.png",

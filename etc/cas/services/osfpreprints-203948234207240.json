@@ -25,7 +25,9 @@
         "java.util.ArrayList",
         [
           "orcid",
-          "fakecas"
+          "fakecas",
+          "stage1cas",
+          "stage2cas"
         ]
       ],
       "permitUndefined": false
