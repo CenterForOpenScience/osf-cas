@@ -1,9 +1,9 @@
 OSF CAS by Center for Open Science
 ==================================
 
-`Master` Build Status: TBI
+`Master` Build Status: **TBI**
 
-`Develop` Build Status: TBI
+`Develop` Build Status: **TBI**
 
 Versioning Scheme: [![CalVer Scheme](https://img.shields.io/badge/calver-YY.MINOR.MICRO-22bfda.svg)](http://calver.org)
 
@@ -13,48 +13,52 @@ License: [![License](https://img.shields.io/hexpm/l/plug.svg)](https://github.co
 
 OSF CAS is the centralized authentication and authorization service for the [OSF](https://osf.io/) and its services such as [OSF Preprints](https://osf.io/preprints/) and [OSF Registries](https://osf.io/registries).
 
-## Features
+# Features
 
-* OSF username / password login
+* OSF username and password login
 * OSF username and verification key login
 * OSF two-factor authentication
-* (WIP) Delegated authentication - SSO via external identity providers
-* (TBI) OAuth authorization server for OSF
-* (TBI) SAML Service provider
+* **WIP** - Delegated authentication
+* **TBI** - OAuth authorization server for OSF
+* **TBI** - SAML service provider
 
-## Implementations
+# Implementations
 
-The implementation of OSF CAS is based on [Apereo CAS 6.2.x](https://github.com/apereo/cas/tree/6.2.x) via [CAS Overlay Template 6.2.x](https://github.com/apereo/cas-overlay-template/tree/6.2). Refer to the official [documentaion](https://apereo.github.io/cas/6.2.x/) for more details.
+The implementation of OSF CAS is based on [Apereo CAS 6.2.x](https://github.com/apereo/cas/tree/6.2.x) via [CAS Overlay Template 6.2.x](https://github.com/apereo/cas-overlay-template/tree/6.2). Refer to [CAS Documentaion 6.2.x](https://apereo.github.io/cas/6.2.x/) for more details.
 
-## Versions
+## Legacy Implementations
+
+A legacy version can be found at [CAS Overlay](https://github.com/CenterForOpenScience/cas-overlay), which was built on [Jasig CAS 4.1.x](https://github.com/apereo/cas/tree/4.1.x) via [CAS Overlay Template 4.1.x](https://github.com/apereo/cas-overlay-template/tree/4.1).
+
+# Versions
 
 - OSF CAS     `20.0.x`
 - Apereo CAS  `6.2.x`
 - PostgreSQL  `9.6`
 - JDK         `11`
 
-## Running OSF CAS for Development
+# Build and Run OSF CAS
 
-### OSF
+## OSF
 
-OSF CAS requires a working OSF running locally. Refer to [Running the OSF For Development](https://github.com/CenterForOpenScience/osf.io/blob/develop/README-docker-compose.md) for how to run OSF locally with `docker-compose`. Disable `fakeCAS` to free the `8080` port.
+OSF CAS requires a working OSF running locally. Refer to OSF's [README-docker-compose.md](https://github.com/CenterForOpenScience/osf.io/blob/develop/README-docker-compose.md) for how to set up and run OSF with `docker-compose`. Must disable `fakeCAS` to free port `8080`.
 
-The default [settings](https://github.com/cslzchen/osf-cas/blob/develop/etc/cas/config/cas.properties) in section **OSF PostgreSQL Authentication** should work as it is.
+Related settings in `cas.propeties` can be found [here](https://github.com/cslzchen/osf-cas/blob/f9a9e459248b4a28f6d5f84963e3265330436276/etc/cas/config/cas.properties#L52-L59).
 
-### CAS DB
+## CAS DB
 
-OSF CAS implementes the [JPA Ticket Registry](https://apereo.github.io/cas/6.2.x/ticketing/Configuring-Ticketing-Components.html#ticket-registry) for durable ticket storage; thus a database is requried. Take a look at section **JPA Ticket Registry** in the [settings](https://github.com/cslzchen/osf-cas/blob/develop/etc/cas/config/cas.properties) and set up the PostgreSQL server accordingly.
+OSF CAS is configured to use the [JPA Ticket Registry](https://apereo.github.io/cas/6.2.x/ticketing/Configuring-Ticketing-Components.html#ticket-registry) for durable ticket storage. Thus, a relational database is required. Set up a `PostgreSQL@9.6` server and update *JPA Ticket Registry* [settings](https://github.com/cslzchen/osf-cas/blob/f9a9e459248b4a28f6d5f84963e3265330436276/etc/cas/config/cas.properties#L67-L110) in `cas.propeties` accordingly. Must use a port other than the already occupied `5432`.
 
-### Authentication Delegation
+## Authentication Delegation
 
-#### ORCiD Login
+### ORCiD Login
 
-Set up a developer app at [ORCiD](https://orcid.org/developer-tools) with `http://localhost:8080/login` and `http://192.168.168.167:8080/login` as redirect URIs. Update
-`cas.authn.pac4j.orcid.id` and `cas.authn.pac4j.orcid.secret` in the [settings](https://github.com/cslzchen/osf-cas/blob/develop/etc/cas/config/cas.properties) accordingly.
+Set up a developer app at [ORCiD](https://orcid.org/developer-tools) with `http://localhost:8080/login` and `http://192.168.168.167:8080/login` as *redirect URIs*. Update
+`cas.authn.pac4j.orcid.id` and `cas.authn.pac4j.orcid.secret` in `cas.properties` [settings](https://github.com/cslzchen/osf-cas/blob/f9a9e459248b4a28f6d5f84963e3265330436276/etc/cas/config/cas.properties#L163-L164).
 
-#### `fakeCAS` Login
+### `fakeCAS` Login
 
-With OSF CAS running locally as the authentication server for OSF, `fakeCAS` can be configured to serve as an identity provider. Simply update `fakecas` in OSF's [docker-compose.yaml](https://github.com/CenterForOpenScience/osf.io/blob/develop/docker-compose.yml) to listen on port 8081.
+With OSF CAS running locally as the authentication server for OSF, `fakeCAS` can be configured to serve as an identity provider. Simply update `fakecas` in OSF's [docker-compose.yaml](https://github.com/CenterForOpenScience/osf.io/blob/dc87c86b2afb7ad4e801b23c6428e3d2169e3e36/docker-compose.yml#L235-L247) to listen on port 8081.
 
 ```
 fakecas:
@@ -68,7 +72,9 @@ fakecas:
   stdin_open: true
 ```
 
-### Build and Run
+Related settings in `cas.propeties` can be found [here](https://github.com/cslzchen/osf-cas/blob/f9a9e459248b4a28f6d5f84963e3265330436276/etc/cas/config/cas.properties#L171-L174).
+
+## Build and Run
 
 It is recommended to use the `Dockerfile` and the provided scripts to build and run CAS.
 
