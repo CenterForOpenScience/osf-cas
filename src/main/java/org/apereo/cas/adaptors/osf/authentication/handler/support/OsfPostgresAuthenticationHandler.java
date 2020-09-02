@@ -8,6 +8,7 @@ import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidPasswordExce
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidUserStatusException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.OneTimePasswordRequiredException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidVerificationKeyException;
+import org.apereo.cas.adaptors.osf.authentication.support.DelegationProtocol;
 import org.apereo.cas.adaptors.osf.authentication.support.OsfUserStatus;
 import org.apereo.cas.adaptors.osf.authentication.support.OsfUserUtils;
 import org.apereo.cas.adaptors.osf.authentication.support.OsfPasswordUtils;
@@ -98,10 +99,26 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
     ) throws GeneralSecurityException {
 
         final String username = credential.getUsername();
-        final boolean isRememberMe = credential.isRememberMe();
         final String plainTextPassword = credential.getPassword();
         final String verificationKey = credential.getVerificationKey();
         final String oneTimePassword = credential.getOneTimePassword();
+        final String institutionId = credential.getInstitutionId();
+        final boolean isRememberMe = credential.isRememberMe();
+        final boolean isRemotePrincipal = credential.isRemotePrincipal();
+        final DelegationProtocol delegationProtocol = credential.getDelegationProtocol();
+
+        LOGGER.debug(
+                "Credential metadata: username=[{}], password=[{}], verificationKey=[{}], oneTimePassword=[{}], " +
+                        "rememberMe=[{}], remotePrincipal=[{}], institutionId=[{}], delegationProtocol=[{}]",
+                username,
+                StringUtils.isNoneBlank(plainTextPassword),
+                StringUtils.isNoneBlank(verificationKey),
+                StringUtils.isNoneBlank(oneTimePassword),
+                isRememberMe,
+                isRemotePrincipal,
+                institutionId,
+                delegationProtocol
+        );
 
         final OsfUser osfUser = jpaOsfDao.findOneUserByEmail(username);
         if (osfUser == null) {
