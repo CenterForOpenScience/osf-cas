@@ -3,6 +3,7 @@ package org.apereo.cas.adaptors.osf.authentication.handler.support;
 import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredential;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedIdpException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedOsfException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InstitutionSsoNotImplementedException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidOneTimePasswordException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidPasswordException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidUserStatusException;
@@ -78,8 +79,13 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
     ) throws GeneralSecurityException {
         OsfPostgresCredential osfPostgresCredential = (OsfPostgresCredential) credential;
         transformUsername(osfPostgresCredential);
-        transformPasswordOrVerificationKey(osfPostgresCredential);
-        transformOneTimePassword(osfPostgresCredential);
+        if (osfPostgresCredential.isRemotePrincipal()) {
+            osfPostgresCredential.setPassword(null);
+            osfPostgresCredential.setVerificationKey(null);
+        } else {
+            transformPasswordOrVerificationKey(osfPostgresCredential);
+            transformOneTimePassword(osfPostgresCredential);
+        }
         LOGGER.debug("Attempting authentication internally for transformed credential [{}]",osfPostgresCredential);
         return authenticateOsfPostgresInternal(osfPostgresCredential);
     }
@@ -119,6 +125,12 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
                 institutionId,
                 delegationProtocol
         );
+
+        if (isRemotePrincipal) {
+            throw new InstitutionSsoNotImplementedException(
+                    "Institution SSO not implemented for user [" + username + "] @ [" + institutionId +"]"
+            );
+        }
 
         final OsfUser osfUser = jpaOsfDao.findOneUserByEmail(username);
         if (osfUser == null) {
