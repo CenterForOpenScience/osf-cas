@@ -13,6 +13,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
 
+/**
+ * This is {@link OsfGuid}.
+ *
+ * @author Longze Chen
+ * @since 20.0.0
+ */
 @Entity
 @Table(name = "osf_guid")
 @NoArgsConstructor

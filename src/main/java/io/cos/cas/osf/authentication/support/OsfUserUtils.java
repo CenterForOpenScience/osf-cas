@@ -14,7 +14,7 @@ import java.util.Map;
  * This is {@link OsfUserUtils}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Slf4j
 public final class OsfUserUtils {

@@ -16,7 +16,7 @@ import java.util.List;
  * This is {@link OsfPostgresAuthenticationProperties}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Getter
 @Setter

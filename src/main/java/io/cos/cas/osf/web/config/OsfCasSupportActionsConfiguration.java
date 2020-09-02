@@ -26,7 +26,7 @@ import java.util.Map;
  * This is {@link OsfCasSupportActionsConfiguration}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Configuration(value = "osfCasSupportActionsConfiguration", proxyBeanMethods = false)
 @AutoConfigureBefore(CasSupportActionsConfiguration.class)

@@ -13,7 +13,7 @@ import java.io.Serializable;
  * This is {@link AbstractOsfModel}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @MappedSuperclass
 @Setter

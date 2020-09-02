@@ -19,7 +19,7 @@ import java.sql.Types;
  * This is {@link PostgresJsonbUserType}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 public class PostgresJsonbUserType implements UserType {
 

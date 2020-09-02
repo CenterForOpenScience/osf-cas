@@ -12,7 +12,7 @@ import javax.persistence.Table;
  * This is {@link DjangoContentType}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Entity
 @Table(name = "django_content_type")

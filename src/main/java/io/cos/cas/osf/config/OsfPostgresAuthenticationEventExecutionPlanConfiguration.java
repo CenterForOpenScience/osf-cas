@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
  * This is {@link OsfPostgresAuthenticationEventExecutionPlanConfiguration}.
  *
  * Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Configuration("osfPostgresAuthenticationEventExecutionPlanConfiguration")
 @EnableConfigurationProperties(CasConfigurationProperties.class)

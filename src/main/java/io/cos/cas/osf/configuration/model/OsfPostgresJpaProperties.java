@@ -10,7 +10,7 @@ import org.apereo.cas.configuration.model.support.jpa.AbstractJpaProperties;
  * This is {@link OsfPostgresJpaProperties}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Getter
 @Setter

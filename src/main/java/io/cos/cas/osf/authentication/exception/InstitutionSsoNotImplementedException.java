@@ -8,7 +8,7 @@ import javax.security.auth.login.AccountException;
  * Describes an authentication error condition where institution SSO is not implemented.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @NoArgsConstructor
 public class InstitutionSsoNotImplementedException extends AccountException {

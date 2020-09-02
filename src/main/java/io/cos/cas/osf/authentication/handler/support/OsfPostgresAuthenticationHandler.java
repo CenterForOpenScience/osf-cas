@@ -50,7 +50,7 @@ import java.util.Map;
  * This is {@link OsfPostgresAuthenticationHandler}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Getter
 @Setter

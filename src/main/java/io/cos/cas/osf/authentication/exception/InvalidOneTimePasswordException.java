@@ -8,7 +8,7 @@ import javax.security.auth.login.AccountException;
  * Describes an authentication error condition where a user account has failed the required two-factor authentication.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @NoArgsConstructor
 public class InvalidOneTimePasswordException extends AccountException {

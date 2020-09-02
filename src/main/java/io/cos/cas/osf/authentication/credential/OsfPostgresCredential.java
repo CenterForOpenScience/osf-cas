@@ -17,7 +17,7 @@ import java.util.Map;
  * This is {@link OsfPostgresCredential}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @NoArgsConstructor
 @Getter

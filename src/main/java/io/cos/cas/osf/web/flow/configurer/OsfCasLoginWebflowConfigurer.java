@@ -44,7 +44,7 @@ import java.util.List;
  * This is {@link OsfCasLoginWebflowConfigurer}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer {
 

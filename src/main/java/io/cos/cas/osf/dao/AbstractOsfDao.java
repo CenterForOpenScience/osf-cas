@@ -9,7 +9,7 @@ import io.cos.cas.osf.model.OsfUser;
  * This is {@link AbstractOsfDao}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 public abstract class AbstractOsfDao {
 

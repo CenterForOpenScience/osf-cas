@@ -24,7 +24,7 @@ import java.util.Set;
  * This is {@link OsfCasCoreWebflowConfiguration}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Configuration("osfCasCoreWebflowConfiguration")
 @AutoConfigureBefore(CasCoreWebflowConfiguration.class)

@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
  * Customized from <a href="https://github.com/parkghost/TOTP-authentication-demo">TOTP Authentication Demo</a>
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 public final class TotpUtils {
 

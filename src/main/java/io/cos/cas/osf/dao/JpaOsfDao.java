@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
  * This is {@link JpaOsfDao}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @NoArgsConstructor
 @Transactional(transactionManager = "jpaOsfDaoTransactionManager")

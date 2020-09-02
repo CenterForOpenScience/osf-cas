@@ -20,7 +20,7 @@ import org.springframework.core.annotation.Order;
  * This is {@link OsfCasWebflowContextConfiguration}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Configuration("osfCasWebflowContextConfiguration")
 @AutoConfigureBefore(CasWebflowContextConfiguration.class)

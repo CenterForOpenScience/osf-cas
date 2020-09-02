@@ -25,7 +25,7 @@ import java.util.Date;
  * This is {@link OsfUser}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Entity
 @Table(name = "osf_osfuser")

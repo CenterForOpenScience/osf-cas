@@ -5,7 +5,7 @@ package io.cos.cas.osf.web.flow.support;
  * interface by adding OSF CAS customized action, state and view IDs.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 
 public interface OsfCasWebflowConstants {

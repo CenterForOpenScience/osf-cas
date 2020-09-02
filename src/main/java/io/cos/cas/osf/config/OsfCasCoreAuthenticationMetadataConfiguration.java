@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * This is {@link OsfCasCoreAuthenticationMetadataConfiguration}.
  *
  * Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Configuration("osfCasCoreAuthenticationMetadataConfiguration")
 @AutoConfigureBefore(CasCoreAuthenticationMetadataConfiguration.class)

@@ -15,7 +15,7 @@ import org.apereo.cas.authentication.Credential;
  * This is {@link OsfPostgresAuthenticationMetaDataPopulator}.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Getter
 @ToString(callSuper = true)

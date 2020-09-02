@@ -37,7 +37,7 @@ import java.util.Map;
  * success. Otherwise, return the error event and go to the login page for default "username / password" login.
  *
  * @author Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Slf4j
 @Setter

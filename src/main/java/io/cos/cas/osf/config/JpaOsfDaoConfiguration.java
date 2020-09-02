@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * This is {@link JpaOsfDaoConfiguration}.
  *
  * Longze Chen
- * @since 6.2.1
+ * @since 20.0.0
  */
 @Configuration("jpaOsfDaoConfiguration")
 @EnableConfigurationProperties(CasConfigurationProperties.class)
