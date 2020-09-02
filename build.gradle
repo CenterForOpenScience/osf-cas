@@ -97,6 +97,7 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-actions:${project.'cas.version'}"
 
     // Authentication Customization
+    implementation "org.apereo.cas:cas-server-core-authentication:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-core-authentication-api:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-core-authentication-mfa-api:${project.'cas.version'}"
 
