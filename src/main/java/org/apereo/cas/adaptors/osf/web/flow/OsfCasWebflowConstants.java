@@ -23,4 +23,6 @@ public interface OsfCasWebflowConstants {
     String VIEW_ID_INVALID_VERIFICATION_KEY = "casInvalidVerificationKeyView";
 
     String VIEW_ID_ONE_TIME_PASSWORD_REQUIRED = "casTwoFactorLoginView";
+
+    String VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED = "casInstitutionSsoNotImplementedView";
 }

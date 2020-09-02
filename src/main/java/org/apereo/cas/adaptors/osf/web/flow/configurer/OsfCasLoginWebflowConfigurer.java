@@ -3,6 +3,7 @@ package org.apereo.cas.adaptors.osf.web.flow.configurer;
 import org.apereo.cas.adaptors.osf.authentication.credential.OsfPostgresCredential;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedIdpException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.AccountNotConfirmedOsfException;
+import org.apereo.cas.adaptors.osf.authentication.exceptions.InstitutionSsoNotImplementedException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidOneTimePasswordException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidUserStatusException;
 import org.apereo.cas.adaptors.osf.authentication.exceptions.InvalidVerificationKeyException;
@@ -231,6 +232,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 InvalidOneTimePasswordException.class.getSimpleName(),
                 OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED
         );
+        createTransitionForState(
+                handler,
+                InstitutionSsoNotImplementedException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED
+        );
 
         // The default transition
         createStateDefaultTransition(handler, CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM);
@@ -304,6 +310,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 flow,
                 OsfCasWebflowConstants.VIEW_ID_INVALID_VERIFICATION_KEY,
                 OsfCasWebflowConstants.VIEW_ID_INVALID_VERIFICATION_KEY
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED
         );
     }
 
