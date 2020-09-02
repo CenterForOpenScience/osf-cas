@@ -1,146 +1,80 @@
-CAS Overlay Template [![Build Status](https://travis-ci.org/apereo/cas-overlay-template.svg?branch=master)](https://travis-ci.org/apereo/cas-overlay-template)
-=======================
+OSF CAS by Center for Open Science
+==================================
 
-Generic CAS WAR overlay to exercise the latest versions of CAS. This overlay could be freely used as a starting template for local CAS war overlays.
+`Master` Build Status: TBI
 
-# Versions
+`Develop` Build Status: TBI
 
-- CAS `6.2.x`
-- JDK `11`
+Versioning Scheme: [![CalVer Scheme](https://img.shields.io/badge/calver-YY.MINOR.MICRO-22bfda.svg)](http://calver.org)
 
-# Overview
+License: [![License](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/apereo/cas/blob/master/LICENSE)
 
-To build the project, use:
+# About
 
-```bash
-# Use --refresh-dependencies to force-update SNAPSHOT versions
-./gradlew[.bat] clean build
+OSF CAS is the centralized authentication and authorization service for the [OSF](https://osf.io/) and its services such as [OSF Preprints](https://osf.io/preprints/) and [OSF Registries](https://osf.io/registries).
+
+## Features
+
+* OSF username / password login
+* OSF username and verification key login
+* OSF two-factor authentication
+* (WIP) Delegated authentication - SSO via external identity providers
+* (TBI) OAuth authorization server for OSF
+* (TBI) SAML Service provider
+
+## Implementations
+
+The implementation of OSF CAS is based on [Apereo CAS 6.2.x](https://github.com/apereo/cas/tree/6.2.x) via [CAS Overlay Template 6.2.x](https://github.com/apereo/cas-overlay-template/tree/6.2). Refer to the official [documentaion](https://apereo.github.io/cas/6.2.x/) for more details.
+
+## Versions
+
+- OSF CAS     `20.0.x`
+- Apereo CAS  `6.2.x`
+- PostgreSQL  `9.6`
+- JDK         `11`
+
+## Running OSF CAS for Development
+
+### OSF
+
+OSF CAS requires a working OSF running locally. Refer to [Running the OSF For Development](https://github.com/CenterForOpenScience/osf.io/blob/develop/README-docker-compose.md) for how to run OSF locally with `docker-compose`. Disable `fakeCAS` to free the `8080` port.
+
+The default [settings](https://github.com/cslzchen/osf-cas/blob/develop/etc/cas/config/cas.properties) in section **OSF PostgreSQL Authentication** should work as it is.
+
+### CAS DB
+
+OSF CAS implementes the [JPA Ticket Registry](https://apereo.github.io/cas/6.2.x/ticketing/Configuring-Ticketing-Components.html#ticket-registry) for durable ticket storage; thus a database is requried. Take a look at section **JPA Ticket Registry** in the [settings](https://github.com/cslzchen/osf-cas/blob/develop/etc/cas/config/cas.properties) and set up the PostgreSQL server accordingly.
+
+### Authentication Delegation
+
+#### ORCiD Login
+
+Set up a developer app at [ORCiD](https://orcid.org/developer-tools) with `http://localhost:8080/login` and `http://192.168.168.167:8080/login` as redirect URIs. Update
+`cas.authn.pac4j.orcid.id` and `cas.authn.pac4j.orcid.secret` in the [settings](https://github.com/cslzchen/osf-cas/blob/develop/etc/cas/config/cas.properties) accordingly.
+
+#### `fakeCAS` Login
+
+With OSF CAS running locally as the authentication server for OSF, `fakeCAS` can be configured to serve as an identity provider. Simply update `fakecas` in OSF's [docker-compose.yaml](https://github.com/CenterForOpenScience/osf.io/blob/develop/docker-compose.yml) to listen on port 8081.
+
+```
+fakecas:
+  image: quay.io/centerforopenscience/fakecas:master
+  command: fakecas -host=0.0.0.0:8081 -osfhost=localhost:5000 -dbaddress=postgres://postgres@postgres:5432/osf?sslmode=disable
+  restart: unless-stopped
+  ports:
+    - 8081:8081
+  depends_on:
+    - postgres
+  stdin_open: true
 ```
 
-To see what commands are available to the build script, run:
+### Build and Run
+
+It is recommended to use the `Dockerfile` and the provided scripts to build and run CAS.
 
 ```bash
-./gradlew[.bat] tasks
-```
-
-To launch into the CAS command-line shell:
-
-```bash
-./gradlew[.bat] downloadShell runShell
-```
-
-To fetch and overlay a CAS resource or view, use:
-
-```bash
-./gradlew[.bat] getResource -PresourceName=[resource-name]
-```
-
-To list all available CAS views and templates:
-
-```bash
-./gradlew[.bat] listTemplateViews
-```
-
-To unzip and explode the CAS web application file and the internal resources jar:
-
-```bash
-./gradlew[.bat] explodeWar
-```
-
-# Configuration
-
-- The `etc` directory contains the configuration files and directories that need to be copied to `/etc/cas/config`.
-
-```bash
-./gradlew[.bat] copyCasConfiguration
-```
-
-- The specifics of the build are controlled using the `gradle.properties` file.
-
-## Adding Modules
-
-CAS modules may be specified under the `dependencies` block of the [Gradle build script](build.gradle):
-
-```gradle
-dependencies {
-    compile "org.apereo.cas:cas-server-some-module:${project.casVersion}"
-    ...
-}
-```
-
-To collect the list of all project modules and dependencies:
-
-```bash
-./gradlew[.bat] allDependencies
-```
-
-### Clear Gradle Cache
-
-If you need to, on Linux/Unix systems, you can delete all the existing artifacts (artifacts and metadata) Gradle has downloaded using:
-
-```bash
-# Only do this when absolutely necessary
-rm -rf $HOME/.gradle/caches/
-```
-
-Same strategy applies to Windows too, provided you switch `$HOME` to its equivalent in the above command.
-
-# Deployment
-
-- Create a keystore file `thekeystore` under `/etc/cas`. Use the password `changeit` for both the keystore and the key/certificate entries. This can either be done using the JDK's `keytool` utility or via the following command:
-
-```bash
-./gradlew[.bat] createKeystore
-```
-
-- Ensure the keystore is loaded up with keys and certificates of the server.
-
-On a successful deployment via the following methods, CAS will be available at:
-
-* `https://cas.server.name:8443/cas`
-
-## Executable WAR
-
-Run the CAS web application as an executable WAR:
-
-```bash
-./gradlew[.bat] run
-```
-
-Debug the CAS web application as an executable WAR:
-
-```bash
-./gradlew[.bat] debug
-```
-
-Run the CAS web application as a *standalone* executable WAR:
-
-```bash
-./gradlew[.bat] clean executable
-```
-
-## External
-
-Deploy the binary web application file `cas.war` after a successful build to a servlet container of choice.
-
-## Docker
-
-The following strategies outline how to build and deploy CAS Docker images.
-
-### Jib
-
-The overlay embraces the [Jib Gradle Plugin](https://github.com/GoogleContainerTools/jib) to provide easy-to-use out-of-the-box tooling for building CAS docker images. Jib is an open-source Java containerizer from Google that lets Java developers build containers using the tools they know. It is a container image builder that handles all the steps of packaging your application into a container image. It does not require you to write a Dockerfile or have Docker installed, and it is directly integrated into the overlay.
-
-```bash
-./gradlew build jibDockerBuild
-```
-
-### Dockerfile
-
-You can also use the native Docker tooling and the provided `Dockerfile` to build and run CAS.
-
-```bash
-chmod +x *.sh
 ./docker-build.sh
 ./docker-run.sh
 ```
+
+Refer to Apereo's [README.md](https://github.com/apereo/cas-overlay-template/tree/6.2#cas-overlay-template-) for more options.
