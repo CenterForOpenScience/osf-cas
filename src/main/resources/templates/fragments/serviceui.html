@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title></title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
+</head>
+
+<body>
+    <main role="main" class="container mt-3 mb-3">
+        <div th:fragment="serviceUI" th:if="${registeredService}" id="serviceui" class="mb-4" style="background-color: transparent; text-align: center">
+            <img th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-logo.png'}" />
+            <br /><br />
+            <div id="servicedesc" class="ml-2">
+                <h1 th:text="${registeredService.name}"></h1>
+                <p th:text="${registeredService.description}"></p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

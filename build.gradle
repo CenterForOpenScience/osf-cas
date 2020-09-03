@@ -1,17 +1,28 @@
 buildscript {
     repositories {
         mavenLocal()
+        gradlePluginPortal()
         mavenCentral()
         jcenter()
-        maven { url "https://repo.spring.io/libs-milestone" }
-        maven { url "https://repo.spring.io/libs-snapshot" }
-        maven { url "https://plugins.gradle.org/m2/" }
+        maven { 
+            url "https://repo.spring.io/libs-milestone" 
+            mavenContent { releasesOnly() }
+        }
+        maven { 
+            url "https://repo.spring.io/libs-snapshot" 
+            mavenContent { snapshotsOnly() }
+        }
+        maven { 
+            url "https://plugins.gradle.org/m2/" 
+            mavenContent { releasesOnly() }
+        }
     }
     dependencies {
         classpath "de.undercouch:gradle-download-task:${project.gradleDownloadTaskVersion}"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${project.springBootVersion}"
         classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:${project.jibVersion}"
         classpath "io.freefair.gradle:maven-plugin:${project.gradleMavenPluginVersion}"
+        classpath "io.freefair.gradle:lombok-plugin:${project.gradleLombokPluginVersion}"
     }
 }
 
@@ -19,11 +30,26 @@ repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-    maven { url "https://build.shibboleth.net/nexus/content/repositories/releases/" }
-    maven { url "https://repo.spring.io/milestone/" }
-    maven { url "https://repo.spring.io/snapshot/" }
-    maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local" }
+    maven { 
+        url "https://oss.sonatype.org/content/repositories/snapshots" 
+        mavenContent { snapshotsOnly() }
+    }
+    maven { 
+        mavenContent { releasesOnly() }
+        url "https://build.shibboleth.net/nexus/content/repositories/releases/" 
+    }
+    maven { 
+        mavenContent { releasesOnly() }
+        url "https://repo.spring.io/milestone/" 
+    }
+    maven { 
+        url "https://repo.spring.io/snapshot/" 
+        mavenContent { snapshotsOnly() }
+    }
+    maven { 
+        mavenContent { snapshotsOnly() }
+        url "https://oss.jfrog.org/artifactory/oss-snapshot-local" 
+    }
 }
 
 def casServerVersion = project.'cas.version'
@@ -33,6 +59,17 @@ project.ext."casServerVersion" = casServerVersion
 project.ext."casWebApplicationBinaryName" = casWebApplicationBinaryName
 
 apply plugin: "io.freefair.war-overlay"
+
+apply plugin: "io.freefair.lombok"
+lombok {
+    config["config.stopBubbling"] = "true"
+    config["lombok.addLombokGeneratedAnnotation"] = "true"
+    config["lombok.equalsAndHashCode.doNotUseGetters"] = "true"
+    config["lombok.log.fieldName"] = "LOGGER"
+    config["lombok.log.fieldIsStatic"] = "true"
+    config["lombok.toString.doNotUseGetters"] = "true"
+}
+
 apply from: rootProject.file("gradle/tasks.gradle")
 
 apply plugin: "war"
@@ -44,7 +81,45 @@ apply from: rootProject.file("gradle/dockerjib.gradle")
 
 dependencies {
     // Other CAS dependencies/modules may be listed here...
-    // compile "org.apereo.cas:cas-server-support-json-service-registry:${casServerVersion}"
+
+    // JSON Service Registry
+    implementation "org.apereo.cas:cas-server-support-json-service-registry:${project.'cas.version'}"
+
+    // Core Utilities
+    implementation "org.apereo.cas:cas-server-core-util-api:${project.'cas.version'}"
+
+    // Web and Requests
+    implementation "org.apereo.cas:cas-server-core-web-api:${project.'cas.version'}"
+
+    // Web Flow Customization
+    implementation "org.apereo.cas:cas-server-core-webflow:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-webflow-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-actions:${project.'cas.version'}"
+
+    // Authentication Customization
+    implementation "org.apereo.cas:cas-server-core-authentication:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-authentication-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-authentication-mfa-api:${project.'cas.version'}"
+
+    // Authentication Delegation: Vanilla
+    implementation "org.apereo.cas:cas-server-support-pac4j-webflow:${project.'cas.version'}"
+    // Authentication Delegation: Customization
+    implementation "org.apereo.cas:cas-server-support-pac4j-core:${project.'cas.version'}"
+
+    // JDBC Drivers
+    implementation "org.apereo.cas:cas-server-support-jdbc-drivers:${project.'cas.version'}"
+
+    // JPA OSF PostgreSQL
+    implementation "org.apereo.cas:cas-server-support-jpa-util:${project.'cas.version'}"
+
+    // JPA Ticket Registry
+    implementation "org.apereo.cas:cas-server-support-jpa-ticket-registry:${project.'cas.version'}"
+
+    // Hibernate
+    implementation "org.hibernate:hibernate-core:${hibernateCoreVersion}"
+
+    // Google GSON
+    implementation "com.google.code.gson:gson:${gsonVersion}"
 }
 
 tasks.findByName("jibDockerBuild")
@@ -54,7 +129,7 @@ tasks.findByName("jibDockerBuild")
 tasks.findByName("jib")
     .dependsOn(copyWebAppIntoJib, copyConfigIntoJib)
     .finalizedBy(deleteWebAppFromJib)
-    
+
 configurations.all {
     resolutionStrategy {
         cacheChangingModulesFor 0, "seconds"
@@ -81,25 +156,4 @@ idea {
         downloadJavadoc = true
         downloadSources = true
     }
-}
-
-bootWar {
-    entryCompression = ZipEntryCompression.STORED
-    overlays {
-        // https://docs.freefair.io/gradle-plugins/current/reference/#_io_freefair_war_overlay
-        // Note: The "excludes" property is only for files in the war dependency.
-        // If a jar is excluded from the war, it could be brought back into the final war as a dependency
-        // of non-war dependencies. Those should be excluded via normal gradle dependency exclusions.
-        cas {
-            from "org.apereo.cas:cas-server-webapp${project.appServer}:${casServerVersion}@war"
-            provided = false
-            //excludes = ["WEB-INF/lib/somejar-1.0*"]
-        }
-    }
-}
-
-
-wrapper {
-    distributionType = Wrapper.DistributionType.BIN
-    gradleVersion = "${project.gradleVersion}"
 }

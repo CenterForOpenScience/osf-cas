@@ -13,7 +13,7 @@ RUN mkdir -p ~/.gradle \
     && ./gradlew --version;
 
 RUN cd cas-overlay \
-    && ./gradlew clean build --parallel;
+    && ./gradlew clean build --parallel --no-daemon;
 
 FROM adoptopenjdk/openjdk11:alpine-jre AS cas
 
