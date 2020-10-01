@@ -24,10 +24,7 @@
       "allowedProviders": [
         "java.util.ArrayList",
         [
-          "orcid",
-          "fakecas",
-          "stage1cas",
-          "stage2cas"
+          "orcid"
         ]
       ],
       "permitUndefined": false
