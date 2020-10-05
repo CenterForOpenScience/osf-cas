@@ -1,11 +1,11 @@
 {
   "@class": "org.apereo.cas.services.RegexRegisteredService",
-  "serviceId": "^https?://(localhost|127\\.0\\.0\\.1):5000/(login|logout)/?\\?next=https?(%3A|:)(%2F|/)(%2F|/)(localhost|127\\.0\\.0\\.1)(%3A|:)5000(%2F|/)preprints($|%2F|/).*",
-  "name": "OSF Preprints",
-  "description": "Accelerating scholarly review, publishing, and discovery.",
-  "id": 203948234207240,
-  "evaluationOrder": 15,
-  "logo": "/images/osfpreprints-banner.png",
+  "serviceId": "^https?://(localhost|127\\.0\\.0\\.1|192\\.168\\.168\\.167):5000/(login|logout)/?\\?next=.*",
+  "name": "OSF",
+  "description": "Manage and share your research with OSF – an free, open, easy and integrated platform to support your research and enable collaboration.",
+  "id": 203948234207230,
+  "evaluationOrder": 20,
+  "logo": "/images/osf-logo.png",
   "attributeReleasePolicy": {
     "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
     "allowedAttributes": [
@@ -24,10 +24,7 @@
       "allowedProviders": [
         "java.util.ArrayList",
         [
-          "orcid",
-          "fakecas",
-          "stage1cas",
-          "stage2cas"
+          "orcid"
         ]
       ],
       "permitUndefined": false

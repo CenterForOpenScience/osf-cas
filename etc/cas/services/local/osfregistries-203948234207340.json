@@ -1,0 +1,33 @@
+{
+  "@class": "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId": "^https?://(localhost|127\\.0\\.0\\.1):5000/(login|logout)/?\\?next=https?(%3A|:)(%2F|/)(%2F|/)(localhost|127\\.0\\.0\\.1)(%3A|:)5000(%2F|/)registries($|%2F|/).*",
+  "name": "",
+  "description": "The open registries network",
+  "id": 203948234207340,
+  "evaluationOrder": 15,
+  "logo": "/images/osfregistries-banner.png",
+  "attributeReleasePolicy": {
+    "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
+    "allowedAttributes": [
+      "java.util.ArrayList",
+      [
+        "givenName",
+        "familyName",
+        "username"
+      ]
+    ]
+  },
+  "accessStrategy": {
+    "@class": "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
+    "delegatedAuthenticationPolicy": {
+      "@class": "org.apereo.cas.services.DefaultRegisteredServiceDelegatedAuthenticationPolicy",
+      "allowedProviders": [
+        "java.util.ArrayList",
+        [
+          "orcid"
+        ]
+      ],
+      "permitUndefined": false
+    }
+  }
+}

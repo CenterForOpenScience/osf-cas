@@ -16,7 +16,7 @@
             <img th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-logo.png'}" />
             <br /><br />
             <div id="servicedesc" class="ml-2">
-                <h1 th:text="${registeredService.name}"></h1>
+                <h1 th:if="${registeredService.name}" th:text="${registeredService.name}"></h1>
                 <p th:text="${registeredService.description}"></p>
             </div>
         </div>
