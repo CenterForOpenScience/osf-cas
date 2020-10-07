@@ -37,32 +37,84 @@ A legacy version can be found at [CAS Overlay](https://github.com/CenterForOpenS
 - PostgreSQL  `9.6`
 - JDK         `11`
 
-# Build and Run OSF CAS
+# Configure, Build and Run OSF CAS
+
+It is recommended to use the provided scripts to [build](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-build.sh) and [run](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-run.sh) CAS. Refer to Apereo's [README.md](https://github.com/apereo/cas-overlay-template/tree/6.2#cas-overlay-template-) for more options.
+
+Use [`cas.properties`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/etc/cas/config/cas.properties) and [`Dockerfile`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/Dockerfile) to configure staging and production servers. Use [`cas-local.properties`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/etc/cas/config/local/cas-local.properties) and [`Dockerfile-local`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/Dockerfile-local) for local development.
 
 ## OSF
 
 OSF CAS requires a working OSF running locally. Refer to OSF's [README-docker-compose.md](https://github.com/CenterForOpenScience/osf.io/blob/develop/README-docker-compose.md) for how to set up and run OSF with `docker-compose`. Must disable `fakeCAS` to free port `8080`.
 
-In `cas.propeties`, global JDBC settings can be found [here](https://github.com/cslzchen/osf-cas/blob/21bb277cc38b3364fd67a632c0bc7b7a6ffc9efd/etc/cas/config/cas.properties#L69-L73) and JPA specific settings can be found [here](https://github.com/cslzchen/osf-cas/blob/21bb277cc38b3364fd67a632c0bc7b7a6ffc9efd/etc/cas/config/cas.properties#L54-L60).
+### OSF DB
+
+More specifically, CAS requires a running OSF PostgreSQL database to handle authentication for OSF. Use the authentication handler's [JPA settings](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/cas.properties#L70-L86) for [`OsfPostgresAuthenticationHandler`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/src/main/java/io/cos/cas/osf/authentication/handler/support/OsfPostgresAuthenticationHandler.java) to connect to and access OSF DB.
+
+Here is an example for local development. Use `192.168.168.167` to access host outside the docker container. Set `readOnly=true` since CAS only needs read-only access ([Principle of Least Privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege)).
+
+```yaml
+# In `cas.properties` or `cas-local.properties`
+
+cas.authn.osf-postgres.jpa.user=postgres
+cas.authn.osf-postgres.jpa.password=
+cas.authn.osf-postgres.jpa.driver-class=org.postgresql.Driver
+cas.authn.osf-postgres.jpa.url=jdbc:postgresql://192.168.168.167:5432/osf?targetServerType=master&readOnly=true
+cas.authn.osf-postgres.jpa.dialect=io.cos.cas.osf.hibernate.dialect.OsfPostgresDialect
+```
 
 ## CAS DB
 
-OSF CAS is configured to use the [JPA Ticket Registry](https://apereo.github.io/cas/6.2.x/ticketing/Configuring-Ticketing-Components.html#ticket-registry) for durable ticket storage. Thus, a relational database is required. Set up a `PostgreSQL@9.6` server and update *JPA Ticket Registry* [settings](https://github.com/cslzchen/osf-cas/blob/21bb277cc38b3364fd67a632c0bc7b7a6ffc9efd/etc/cas/config/cas.properties#L65-L113) in `cas.propeties` accordingly. Must use a port other than the already occupied `5432`.
+The implementation of OSF CAS uses the [JPA Ticket Registry](https://apereo.github.io/cas/6.2.x/ticketing/Configuring-Ticketing-Components.html#ticket-registry) for durable ticket storage and thus requires a relational database. Set up a `PostgreSQL@9.6` server and review [JPA Ticket Registry settings](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/cas.properties#L90-L138). In most cases, only [Database connections](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/cas.properties#L104-L108) need to be updated. In addition, [JDBC settings](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/cas.properties#L96-L98) can be adjusted if necessary.
+
+Here is an example for local development. Use `192.168.168.167` to access host outside the docker container. Use the port `54321` since the default `5432` one has been used by OSF DB. Update `pg_hba.conf` to grant proper access permission depending on the setup.
+
+```yaml
+# In `cas.properties` or `cas-local.properties`
+
+cas.ticket.registry.jpa.user=longzechen
+cas.ticket.registry.jpa.password=
+cas.ticket.registry.jpa.driver-class=org.postgresql.Driver
+cas.ticket.registry.jpa.url=jdbc:postgresql://192.168.168.167:54321/osf-cas?targetServerType=master
+cas.ticket.registry.jpa.dialect=org.hibernate.dialect.PostgreSQL95Dialect
+```
+
+```yaml
+# In `pg_hba.conf`
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+host    osf-cas         longzechen      192.168.168.167/24      trust
+```
 
 ## Signing and Encryption Keys
 
-Refer to [settings](https://github.com/cslzchen/osf-cas/blob/21bb277cc38b3364fd67a632c0bc7b7a6ffc9efd/etc/cas/config/cas.properties#L117-L133) in `cas.properties` for signing and encrypting client session and ticket granting cookie.
+Refer to [signing and encryption settings](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/cas.properties#L142-L158) in `cas.properties` for signing and encrypting client sessions and ticket granting cookies. Use the following default keys **for local development only**.
+
+```yaml
+# In `cas-local.properties`
+
+cas.webflow.crypto.signing.key=7okipSDHBKuZL2n66cfYU4OH1Z_BRYkmEJazc29hzhXCXbRvws7Hv4_hEVd4E2osMrgIEdykzV2hAVD9CCQpJw
+cas.webflow.crypto.encryption.key=1A9hLtxA-Es-hbQsfxqxxw
+
+cas.tgc.crypto.signing.key=_WTRQmXGuq-mx2pTjNCXuX5971-e8KOCFOa27Mh5I3oBobYSzyUrLS9rfSiXQQDolJrJrWv7jURID1vtouznHg
+cas.tgc.crypto.encryption.key=dcjD5PIfrcqGM8tv4_FGubcay-DbqKPPoz9xQ3IHQi0
+```
 
 ## Authentication Delegation
 
 ### ORCiD Login
 
-Set up a developer app at [ORCiD](https://orcid.org/developer-tools) with `http://localhost:8080/login` and `http://192.168.168.167:8080/login` as *redirect URIs*. Update
-`cas.authn.pac4j.orcid.id` and `cas.authn.pac4j.orcid.secret` in `cas.properties` [settings](https://github.com/cslzchen/osf-cas/blob/21bb277cc38b3364fd67a632c0bc7b7a6ffc9efd/etc/cas/config/cas.properties#L186-L192).
+To enable ORCiD login, update `cas.authn.pac4j.orcid.id` and `cas.authn.pac4j.orcid.secret` [here](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/cas.properties#L212-L213) in delegation settings accordingly.
 
-### `fakeCAS` Login
+For local development, set up a developer app at [ORCiD](https://orcid.org/developer-tools) with `http://localhost:8080/login` and `http://192.168.168.167:8080/login` as *redirect URIs*.
 
-With OSF CAS running locally as the authentication server for OSF, `fakeCAS` can be configured to serve as an identity provider. Simply update `fakecas` in OSF's [docker-compose.yaml](https://github.com/CenterForOpenScience/osf.io/blob/dc87c86b2afb7ad4e801b23c6428e3d2169e3e36/docker-compose.yml#L235-L247) to listen on port 8081.
+### Institution Login
+
+( ... WIP ... )
+
+#### `fakeCAS` Login (Local Development Only)
+
+With OSF CAS running locally as the authentication server for OSF, the previously disabled `fakeCAS` can be re-configured to serve as an identity provider. Simply update `fakecas` in OSF's [docker-compose.yaml](https://github.com/CenterForOpenScience/osf.io/blob/dc87c86b2afb7ad4e801b23c6428e3d2169e3e36/docker-compose.yml#L235-L247) to listen on port `8081`.
 
 ```
 fakecas:
@@ -76,15 +128,15 @@ fakecas:
   stdin_open: true
 ```
 
-Related settings in `cas.propeties` can be found [here](https://github.com/cslzchen/osf-cas/blob/21bb277cc38b3364fd67a632c0bc7b7a6ffc9efd/etc/cas/config/cas.properties#L196-L199).
+Related `cas.propeties` settings can be found [here](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/local/cas-local.properties#L192-L235).
 
-## Build and Run
+```yaml
+# In `cas-local.properties`
 
-It is recommended to use the `Dockerfile` and the provided scripts to build and run CAS.
+cas.authn.osf-postgres.institution-clients[2]=${cas.authn.pac4j.cas[2].client-name}
 
-```bash
-./docker-build.sh
-./docker-run.sh
+cas.authn.pac4j.cas[2].login-url=http://192.168.168.167:8081/login
+cas.authn.pac4j.cas[2].client-name=fakecas
+cas.authn.pac4j.cas[2].protocol=CAS30
+cas.authn.pac4j.cas[2].callback-url-type=QUERY_PARAMETER
 ```
-
-Refer to Apereo's [README.md](https://github.com/apereo/cas-overlay-template/tree/6.2#cas-overlay-template-) for more options.
