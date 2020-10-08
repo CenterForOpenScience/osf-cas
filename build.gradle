@@ -115,6 +115,9 @@ dependencies {
     // JPA Ticket Registry
     implementation "org.apereo.cas:cas-server-support-jpa-ticket-registry:${project.'cas.version'}"
 
+    // Tomcat Catalina
+    implementation "org.apache.tomcat:tomcat-catalina:${springBootTomcatVersion}"
+
     // Hibernate
     implementation "org.hibernate:hibernate-core:${hibernateCoreVersion}"
 
