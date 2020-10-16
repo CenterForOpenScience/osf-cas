@@ -14,6 +14,10 @@
         <div layout:fragment="content" class="banner banner-danger mdc-card p-4 m-auto w-lg-66">
             <h2 th:utext="#{screen.invalidverificationkey.heading}"></h2>
             <p th:utext="#{screen.invalidverificationkey.message}"></p>
+            <br />
+            <a class="mdc-button mdc-button--raised" th:href="#{osf.home.url}">
+                <span class="mdc-button__label" th:utext="#{screen.pm.button.backtoosf}"></span>
+            </a>
         </div>
     </main>
 </body>
