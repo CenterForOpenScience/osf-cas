@@ -36,12 +36,14 @@
                 </section>
             </div>
 
-            <section class="delegation-row">
-                <a class="delegation-button" href="#">
-                    <img class="delegation-button-logo" src="/images/institution-logo.png">
-                    <span class="delegation-button-label" th:utext="#{screen.delegation.button.institution}"></span>
-                </a>
-            </section>
+            <div id="instnlogin">
+                <section class="delegation-row">
+                    <a class="delegation-button" th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}">
+                        <img class="delegation-button-logo" src="/images/institution-logo.png">
+                        <span class="delegation-button-label" th:utext="#{screen.delegation.button.institution}"></span>
+                    </a>
+                </section>
+            </div>
 
             <div>
                 <hr class="hr-text" data-content="OR" />
