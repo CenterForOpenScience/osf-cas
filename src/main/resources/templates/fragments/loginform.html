@@ -16,16 +16,17 @@
         <div th:fragment="loginform" class="d-flex flex-column justify-content-between m-auto">
             <div th:if="${delegatedAuthenticationProviderPrimary == null}">
                 <div class="service-ui" th:replace="fragments/serviceui :: serviceUI">
-                    <a href="fragments/serviceui.html">service ui fragment</a>
+                    <a href="fragments/serviceui.html"></a>
                 </div>
             </div>
+
+            <h3 class="text-center">
+                <i class="mdi mdi-security"></i>
+                <span th:utext="#{screen.welcome.instructions}"></span>
+            </h3>
+
             <div class="form-wrapper">
                 <form method="post" id="fm1" th:object="${credential}" action="login">
-
-                    <h3 class="text-center">
-                        <i class="mdi mdi-security"></i>
-                        <span th:utext="#{screen.welcome.instructions}"></span>
-                    </h3>
 
                     <div class="banner banner-danger banner-dismissible" th:if="${#fields.hasErrors('*')}">
                         <p th:each="err : ${#fields.errors('*')}" th:utext="${err + ' '}"></p>

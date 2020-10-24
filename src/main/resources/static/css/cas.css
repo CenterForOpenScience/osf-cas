@@ -583,3 +583,50 @@ button.close {
     background-color: #17a3b844;
     border-radius: 4px;
 }
+
+/* customized styles for OSF CAS */
+
+:root {
+    --cas-theme-osf-navbar: #263947;
+    --cas-theme-osf-surface: #F7F7F7;
+    --cas-theme-osf-footer: #EFEFEF;
+    --cas-theme-primary: var(--cas-theme-osf-navbar, #263947);
+    --mdc-theme-primary: var(--cas-theme-primary, #263947);
+    --mdc-theme-surface: var(--cas-theme-osf-surface, #F7F7F7);
+}
+
+body {
+    background:
+        linear-gradient(to right, #009574d8, #003f7cd8),
+        url(/images/page-background.png) center center no-repeat;
+    background-size: cover;
+    background-blend-mode: normal;
+}
+
+.mdc-top-app-bar__section--align-start,
+.mdc-top-app-bar__section--align-end {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mdc-top-app-bar__section--align-center {
+    justify-content: center;
+}
+
+.cas-footer {
+    font-size: 0.75rem;
+    background: var(--cas-theme-osf-footer, #efefef);
+}
+
+.cas-brand-drawer {
+    margin: 2rem 0 0.5rem 0;
+}
+
+.login-section {
+    max-width: 42rem;
+}
+
+.service-ui-logo {
+    max-height: 7rem;
+}

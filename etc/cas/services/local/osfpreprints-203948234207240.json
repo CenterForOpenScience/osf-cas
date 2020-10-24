@@ -5,7 +5,7 @@
   "description": "Accelerating scholarly review, publishing, and discovery.",
   "id": 203948234207240,
   "evaluationOrder": 15,
-  "logo": "/images/osfpreprints-banner.png",
+  "logo": "/images/osf-preprints-banner.png",
   "attributeReleasePolicy": {
     "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
     "allowedAttributes": [

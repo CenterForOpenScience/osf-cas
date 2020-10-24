@@ -13,7 +13,7 @@
 <body>
     <main role="main" class="container mt-3 mb-3">
         <div th:fragment="serviceUI" th:if="${registeredService}" id="serviceui" class="mb-4" style="background-color: transparent; text-align: center">
-            <img th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-logo.png'}" />
+            <img id="servicelogo" class="service-ui-logo" th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-logo.png'}" />
             <br /><br />
             <div id="servicedesc" class="ml-2">
                 <h1 th:if="${registeredService.name}" th:text="${registeredService.name}"></h1>

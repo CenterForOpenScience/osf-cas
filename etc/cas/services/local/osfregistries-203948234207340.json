@@ -5,7 +5,7 @@
   "description": "The open registries network",
   "id": 203948234207340,
   "evaluationOrder": 15,
-  "logo": "/images/osfregistries-banner.png",
+  "logo": "/images/osf-registries-banner.png",
   "attributeReleasePolicy": {
     "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
     "allowedAttributes": [
