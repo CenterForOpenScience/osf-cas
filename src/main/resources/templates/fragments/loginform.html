@@ -25,12 +25,16 @@
                 <span th:utext="#{screen.welcome.instructions}"></span>
             </h3>
 
-            <section class="delegation-row">
-                <a class="delegation-button" href="#">
-                    <img class="delegation-button-logo" src="/images/orcid-logo.png">
-                    <span class="delegation-button-label" th:utext="#{screen.delegation.button.orcid}"></span>
-                </a>
-            </section>
+            <div id="orcidlogin" th:if="${delegatedAuthenticationProviderConfigurations}">
+                <section class="delegation-row"
+                    th:each="entry: ${delegatedAuthenticationProviderConfigurations}"
+                    th:if="${entry.type} == 'orcid'">
+                    <a class="delegation-button" th:href="@{${entry.redirectUrl}}">
+                        <img class="delegation-button-logo" src="/images/orcid-logo.png">
+                        <span class="delegation-button-label" th:utext="#{screen.delegation.button.orcid}"></span>
+                    </a>
+                </section>
+            </div>
 
             <section class="delegation-row">
                 <a class="delegation-button" href="#">
