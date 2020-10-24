@@ -25,6 +25,24 @@
                 <span th:utext="#{screen.welcome.instructions}"></span>
             </h3>
 
+            <section class="delegation-row">
+                <a class="delegation-button" href="#">
+                    <img class="delegation-button-logo" src="/images/orcid-logo.png">
+                    <span class="delegation-button-label" th:utext="#{screen.delegation.button.orcid}"></span>
+                </a>
+            </section>
+
+            <section class="delegation-row">
+                <a class="delegation-button" href="#">
+                    <img class="delegation-button-logo" src="/images/institution-logo.png">
+                    <span class="delegation-button-label" th:utext="#{screen.delegation.button.institution}"></span>
+                </a>
+            </section>
+
+            <div>
+                <hr class="hr-text" data-content="OR" />
+            </div>
+
             <div class="form-wrapper">
                 <form method="post" id="fm1" th:object="${credential}" action="login">
 

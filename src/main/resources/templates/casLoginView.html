@@ -22,11 +22,6 @@
                     <a href="fragments/loginform.html"></a>
                 </div>
             </section>
-            <section id="providers" class="login-section login-providers" th:if="${delegatedAuthenticationProviderConfigurations} OR ${wsfedUrls}">
-                <div th:replace="fragments/loginproviders :: loginproviders">
-                    <a href="fragments/loginproviders.html"></a>
-                </div>
-            </section>
         </div>
     </div>
 </body>
