@@ -745,8 +745,21 @@ body {
     background-color: var(--cas-theme-osf-red, #b52b27);
 }
 
+.login-error-inline {
+    margin: 0.25rem 0;
+}
+
 .login-error-card {
     min-width: fit-content;
+}
+
+.banner-dismissible {
+    background-color: var(--cas-theme-osf-red, #b52b27);
+    color: white;
+}
+
+.banner-dismissible .close {
+    padding: 0rem 0.75rem;
 }
 
 .banner-danger .title-danger {

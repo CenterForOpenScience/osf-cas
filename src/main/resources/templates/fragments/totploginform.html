@@ -27,8 +27,9 @@
                         <span th:utext="#{screen.twofactor.instructions}"></span>
                     </h3>
 
-                    <div class="banner banner-danger banner-dismissible" th:if="${#fields.hasErrors('*')}">
-                        <p th:each="err : ${#fields.errors('*')}" th:utext="${err + ' '}"></p>
+                    <div id="loginformerrors" class="banner banner-danger banner-dismissible" th:if="${#fields.hasErrors('*')}">
+                        <p class="login-error-inline" th:each="err : ${#fields.errors('*')}" th:utext="${err + ' '}"></p>
+                        <a href="javascript:document.getElementById('loginformerrors').remove();" class="close">&times;</a>
                     </div>
 
                     <section class="cas-field my-2=3">
