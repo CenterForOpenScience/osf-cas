@@ -14,18 +14,20 @@
     <main role="main" class="container mt-3 mb-3">
         <!-- Two-factor authentication login form template begins here -->
         <div th:fragment="totploginform" class="d-flex flex-column justify-content-between m-auto">
-            <div th:if="${delegatedAuthenticationProviderPrimary == null}">
-                <div class="service-ui" th:replace="fragments/serviceui :: serviceUI">
-                    <a href="fragments/serviceui.html"></a>
+
+            <div>
+                <div class="service-ui" th:replace="fragments/osfbannerui :: osfBannerUI">
+                    <a href="fragments/osfbannerui.html"></a>
                 </div>
             </div>
+
+            <h3 class="text-center text-with-mdi">
+                <i class="mdi mdi-cellphone mdi-before-text"></i>
+                <span th:utext="#{screen.twofactor.instructions}"></span>
+            </h3>
+
             <div class="form-wrapper">
                 <form method="post" id="fm1" th:object="${credential}" action="login">
-
-                    <h3 class="text-center">
-                        <i class="mdi mdi-security"></i>
-                        <span th:utext="#{screen.twofactor.instructions}"></span>
-                    </h3>
 
                     <div id="loginformerrors" class="banner banner-danger banner-dismissible" th:if="${#fields.hasErrors('*')}">
                         <p class="login-error-inline" th:each="err : ${#fields.errors('*')}" th:utext="${err + ' '}"></p>
@@ -116,6 +118,10 @@
                 </form>
 
                 <hr class="my-4" />
+
+                <div>
+                    <p>Open the two-factor authentication app on your device to view your authentication code and verify your identity.</p>
+                </div>
 
                 <script type="text/javascript" th:inline="javascript">
                     /*<![CDATA[*/
