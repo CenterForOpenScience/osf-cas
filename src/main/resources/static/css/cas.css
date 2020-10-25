@@ -594,6 +594,7 @@ button.close {
     --cas-theme-osf-blue: #1b6d85;
     --cas-theme-osf-red: #b52b27;
     --cas-theme-primary: var(--cas-theme-osf-navbar, #263947);
+    --cas-theme-danger: var(--cas-theme-osf-red, #b52b27);
     --mdc-theme-primary: var(--cas-theme-primary, #263947);
     --mdc-theme-surface: var(--cas-theme-osf-surface, #F7F7F7);
 }
@@ -630,8 +631,14 @@ body {
     max-width: 42rem;
 }
 
-.service-ui-logo {
-    max-height: 7rem;
+.service-ui {
+    text-align: center;
+    margin-top: 1rem!important;
+    margin-bottom: 1rem!important;
+}
+
+.service-ui .service-ui-logo {
+    max-height: 5rem;
 }
 
 .delegation-row {
@@ -736,4 +743,17 @@ body {
 
 .form-button .button-osf-red {
     background-color: var(--cas-theme-osf-red, #b52b27);
+}
+
+.login-error-card {
+    min-width: fit-content;
+}
+
+.banner-danger .title-danger {
+    margin: 0.5rem 0;
+    color: var(--cas-theme-osf-red, #b52b27);
+}
+
+.banner-danger hr {
+    width: 100%;
 }

@@ -24,15 +24,29 @@
 <main role="main" class="container mt-3 mb-3">
     <div layout:fragment="content">
         <div class="mdc-card p-4 banner banner-danger">
-            <h2 th:utext="#{screen.unavailable.heading(${status},${error})}"></h2>
-            <div th:utext="#{screen.unavailable.message}"></div>
-            <pre id="errorMsg" class="mt-4" style="white-space: pre-wrap;" th:text="${'Error: ' + message}"></pre>
-            <p id="errorDetails" class="word-break-all">
-                <button type="button" class="mdc-button mdc-button--raised"
-                        onclick="showErrorDetails();">
-                    <span class="mdc-button__label">View Details</span>
-                </button>
-            </p>
+            <div class="login-error-card">
+                <div class="service-ui" th:replace="fragments/osfbannerui :: osfBannerUI">
+                    <a href="fragments/osfbannerui.html"></a>
+                </div>
+                <h3 class="text-center title-danger">
+                    <span th:utext="#{screen.authnerror.instructions}"></span>
+                </h3>
+                <hr class="my-4" />
+                <h2 th:utext="#{screen.unavailable.heading(${status},${error})}"></h2>
+                <div th:utext="#{screen.unavailable.message}"></div>
+                <pre id="errorMsg" class="mt-4" style="white-space: pre-wrap;" th:text="${'Error: ' + message}"></pre>
+                <p id="errorDetails" class="word-break-all">
+                    <button type="button" class="mdc-button mdc-button--raised"
+                            onclick="showErrorDetails();">
+                        <span class="mdc-button__label">View Details</span>
+                    </button>
+                </p>
+                <div class="form-button">
+                    <a class="mdc-button mdc-button--raised button-osf-red" th:href="@{/logout(service=#{osf.home.url})}">
+                        <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </main>
