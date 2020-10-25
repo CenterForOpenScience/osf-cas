@@ -590,6 +590,9 @@ button.close {
     --cas-theme-osf-navbar: #263947;
     --cas-theme-osf-surface: #F7F7F7;
     --cas-theme-osf-footer: #EFEFEF;
+    --cas-theme-osf-green: #357935;
+    --cas-theme-osf-blue: #1b6d85;
+    --cas-theme-osf-red: #b52b27;
     --cas-theme-primary: var(--cas-theme-osf-navbar, #263947);
     --mdc-theme-primary: var(--cas-theme-primary, #263947);
     --mdc-theme-surface: var(--cas-theme-osf-surface, #F7F7F7);
@@ -710,4 +713,27 @@ body {
     padding: 0 .5em;
     line-height: 1.5em;
     background-color: var(--cas-theme-osf-surface, #F7F7F7);
+}
+
+.form-button {
+    display: block;
+    margin: 0.5rem 0;
+}
+
+.form-button .mdc-button {
+    width: 100%;
+    min-width: fit-content;
+    text-transform: none;
+}
+
+.form-button .button-osf-green {
+    background-color: var(--cas-theme-osf-green, #357935);
+}
+
+.form-button .button-osf-blue {
+    background-color: var(--cas-theme-osf-blue, #1b6d85);
+}
+
+.form-button .button-osf-red {
+    background-color: var(--cas-theme-osf-red, #b52b27);
 }

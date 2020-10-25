@@ -12,10 +12,11 @@
 
 <body>
 <main role="main" class="container mt-3 mb-3">
-    <div th:fragment="submitButton (messageKey)">
+    <div class="form-button" th:fragment="submitButton (buttonCustomization, messageKey)">
 
         <button
                 class="mdc-button mdc-button--raised"
+                th:classappend="${buttonCustomization}"
                 th:if="${recaptchaSiteKey == null}"
                 name="submit"
                 accesskey="l"
@@ -56,11 +57,9 @@
                 </button>
              </span>
         </span>
-
     </div>
+
 </main>
 </body>
 
 </html>
-
-
