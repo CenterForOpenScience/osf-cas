@@ -790,6 +790,7 @@ body {
 .banner-dismissible {
     background-color: var(--cas-theme-osf-red, #b52b27);
     color: white;
+    margin: 0.25rem 0;
 }
 
 .banner-dismissible .close {
