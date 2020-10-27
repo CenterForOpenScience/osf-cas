@@ -1,5 +1,7 @@
 package io.cos.cas.osf.web.config;
 
+import io.cos.cas.osf.web.flow.login.OsfDefaultLoginPreparationAction;
+import io.cos.cas.osf.web.flow.login.OsfInstitutionLoginPreparationAction;
 import io.cos.cas.osf.web.flow.login.OsfPrincipalFromNonInteractiveCredentialsAction;
 
 import org.apereo.cas.CentralAuthenticationService;
@@ -75,6 +77,34 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
                 adaptiveAuthenticationPolicy.getObject(),
                 centralAuthenticationService.getObject(),
                 authnDelegationClients
+        );
+    }
+
+    /**
+     * Bean configuration for {@link OsfDefaultLoginPreparationAction}.
+     *
+     * @return the initialized action
+     */
+    @Bean
+    public Action osfDefaultLoginCheckAction() {
+        return new OsfDefaultLoginPreparationAction(
+                initialAuthenticationAttemptWebflowEventResolver.getObject(),
+                serviceTicketRequestWebflowEventResolver.getObject(),
+                adaptiveAuthenticationPolicy.getObject()
+        );
+    }
+
+    /**
+     * Bean configuration for {@link OsfInstitutionLoginPreparationAction}.
+     *
+     * @return the initialized action
+     */
+    @Bean
+    public Action osfInstitutionLoginCheckAction() {
+        return new OsfInstitutionLoginPreparationAction(
+                initialAuthenticationAttemptWebflowEventResolver.getObject(),
+                serviceTicketRequestWebflowEventResolver.getObject(),
+                adaptiveAuthenticationPolicy.getObject()
         );
     }
 }
