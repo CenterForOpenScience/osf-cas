@@ -736,6 +736,10 @@ body {
     font-size: 1rem;
 }
 
+.login-error-card .hr-text {
+    margin: 1.5rem 0;
+}
+
 .hr-text::before {
     content: '';
     background: linear-gradient(to right, transparent, black, var(--cas-theme-osf-surface, #f7f7f7));
@@ -761,21 +765,38 @@ body {
     margin: 0.5rem 0;
 }
 
-.form-button .mdc-button {
+.form-button-inline {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0.25rem 0;
+}
+
+.form-button .mdc-button,
+.form-button-inline .mdc-button {
     width: 100%;
     min-width: fit-content;
     text-transform: none;
 }
 
-.form-button .button-osf-green {
+.form-button-inline .mdc-button {
+    flex-basis: 48%;
+    margin: 0.25rem 0;
+}
+
+.form-button .button-osf-green,
+.form-button-inline .button-osf-green {
     background-color: var(--cas-theme-osf-green, #357935);
 }
 
-.form-button .button-osf-blue {
+.form-button .button-osf-blue,
+.form-button-inline .button-osf-blue {
     background-color: var(--cas-theme-osf-blue, #1b6d85);
 }
 
-.form-button .button-osf-red {
+.form-button .button-osf-red,
+.form-button-inline .button-osf-red {
     background-color: var(--cas-theme-osf-red, #b52b27);
 }
 
@@ -784,6 +805,15 @@ body {
 }
 
 .login-error-card {
+    min-width: fit-content;
+}
+
+.login-error-card .pre-formatted-small pre {
+    font-size: 0.75rem;
+    white-space: pre-wrap;
+}
+
+.banner-danger {
     min-width: fit-content;
 }
 
