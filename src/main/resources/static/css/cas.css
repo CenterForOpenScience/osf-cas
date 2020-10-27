@@ -632,6 +632,12 @@ body {
     min-width: fit-content;
 }
 
+@media screen and (max-width: 767.99px) {
+    .login-section {
+        padding: 1rem 1.5rem;
+    }
+}
+
 #serviceui {
     background-color: transparent;
 }
