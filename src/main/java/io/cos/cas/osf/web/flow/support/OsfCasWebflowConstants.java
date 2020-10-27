@@ -10,11 +10,21 @@ package io.cos.cas.osf.web.flow.support;
 
 public interface OsfCasWebflowConstants {
 
+    String ACTION_ID_OSF_DEFAULT_LOGIN_CHECK = "osfDefaultLoginCheckAction";
+
+    String STATE_ID_OSF_DEFAULT_LOGIN_CHECK = "osfDefaultLoginCheck";
+
     String TRANSITION_ID_USERNAME_PASSWORD_LOGIN = "continueToUsernamePasswordLogin";
+
+    String ACTION_ID_OSF_INSTITUTION_LOGIN_CHECK = "osfInstitutionLoginCheckAction";
+
+    String STATE_ID_OSF_INSTITUTION_LOGIN_CHECK = "osfInstitutionLoginCheck";
 
     String TRANSITION_ID_INSTITUTION_LOGIN = "switchToInstitutionLogin";
 
     String TRANSITION_ID_ORCID_LOGIN_AUTO_REDIRECT = "autoRedirectToOrcidLogin";
+
+    String VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT = "casAutoRedirectToOrcidLoginView";
 
     String ACTION_ID_OSF_NON_INTERACTIVE_AUTHENTICATION_CHECK = "osfNonInteractiveAuthenticationCheckAction";
 
