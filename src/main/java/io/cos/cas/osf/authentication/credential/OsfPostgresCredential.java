@@ -2,6 +2,7 @@ package io.cos.cas.osf.authentication.credential;
 
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.Map;
  * @author Longze Chen
  * @since 20.0.0
  */
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter

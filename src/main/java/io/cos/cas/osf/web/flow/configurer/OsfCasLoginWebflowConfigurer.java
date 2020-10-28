@@ -77,8 +77,7 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
     @Override
     protected void createLoginFormView(final Flow flow) {
 
-        List<String> propertiesToBind = CollectionUtils
-                .wrapList("username", "password", "verificationKey", "oneTimePassword", "source");
+        List<String> propertiesToBind = CollectionUtils.wrapList("username", "password", "source");
         BinderConfiguration binder = createStateBinderConfiguration(propertiesToBind);
         casProperties.getView().getCustomLoginFormFields()
                 .forEach((field, props) -> {
