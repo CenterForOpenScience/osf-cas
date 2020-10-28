@@ -31,6 +31,8 @@ public abstract class OsfAbstractLoginPreparationAction extends AbstractAuthenti
 
     protected static final String PARAMETER_INSTITUTION_ID = "institutionId";
 
+    protected static final String PARAMETER_ORCID_CLIENT_TYPE = "orcid";
+
     protected static final String PARAMETER_ORCID_REDIRECT = "redirectOrcid";
 
     protected static final String PARAMETER_ORCID_REDIRECT_VALUE = "true";

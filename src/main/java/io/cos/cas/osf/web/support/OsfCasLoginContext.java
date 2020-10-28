@@ -24,6 +24,8 @@ import java.io.Serializable;
 @Setter
 public class OsfCasLoginContext implements Serializable  {
 
+    private static final long serialVersionUID = 7523144720609509742L;
+
     private String serviceUrl;
 
     private String handleErrorName;
@@ -34,16 +36,20 @@ public class OsfCasLoginContext implements Serializable  {
 
     private boolean orcidRedirect;
 
+    private String orcidLoginUrl;
+
     public OsfCasLoginContext (
             final String serviceUrl,
             final boolean institutionLogin,
             final String institutionId,
-            final boolean orcidRedirect
+            final boolean orcidRedirect,
+            final String orcidLoginUrl
     ) {
         this.serviceUrl = serviceUrl;
         this.handleErrorName = null;
         this.institutionLogin = institutionLogin;
         this.institutionId = institutionId;
         this.orcidRedirect = orcidRedirect;
+        this.orcidLoginUrl = orcidLoginUrl;
     }
 }

@@ -1,47 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
-
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
-    <title th:text="#{screen.orcidredirectnotimplemented.heading}"></title>
-    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
-</head>
-
-<body>
-    <main role="main" class="container mt-3 mb-3">
-        <div layout:fragment="content" class="banner banner-danger mdc-card p-4 m-auto w-lg-66">
-            <div class="login-error-card">
-                <div class="service-ui" th:replace="fragments/osfbannerui :: osfBannerUI">
-                    <a href="fragments/osfbannerui.html"></a>
-                </div>
-                <h3 class="text-center title-danger">
-                    <span th:utext="#{screen.authnerror.instructions}"></span>
-                </h3>
-                <hr class="my-4" />
-                <h2 th:utext="#{screen.orcidredirectnotimplemented.heading}"></h2>
-                <p th:utext="#{screen.orcidredirectnotimplemented.message}"></p>
-
-                <div id="orcidlogin" th:if="${delegatedAuthenticationProviderConfigurations}">
-                    <section class="delegation-row"
-                        th:each="entry: ${delegatedAuthenticationProviderConfigurations}"
-                        th:if="${entry.type} == 'orcid'">
-                        <a class="delegation-button" th:href="@{${entry.redirectUrl}}">
-                            <img class="delegation-button-logo" src="/images/orcid-logo.png">
-                            <span class="delegation-button-label" th:utext="#{screen.delegation.button.orcid}"></span>
-                        </a>
-                    </section>
-                </div>
-
-                <div class="form-button">
-                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.home.url})}">
-                        <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </main>
-</body>
-
+<html>
+    <head>
+        <!-- When this template is rendered, both ${osfCasLoginContext.orcidLoginUrl}
+             and #{screen.delegation.heading.orcidredirect} are guranteed to exist. -->
+        <meta http-equiv="refresh" th:content="${'0; url=' + osfCasLoginContext.orcidLoginUrl}" />
+        <title th:text="#{screen.delegation.heading.orcidredirect}"></title>
+    </head>
 </html>

@@ -7,15 +7,19 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.adaptive.AdaptiveAuthenticationPolicy;
+import org.apereo.cas.web.DelegatedClientIdentityProviderConfiguration;
 import org.apereo.cas.web.flow.resolver.CasDelegatingWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
 
+import org.apereo.cas.web.support.WebUtils;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
+import java.io.Serializable;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * This is {@link OsfDefaultLoginPreparationAction}.
@@ -50,14 +54,23 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
         final boolean institutionLogin = isInstitutionLogin(context);
         final String institutionId = getInstitutionIdFromRequestContext(context);
         final boolean orcidRedirect = isOrcidLoginAutoRedirect(context);
+        final String orcidLoginUrl = getOrcidLoginUrlFromFlowScope(context);
 
-        loginContext = Optional.of(context).map(requestContext -> (OsfCasLoginContext) requestContext.getFlowScope().get(PARAMETER_LOGIN_CONTEXT)).orElse(null);
+        loginContext = Optional.of(context).map(requestContext
+                -> (OsfCasLoginContext) requestContext.getFlowScope().get(PARAMETER_LOGIN_CONTEXT)).orElse(null);
         if (loginContext == null) {
-            loginContext = new OsfCasLoginContext(serviceUrl, institutionLogin, institutionId, orcidRedirect);
+            loginContext = new OsfCasLoginContext(
+                    serviceUrl,
+                    institutionLogin,
+                    institutionId,
+                    orcidRedirect,
+                    orcidLoginUrl
+            );
         } else {
             loginContext.setServiceUrl(serviceUrl);
             loginContext.setInstitutionLogin(institutionLogin);
             loginContext.setInstitutionId(institutionId);
+            loginContext.setOrcidLoginUrl(orcidLoginUrl);
             loginContext.setOrcidRedirect(false);
         }
         context.getFlowScope().put(PARAMETER_LOGIN_CONTEXT, loginContext);
@@ -67,7 +80,11 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
         }
 
         if (loginContext.isOrcidRedirect()) {
-            return autoRedirectToOrcidLogin();
+            if (StringUtils.isNotBlank(orcidLoginUrl)) {
+                return autoRedirectToOrcidLogin();
+            }
+            LOGGER.error("ORCiD login auto-redirect failed due to delegation configurations not found in context.");
+            return error();
         }
 
         return continueToUsernamePasswordLogin();
@@ -87,6 +104,19 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
         final String orcidRedirect = context.getRequestParameters().get(PARAMETER_ORCID_REDIRECT);
         return StringUtils.isNotBlank(orcidRedirect)
                 && PARAMETER_ORCID_REDIRECT_VALUE.equals(orcidRedirect.toLowerCase());
+    }
+
+    private String getOrcidLoginUrlFromFlowScope(final RequestContext context) {
+        final Set<? extends Serializable> clients = WebUtils.getDelegatedAuthenticationProviderConfigurations(context);
+        for (final Serializable client: clients) {
+            if (client instanceof DelegatedClientIdentityProviderConfiguration) {
+                final String clientType = ((DelegatedClientIdentityProviderConfiguration) client).getType();
+                if (PARAMETER_ORCID_CLIENT_TYPE.equals(clientType)) {
+                    return ((DelegatedClientIdentityProviderConfiguration) client).getRedirectUrl();
+                }
+            }
+        }
+        return null;
     }
 
     private String getEncodedServiceUrlFromRequestContext(final RequestContext context) throws AssertionError {
