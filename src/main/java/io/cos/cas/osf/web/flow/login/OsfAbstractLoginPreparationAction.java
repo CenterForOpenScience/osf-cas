@@ -48,8 +48,13 @@ public abstract class OsfAbstractLoginPreparationAction extends AbstractAuthenti
     }
 
     @Override
-    protected Event doPreExecute(RequestContext context){
+    protected Event doPreExecute(RequestContext context) {
         return null;
+    }
+
+    @Override
+    protected Event doExecute(RequestContext context) {
+        return error();
     }
 
     @Override

@@ -315,6 +315,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 OsfCasWebflowConstants.TRANSITION_ID_ORCID_LOGIN_AUTO_REDIRECT,
                 OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT
         );
+        createTransitionForState(
+                action,
+                CasWebflowConstants.TRANSITION_ID_ERROR,
+                CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM
+        );
     }
 
     /**
