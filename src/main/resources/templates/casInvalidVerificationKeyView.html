@@ -23,7 +23,7 @@
                 <h2 th:utext="#{screen.invalidverificationkey.heading}"></h2>
                 <p th:utext="#{screen.invalidverificationkey.message}"></p>
                 <div class="form-button">
-                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.home.url})}">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
                         <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>
                     </a>
                 </div>

@@ -24,7 +24,7 @@
                 <h2 th:utext="#{screen.unavailable.heading}"></h2>
                 <div th:utext="#{screen.unavailable.message}"></div>
                 <div class="form-button-inline">
-                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.home.url})}">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
                         <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>
                     </a>
                     <button id="buttonViewErrorDetails" type="button"
