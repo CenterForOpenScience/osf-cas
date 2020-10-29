@@ -643,7 +643,6 @@ body {
 }
 
 .service-ui {
-    text-align: center;
     margin-top: 1rem!important;
     margin-bottom: 1rem!important;
 }
@@ -666,9 +665,14 @@ body {
     margin: 1rem 0;
 }
 
-.text-with-mdi {
+.text-with-mdi,
+.text-without-mdi {
     font-size: 1rem;
     margin: 0.5rem 0;
+}
+
+.login-section .text-with-mdi {
+    white-space: nowrap;
 }
 
 .mdi-before-text {
@@ -839,9 +843,67 @@ body {
 .banner-danger .title-danger {
     margin: 0.5rem 0;
     color: var(--cas-theme-osf-red, #b52b27);
+    white-space: nowrap;
 }
 
 .banner-generic hr,
 .banner-danger hr {
     width: 100%;
+}
+
+.card-message {
+    padding: 1rem 0;
+}
+
+.w-card-narrow .card-message {
+    max-width: 36rem;
+}
+
+.w-card-wide .card-message {
+    max-width: 48rem;
+}
+
+@media all and (min-width: 640px) {
+    .w-card-narrow {
+        width: 50%;
+    }
+    .w-card-wide {
+        width: 75%;
+    }
+}
+
+@media all and (max-width: 640px) {
+    .w-card-narrow {
+        width: 100%;
+    }
+    .w-card-wide {
+        width: 100%;
+    }
+    footer {
+        display: none
+    }
+}
+
+@media all and (max-width: 480px) {
+    .text-center {
+        text-align: left;
+    }
+    .service-ui .service-ui-logo {
+        max-width: 240px;
+    }
+    .service-ui-info .service-ui-desc {
+        display: none;
+    }
+    .login-section .mdi-before-text {
+        display: none;
+    }
+    .login-section .text-with-mdi {
+        font-size: 0.75rem;
+    }
+    .login-section .text-without-mdi {
+        font-size: 0.75rem;
+    }
+    .login-error-card .title-danger {
+        font-size: 0.875rem;
+    }
 }

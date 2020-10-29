@@ -12,14 +12,16 @@
 <body>
     <main role="main" class="container mt-3 mb-3">
         <div layout:fragment="content">
-            <div class="banner-generic m-auto mdc-card p-4">
+            <div class="banner-generic m-auto mdc-card p-4 w-card-narrow">
                 <div class="login-generic-card">
                     <div th:replace="fragments/osfbannerui :: osfBannerUI">
                         <a href="fragments/osfbannerui.html"></a>
                     </div>
                     <hr class="my-4" />
-                    <h2 th:utext="#{screen.generic.logout.heading}"></h2>
-                    <p th:utext="#{screen.generic.logout.message}"></p>
+                    <div class="card-message">
+                        <h2 th:utext="#{screen.generic.logout.heading}"></h2>
+                        <p th:utext="#{screen.generic.logout.message}"></p>
+                    </div>
                     <div class="form-button">
                         <a class="mdc-button mdc-button--raised button-osf-green" th:href="@{/login}">
                             <span class="mdc-button__label" th:utext="#{screen.generic.button.backtologin}"></span>

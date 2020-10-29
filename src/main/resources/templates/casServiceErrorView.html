@@ -11,7 +11,7 @@
 
 <body>
     <main role="main" class="container mt-3 mb-3">
-        <div layout:fragment="content" class="banner banner-danger mdc-card p-4 m-auto">
+        <div layout:fragment="content" class="banner banner-danger mdc-card p-4 m-auto w-card-narrow">
             <div class="login-error-card">
                 <div th:replace="fragments/osfbannerui :: osfBannerUI">
                     <a href="fragments/osfbannerui.html"></a>
@@ -20,8 +20,10 @@
                     <span th:utext="#{screen.authnerror.instructions}"></span>
                 </h3>
                 <hr class="my-4" />
-                <h2 th:utext="#{screen.service.error.heading}"></h2>
-                <p th:if="${rootCauseException != null and rootCauseException.code != null}" th:utext="#{${rootCauseException.code}}"></p>
+                <div class="card-message">
+                    <h2 th:utext="#{screen.service.error.heading}"></h2>
+                    <p th:if="${rootCauseException != null and rootCauseException.code != null}" th:utext="#{${rootCauseException.code}}"></p>
+                </div>
                 <div class="form-button">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
                         <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>

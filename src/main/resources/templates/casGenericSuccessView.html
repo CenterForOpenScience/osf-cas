@@ -12,16 +12,16 @@
 <body>
     <main role="main" class="container mt-3 mb-3">
         <div layout:fragment="content" class="row">
-
-            <div class="banner-generic m-auto mdc-card p-4">
-
+            <div class="banner-generic m-auto mdc-card p-4 w-card-wide">
                 <div class="login-generic-card">
                     <div th:replace="fragments/osfbannerui :: osfBannerUI">
                         <a href="fragments/osfbannerui.html"></a>
                     </div>
                     <hr class="my-4" />
-                    <h2 th:utext="#{screen.generic.login.heading}"></h2>
-                    <p th:utext="#{screen.generic.login.message}"></p>
+                    <div class="card-message">
+                        <h2 th:utext="#{screen.generic.login.heading}"></h2>
+                        <p th:utext="#{screen.generic.login.message}"></p>
+                    </div>
                     <div class="form-button-inline">
                         <a class="mdc-button mdc-button--raised button-osf-green" th:href="@{#{osf.home.url}}">
                             <span class="mdc-button__label" th:utext="#{screen.generic.button.backtoosf}"></span>
@@ -73,7 +73,6 @@
                     </div>
                 </div>
             </div>
-
             <script type="text/javascript" th:inline="javascript">
                 let div = document.querySelector('#divPrincipalAttributes');
                 new mdc.dataTable.MDCDataTable(div);
@@ -91,7 +90,6 @@
                 }
                 /*]]>*/
             </script>
-
         </div>
     </main>
 </body>

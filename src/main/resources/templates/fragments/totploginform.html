@@ -23,7 +23,7 @@
 
             <h3 class="text-center text-with-mdi">
                 <i class="mdi mdi-cellphone mdi-before-text"></i>
-                <span th:utext="#{screen.twofactor.instructions}"></span>
+                <span th:utext="#{screen.twofactor.instructions.top}"></span>
             </h3>
 
             <div class="form-wrapper">
@@ -123,8 +123,8 @@
 
                 <hr class="my-4" />
 
-                <div>
-                    <p>Open the two-factor authentication app on your device to view your authentication code and verify your identity.</p>
+                <div class="text-without-mdi">
+                    <p th:utext="#{screen.twofactor.instructions.bottom}"></p>
                 </div>
 
                 <script type="text/javascript" th:inline="javascript">

@@ -11,7 +11,7 @@
 
 <body>
     <main role="main" class="container mt-3 mb-3">
-        <div layout:fragment="content" class="banner banner-danger mdc-card p-4">
+        <div layout:fragment="content" class="banner banner-danger mdc-card p-4 w-md-wide">
 
             <div class="login-error-card">
                 <div th:replace="fragments/osfbannerui :: osfBannerUI">
@@ -21,8 +21,10 @@
                     <span th:utext="#{screen.authnerror.instructions}"></span>
                 </h3>
                 <hr class="my-4" />
-                <h2 th:utext="#{screen.unavailable.heading}"></h2>
-                <div th:utext="#{screen.unavailable.message}"></div>
+                <div class="card-message">
+                    <h2 th:utext="#{screen.unavailable.heading}"></h2>
+                    <div th:utext="#{screen.unavailable.message}"></div>
+                </div>
                 <div class="form-button-inline">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
                         <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>
