@@ -810,7 +810,8 @@ body {
     margin: 0.25rem 0;
 }
 
-.login-error-card {
+.login-error-card,
+.login-generic-card {
     min-width: fit-content;
 }
 
@@ -819,6 +820,7 @@ body {
     white-space: pre-wrap;
 }
 
+.banner-generic,
 .banner-danger {
     min-width: fit-content;
 }
@@ -838,6 +840,7 @@ body {
     color: var(--cas-theme-osf-red, #b52b27);
 }
 
+.banner-generic hr,
 .banner-danger hr {
     width: 100%;
 }
