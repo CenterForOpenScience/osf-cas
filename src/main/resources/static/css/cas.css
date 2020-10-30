@@ -643,7 +643,6 @@ body {
 }
 
 .service-ui {
-    text-align: center;
     margin-top: 1rem!important;
     margin-bottom: 1rem!important;
 }
@@ -666,9 +665,14 @@ body {
     margin: 1rem 0;
 }
 
-.text-with-mdi {
+.text-with-mdi,
+.text-without-mdi {
     font-size: 1rem;
     margin: 0.5rem 0;
+}
+
+.login-section .text-with-mdi {
+    white-space: nowrap;
 }
 
 .mdi-before-text {
@@ -742,7 +746,8 @@ body {
     font-size: 1rem;
 }
 
-.login-error-card .hr-text {
+.login-error-card .hr-text,
+.login-generic-card .hr-text {
     margin: 1.5rem 0;
 }
 
@@ -810,7 +815,8 @@ body {
     margin: 0.25rem 0;
 }
 
-.login-error-card {
+.login-error-card,
+.login-generic-card {
     min-width: fit-content;
 }
 
@@ -819,6 +825,7 @@ body {
     white-space: pre-wrap;
 }
 
+.banner-generic,
 .banner-danger {
     min-width: fit-content;
 }
@@ -836,8 +843,154 @@ body {
 .banner-danger .title-danger {
     margin: 0.5rem 0;
     color: var(--cas-theme-osf-red, #b52b27);
+    white-space: nowrap;
 }
 
+.banner-generic hr,
 .banner-danger hr {
     width: 100%;
+}
+
+.card-message {
+    padding: 1rem 0;
+}
+
+.w-card-narrow .card-message {
+    max-width: 36rem;
+}
+
+.w-card-wide .card-message {
+    max-width: 48rem;
+}
+
+@media all and (min-width: 639.99px) {
+    .w-card-narrow {
+        width: 50%;
+    }
+    .w-card-wide {
+        width: 75%;
+    }
+}
+
+@media all and (min-width: 479.99px) and (max-width: 639.99px) {
+    .w-card-narrow {
+        width: 100%;
+    }
+    .w-card-wide {
+        width: 100%;
+    }
+    footer {
+        display: none
+    }
+}
+
+@media all and (min-height: 1439.99) {
+    .mdc-top-app-bar__row {
+        height: 64px;
+    }
+    .cas-brand {
+        height: 56px;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 72px;
+    }
+    .mdc-drawer {
+        top: 56px;
+    }
+    .cas-footer-osf {
+        font-size: 1rem;
+        padding-bottom: 1.5rem!important;
+        padding-top: 1.5rem!important;
+        text-align: center;
+    }
+}
+
+@media all and (min-width: 639.99px),
+all and (min-height: 1079.99) {
+    .mdc-top-app-bar__row {
+        height: 56px;
+    }
+    .cas-brand {
+        height: 48px;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 64px;
+    }
+    .mdc-drawer {
+        top: 48px;
+    }
+    .cas-footer-osf {
+        font-size: 0.875rem;
+        padding-bottom: 1rem!important;
+        padding-top: 1rem!important;
+        text-align: center;
+    }
+}
+
+@media all and (min-width: 479.99px) and (max-width: 639.99px),
+all and (max-height: 1079.99px) {
+    .mdc-top-app-bar__row {
+        height: 40px;
+    }
+    .cas-brand {
+        height: 32px;
+    }
+    .mdc-drawer {
+        top: 32px;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 32px;
+    }
+    .cas-footer-osf {
+        font-size: 0.75rem;
+        padding-bottom: 0.75rem!important;
+        padding-top: 0.75rem!important;
+        text-align: center;
+    }
+}
+
+@media all and (max-width: 479.99px),
+all and (max-height: 899.99px) {
+    .service-ui {
+        margin-top: 0.5rem!important;
+        margin-bottom: 0.5rem!important;
+    }
+    .service-ui .service-ui-logo {
+        max-width: 240px;
+        max-height: 3rem;
+    }
+    .service-ui-info .service-ui-name,
+    .service-ui-info .service-ui-desc {
+        display: none;
+    }
+    .login-section .mdi-before-text {
+        display: none;
+    }
+    .login-section .text-with-mdi {
+        font-size: 0.75rem;
+    }
+    .login-section .text-without-mdi {
+        font-size: 0.75rem;
+    }
+    .login-error-card .title-danger {
+        font-size: 0.875rem;
+    }
+    .mdc-top-app-bar__row {
+        height: 32px;
+    }
+    .cas-brand {
+        height: 24px;
+    }
+    .mdc-drawer {
+        top: 32px;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 16px;
+    }
+    .cas-footer-osf {
+        font-size: 0.625rem;
+        padding-bottom: 0.5rem!important;
+        padding-top: 0.5rem!important;
+        text-align: center;
+    }
 }

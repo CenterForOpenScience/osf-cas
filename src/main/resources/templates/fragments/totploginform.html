@@ -23,7 +23,7 @@
 
             <h3 class="text-center text-with-mdi">
                 <i class="mdi mdi-cellphone mdi-before-text"></i>
-                <span th:utext="#{screen.twofactor.instructions}"></span>
+                <span th:utext="#{screen.twofactor.instructions.top}"></span>
             </h3>
 
             <div class="form-wrapper">
@@ -114,7 +114,7 @@
                     <div th:replace="fragments/submitbutton :: submitButton (buttonCustomization='button-osf-green', messageKey='screen.twofactor.button.verify')" />
 
                     <div class="form-button">
-                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.home.url})}">
+                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
                             <span class="mdc-button__label" th:utext="#{screen.twofactor.button.cancel}"></span>
                         </a>
                     </div>
@@ -123,8 +123,8 @@
 
                 <hr class="my-4" />
 
-                <div>
-                    <p>Open the two-factor authentication app on your device to view your authentication code and verify your identity.</p>
+                <div class="text-without-mdi">
+                    <p th:utext="#{screen.twofactor.instructions.bottom}"></p>
                 </div>
 
                 <script type="text/javascript" th:inline="javascript">
