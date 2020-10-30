@@ -18,9 +18,11 @@ OSF CAS is the centralized authentication and authorization service for the [OSF
 * OSF username and password login
 * OSF username and verification key login
 * OSF two-factor authentication
-* **WIP** - Delegated authentication
+* Delegated authentication
+  * ORCiD login
+  * **WIP** - CAS client: supports CAS protocol based institution SSO
+  * **WIP** - SAML service provider: supports SAML protocol based institution SSO
 * **TBI** - OAuth authorization server for OSF
-* **TBI** - SAML service provider
 
 # Implementations
 
@@ -41,7 +43,7 @@ A legacy version can be found at [CAS Overlay](https://github.com/CenterForOpenS
 
 It is recommended to use the provided scripts to [build](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-build.sh) and [run](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-run.sh) CAS. Refer to Apereo's [README.md](https://github.com/apereo/cas-overlay-template/tree/6.2#cas-overlay-template-) for more options.
 
-Use [`cas.properties`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/etc/cas/config/cas.properties) and [`Dockerfile`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/Dockerfile) to configure staging and production servers. Use [`cas-local.properties`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/etc/cas/config/local/cas-local.properties) and [`Dockerfile-local`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/Dockerfile-local) for local development.
+Use [`cas.properties`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/etc/cas/config/cas.properties) and [`Dockerfile`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/Dockerfile) to configure staging and production servers. Use [`cas-local.properties`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/etc/cas/config/local/cas-local.properties) and [`Dockerfile-local`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/Dockerfile-local) for local development. To accelerate developing OSF CAS, use the [reload](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-reload.sh) script to rebuild, reconfigure and restart the running container.
 
 ## OSF
 
