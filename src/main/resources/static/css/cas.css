@@ -863,7 +863,7 @@ body {
     max-width: 48rem;
 }
 
-@media all and (min-width: 640px) {
+@media all and (min-width: 639.99px) {
     .w-card-narrow {
         width: 50%;
     }
@@ -872,7 +872,7 @@ body {
     }
 }
 
-@media all and (max-width: 640px) {
+@media all and (min-width: 479.99px) and (max-width: 639.99px) {
     .w-card-narrow {
         width: 100%;
     }
@@ -884,13 +884,82 @@ body {
     }
 }
 
-@media all and (max-width: 480px) {
-    .text-center {
-        text-align: left;
+@media all and (min-height: 1439.99) {
+    .mdc-top-app-bar__row {
+        height: 64px;
+    }
+    .cas-brand {
+        height: 56px;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 72px;
+    }
+    .mdc-drawer {
+        top: 56px;
+    }
+    .cas-footer-osf {
+        font-size: 1rem;
+        padding-bottom: 1.5rem!important;
+        padding-top: 1.5rem!important;
+        text-align: center;
+    }
+}
+
+@media all and (min-width: 639.99px),
+all and (min-height: 1079.99) {
+    .mdc-top-app-bar__row {
+        height: 56px;
+    }
+    .cas-brand {
+        height: 48px;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 64px;
+    }
+    .mdc-drawer {
+        top: 48px;
+    }
+    .cas-footer-osf {
+        font-size: 0.875rem;
+        padding-bottom: 1rem!important;
+        padding-top: 1rem!important;
+        text-align: center;
+    }
+}
+
+@media all and (min-width: 479.99px) and (max-width: 639.99px),
+all and (max-height: 1079.99px) {
+    .mdc-top-app-bar__row {
+        height: 40px;
+    }
+    .cas-brand {
+        height: 32px;
+    }
+    .mdc-drawer {
+        top: 32px;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 32px;
+    }
+    .cas-footer-osf {
+        font-size: 0.75rem;
+        padding-bottom: 0.75rem!important;
+        padding-top: 0.75rem!important;
+        text-align: center;
+    }
+}
+
+@media all and (max-width: 479.99px),
+all and (max-height: 899.99px) {
+    .service-ui {
+        margin-top: 0.5rem!important;
+        margin-bottom: 0.5rem!important;
     }
     .service-ui .service-ui-logo {
         max-width: 240px;
+        max-height: 3rem;
     }
+    .service-ui-info .service-ui-name,
     .service-ui-info .service-ui-desc {
         display: none;
     }
@@ -905,5 +974,23 @@ body {
     }
     .login-error-card .title-danger {
         font-size: 0.875rem;
+    }
+    .mdc-top-app-bar__row {
+        height: 32px;
+    }
+    .cas-brand {
+        height: 24px;
+    }
+    .mdc-drawer {
+        top: 32px;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 16px;
+    }
+    .cas-footer-osf {
+        font-size: 0.625rem;
+        padding-bottom: 0.5rem!important;
+        padding-top: 0.5rem!important;
+        text-align: center;
     }
 }
