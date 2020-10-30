@@ -17,8 +17,8 @@ RUN cd cas-overlay \
 
 FROM adoptopenjdk/openjdk11:alpine-jre AS cas
 
-LABEL "Organization"="Apereo"
-LABEL "Description"="Apereo CAS"
+LABEL "Organization"="Center for Open Science"
+LABEL "Description"="OSF CAS"
 
 RUN cd / \
     && mkdir -p /etc/cas/config \
@@ -32,7 +32,7 @@ COPY etc/cas/services/ /etc/cas/services/
 COPY etc/cas/saml/ /etc/cas/saml/
 COPY --from=overlay cas-overlay/build/libs/cas.war cas-overlay/
 
-EXPOSE 8080 8443
+EXPOSE 8080
 
 ENV PATH $PATH:$JAVA_HOME/bin:.
 

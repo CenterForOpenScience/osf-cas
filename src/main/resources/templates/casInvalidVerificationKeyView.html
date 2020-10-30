@@ -11,13 +11,25 @@
 
 <body>
     <main role="main" class="container mt-3 mb-3">
-        <div layout:fragment="content" class="banner banner-danger mdc-card p-4 m-auto w-lg-66">
-            <h2 th:utext="#{screen.invalidverificationkey.heading}"></h2>
-            <p th:utext="#{screen.invalidverificationkey.message}"></p>
-            <br />
-            <a class="mdc-button mdc-button--raised" th:href="#{osf.home.url}">
-                <span class="mdc-button__label" th:utext="#{screen.pm.button.backtoosf}"></span>
-            </a>
+        <div layout:fragment="content" class="banner banner-danger mdc-card p-4 m-auto w-card-narrow">
+            <div class="login-error-card">
+                <div th:replace="fragments/osfbannerui :: osfBannerUI">
+                    <a href="fragments/osfbannerui.html"></a>
+                </div>
+                <h3 class="text-center title-danger">
+                    <span th:utext="#{screen.authnerror.instructions}"></span>
+                </h3>
+                <hr class="my-4" />
+                <div class="card-message">
+                    <h2 th:utext="#{screen.invalidverificationkey.heading}"></h2>
+                    <p th:utext="#{screen.invalidverificationkey.message}"></p>
+                </div>
+                <div class="form-button">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
+                        <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>
+                    </a>
+                </div>
+            </div>
         </div>
     </main>
 </body>

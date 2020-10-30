@@ -1,9 +1,9 @@
 {
   "@class": "org.apereo.cas.services.RegexRegisteredService",
-  "serviceId": "^https?://(localhost|127\\.0\\.0\\.1|192\\.168\\.168\\.167):5000/.*",
-  "name": "OSF Generic",
-  "description": "Manage and share your research with OSF – an free, open, easy and integrated platform to support your research and enable collaboration.",
-  "id": 203948234207220,
+  "serviceId": "^https?://(localhost|127\\.0\\.0\\.1|192\\.168\\.168\\.167):5000/fake/.*",
+  "name": "One Special Fake OSF",
+  "description": "This is the One Special Fake OSF for testing hard-to-reach corner cases and errors (local-dev only)",
+  "id": 203948234207210,
   "evaluationOrder": 25,
   "logo": "/images/osf-logo.png",
   "attributeReleasePolicy": {

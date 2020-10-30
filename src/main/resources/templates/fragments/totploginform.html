@@ -14,21 +14,28 @@
     <main role="main" class="container mt-3 mb-3">
         <!-- Two-factor authentication login form template begins here -->
         <div th:fragment="totploginform" class="d-flex flex-column justify-content-between m-auto">
-            <div th:if="${delegatedAuthenticationProviderPrimary == null}">
-                <div class="service-ui" th:replace="fragments/serviceui :: serviceUI">
-                    <a href="fragments/serviceui.html"></a>
+
+            <div>
+                <div class="service-ui" th:replace="fragments/osfbannerui :: osfBannerUI">
+                    <a href="fragments/osfbannerui.html"></a>
                 </div>
             </div>
+
+            <h3 class="text-center text-with-mdi">
+                <i class="mdi mdi-cellphone mdi-before-text"></i>
+                <span th:utext="#{screen.twofactor.instructions.top}"></span>
+            </h3>
+
             <div class="form-wrapper">
                 <form method="post" id="fm1" th:object="${credential}" action="login">
 
-                    <h3 class="text-center">
-                        <i class="mdi mdi-security"></i>
-                        <span th:utext="#{screen.twofactor.instructions}"></span>
-                    </h3>
-
-                    <div class="banner banner-danger banner-dismissible" th:if="${#fields.hasErrors('*')}">
-                        <p th:each="err : ${#fields.errors('*')}" th:utext="${err + ' '}"></p>
+                    <div id="loginformerrorlist" th:if="${#fields.hasErrors('*')}">
+                        <div th:each="err : ${#fields.errors('*')}" th:if="${not #strings.isEmpty(err)}" th:with="errorDivElementId=${'' + #strings.randomAlphanumeric(16)}">
+                            <div th:id="${errorDivElementId}" class="banner banner-danger banner-dismissible" >
+                                <p class="login-error-inline" th:utext="${err + ' '}"></p>
+                                <a th:href="${'javascript:document.getElementById(''' + errorDivElementId + ''').remove();'}" class="close">&times;</a>
+                            </div>
+                        </div>
                     </div>
 
                     <section class="cas-field my-2=3">
@@ -104,11 +111,21 @@
                         </p>
                     </section>
 
-                    <div th:replace="fragments/submitbutton :: submitButton (messageKey='screen.twofactor.button.verify')" />
+                    <div th:replace="fragments/submitbutton :: submitButton (buttonCustomization='button-osf-green', messageKey='screen.twofactor.button.verify')" />
+
+                    <div class="form-button">
+                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
+                            <span class="mdc-button__label" th:utext="#{screen.twofactor.button.cancel}"></span>
+                        </a>
+                    </div>
 
                 </form>
 
                 <hr class="my-4" />
+
+                <div class="text-without-mdi">
+                    <p th:utext="#{screen.twofactor.instructions.bottom}"></p>
+                </div>
 
                 <script type="text/javascript" th:inline="javascript">
                     /*<![CDATA[*/
@@ -129,9 +146,8 @@
                 </script>
 
             </div>
-            <div th:replace="fragments/loginsidebar :: loginsidebar" />
         </div>
-    </div>
-</main>
+    </main>
 </body>
+
 </html>

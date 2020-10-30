@@ -71,14 +71,14 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         super.createDefaultViewStates(flow);
         // Create OSF customized view states
         createTwoFactorLoginFormView(flow);
+        createOrcidLoginAutoRedirectView(flow);
         createOsfCasAuthenticationExceptionViewStates(flow);
     }
 
     @Override
     protected void createLoginFormView(final Flow flow) {
 
-        List<String> propertiesToBind = CollectionUtils
-                .wrapList("username", "password", "verificationKey", "oneTimePassword", "source");
+        List<String> propertiesToBind = CollectionUtils.wrapList("username", "password", "source");
         BinderConfiguration binder = createStateBinderConfiguration(propertiesToBind);
         casProperties.getView().getCustomLoginFormFields()
                 .forEach((field, props) -> {
@@ -124,6 +124,9 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
     @Override
     protected void createDefaultActionStates(final Flow flow) {
         super.createDefaultActionStates(flow);
+        // Create the customized interactive login check actions
+        createOsfDefaultLoginCheckAction(flow);
+        createOsfInstitutionLoginCheckAction(flow);
         // Create the customized non-interactive authentication check action
         createOsfNonInteractiveAuthenticationCheckAction(flow);
     }
@@ -277,12 +280,63 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         createTransitionForState(
                 action,
                 CasWebflowConstants.TRANSITION_ID_ERROR,
-                CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM
+                OsfCasWebflowConstants.STATE_ID_OSF_DEFAULT_LOGIN_CHECK
         );
         createTransitionForState(
                 action,
                 CasWebflowConstants.TRANSITION_ID_AUTHENTICATION_FAILURE,
                 CasWebflowConstants.STATE_ID_HANDLE_AUTHN_FAILURE
+        );
+    }
+
+    /**
+     * Create the default login check / preparation action for OSF CAS.
+     *
+     * @param flow the flow
+     */
+    private void createOsfDefaultLoginCheckAction(final Flow flow) {
+        ActionState action = createActionState(
+                flow,
+                OsfCasWebflowConstants.STATE_ID_OSF_DEFAULT_LOGIN_CHECK,
+                OsfCasWebflowConstants.ACTION_ID_OSF_DEFAULT_LOGIN_CHECK
+        );
+        createTransitionForState(
+                action,
+                OsfCasWebflowConstants.TRANSITION_ID_USERNAME_PASSWORD_LOGIN,
+                CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM
+        );
+        createTransitionForState(
+                action,
+                OsfCasWebflowConstants.TRANSITION_ID_INSTITUTION_LOGIN,
+                OsfCasWebflowConstants.STATE_ID_OSF_INSTITUTION_LOGIN_CHECK
+        );
+        createTransitionForState(
+                action,
+                OsfCasWebflowConstants.TRANSITION_ID_ORCID_LOGIN_AUTO_REDIRECT,
+                OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT
+        );
+        createTransitionForState(
+                action,
+                CasWebflowConstants.TRANSITION_ID_ERROR,
+                CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM
+        );
+    }
+
+    /**
+     * Create the institution login check / preparation action for OSF CAS.
+     *
+     * @param flow the flow
+     */
+    private void createOsfInstitutionLoginCheckAction(final Flow flow) {
+        ActionState action = createActionState(
+                flow,
+                OsfCasWebflowConstants.STATE_ID_OSF_INSTITUTION_LOGIN_CHECK,
+                OsfCasWebflowConstants.ACTION_ID_OSF_INSTITUTION_LOGIN_CHECK
+        );
+        createTransitionForState(
+                action,
+                CasWebflowConstants.TRANSITION_ID_ERROR,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED
         );
     }
 
@@ -351,5 +405,18 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         attributes.put("bind", Boolean.TRUE);
         attributes.put("validate", Boolean.TRUE);
         attributes.put("history", History.INVALIDATE);
+    }
+
+    /**
+     * Create the ORCiD login auto-redirect view to support the OSF feature "sign-up via ORCiD".
+     *
+     * @param flow the flow
+     */
+    protected void createOrcidLoginAutoRedirectView(final Flow flow) {
+        createViewState(
+            flow,
+            OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT,
+            OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT
+        );
     }
 }
