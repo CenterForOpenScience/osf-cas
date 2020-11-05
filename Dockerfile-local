@@ -12,8 +12,12 @@ RUN mkdir -p ~/.gradle \
     && chmod 750 ./gradlew \
     && ./gradlew --version;
 
-RUN cd cas-overlay \
-    && ./gradlew clean build --parallel --no-daemon;
+RUN cd cas-overlay && ./gradlew clean build --parallel --no-daemon;
+# The build process above in docker may takes a long time depending on your local resources. This OK if you only use
+# CAS by building it once. For local development, building in local shell or with your IDE such as IntelliJ is much
+# faster. Afterwards, simply comment out the above "RUN" command and enable the following "COPY" one. In fact, this
+# stage can be skipped if you have the WAR built locally. Just need run the second stage with a modified WAR source.
+# COPY ./build cas-overlay/build/
 
 FROM adoptopenjdk/openjdk11:alpine-jre AS cas
 
@@ -27,9 +31,21 @@ RUN cd / \
     && mkdir -p cas-overlay;
 
 COPY etc/cas/ /etc/cas/
+
 COPY etc/cas/config/ /etc/cas/config/
+# Use "cas-local.properties" and "log4j2-local.xml" for local development
+RUN rm etc/cas/config/cas.properties
+COPY etc/cas/config/local/cas-local.properties etc/cas/config/cas.properties
+COPY etc/cas/config/local/log4j2-local.xml etc/cas/config/log4j2.xml
+RUN rm -r etc/cas/config/local
+
 COPY etc/cas/services/ /etc/cas/services/
+# Use registered services defined in "local/services" for local development
+COPY etc/cas/services/local/* /etc/cas/services/
+RUN rm -r etc/cas/services/local/
+
 COPY etc/cas/saml/ /etc/cas/saml/
+
 COPY --from=overlay cas-overlay/build/libs/cas.war cas-overlay/
 
 EXPOSE 8080

@@ -16,19 +16,49 @@
         <div th:fragment="loginform" class="d-flex flex-column justify-content-between m-auto">
             <div th:if="${delegatedAuthenticationProviderPrimary == null}">
                 <div class="service-ui" th:replace="fragments/serviceui :: serviceUI">
-                    <a href="fragments/serviceui.html">service ui fragment</a>
+                    <a href="fragments/serviceui.html"></a>
                 </div>
             </div>
+
+            <h3 class="text-center text-with-mdi">
+                <i class="mdi mdi-security mdi-before-text"></i>
+                <span th:utext="#{screen.welcome.instructions}"></span>
+            </h3>
+
+            <div id="orcidlogin" th:if="${delegatedAuthenticationProviderConfigurations}">
+                <section class="delegation-row"
+                    th:each="entry: ${delegatedAuthenticationProviderConfigurations}"
+                    th:if="${entry.type} == 'orcid'">
+                    <a class="delegation-button" th:href="@{${entry.redirectUrl}}">
+                        <img class="delegation-button-logo" src="/images/orcid-logo.png">
+                        <span class="delegation-button-label" th:utext="#{screen.delegation.button.orcid}"></span>
+                    </a>
+                </section>
+            </div>
+
+            <div id="instnlogin">
+                <section class="delegation-row">
+                    <a class="delegation-button" th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}">
+                        <img class="delegation-button-logo" src="/images/institution-logo.png">
+                        <span class="delegation-button-label" th:utext="#{screen.delegation.button.institution}"></span>
+                    </a>
+                </section>
+            </div>
+
+            <div>
+                <hr class="hr-text" data-content="OR" />
+            </div>
+
             <div class="form-wrapper">
                 <form method="post" id="fm1" th:object="${credential}" action="login">
 
-                    <h3 class="text-center">
-                        <i class="mdi mdi-security"></i>
-                        <span th:utext="#{screen.welcome.instructions}"></span>
-                    </h3>
-
-                    <div class="banner banner-danger banner-dismissible" th:if="${#fields.hasErrors('*')}">
-                        <p th:each="err : ${#fields.errors('*')}" th:utext="${err + ' '}"></p>
+                    <div id="loginformerrorlist" th:if="${#fields.hasErrors('*')}">
+                        <div th:each="err : ${#fields.errors('*')}" th:if="${not #strings.isEmpty(err)}" th:with="errorDivElementId=${'loginformerror' + #strings.randomAlphanumeric(16)}">
+                            <div th:id="${errorDivElementId}" class="banner banner-danger banner-dismissible" >
+                                <p class="login-error-inline" th:utext="${err + ' '}"></p>
+                                <a th:href="${'javascript:document.getElementById(''' + errorDivElementId + ''').remove();'}" class="close">&times;</a>
+                            </div>
+                        </div>
                     </div>
 
                     <section class="cas-field my-2=3">
@@ -54,7 +84,7 @@
                         </span>
                     </section>
 
-                    <section class="cas-field my-3">
+                    <section class="cas-field cas-field-primary my-3">
                         <div class="mdc-text-field  d-flex">
                             <input class="mdc-text-field__input"
                                 id="username"
@@ -70,7 +100,7 @@
                         </div>
                     </section>
 
-                    <section class="cas-field my-3 mdc-input-group">
+                    <section class="cas-field cas-field-primary my-3 mdc-input-group">
                         <div class="mdc-input-group-field mdc-input-group-field-append">
                             <div class="mdc-text-field  mdc-text-field--with-trailing-icon d-flex caps-check">
                                 <input class="mdc-text-field__input pwd"
@@ -95,7 +125,7 @@
                         </button>
                     </section>
 
-                    <section class="cas-field" th:if="${rememberMeAuthenticationEnabled}">
+                    <section class="cas-field cas-field-primary " th:if="${rememberMeAuthenticationEnabled}">
                         <p>
                             <input type="checkbox" name="rememberMe" id="rememberMe" value="true"/>&nbsp;
                             <label for="rememberMe" th:text="#{screen.rememberme.checkbox.title}"></label>
@@ -117,7 +147,7 @@
                         </p>
                     </section>
 
-                    <div th:replace="fragments/submitbutton :: submitButton (messageKey='screen.welcome.button.login')" />
+                    <div th:replace="fragments/submitbutton :: submitButton (buttonCustomization='button-osf-green', messageKey='screen.welcome.button.login')" />
 
                 </form>
 
@@ -144,9 +174,8 @@
                 </script>
 
             </div>
-            <div th:replace="fragments/loginsidebar :: loginsidebar" />
         </div>
-    </div>
-</main>
+    </main>
 </body>
+
 </html>

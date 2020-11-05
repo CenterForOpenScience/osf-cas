@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- When this template is rendered, both ${osfCasLoginContext.orcidLoginUrl}
+             and #{screen.delegation.heading.orcidredirect} are guranteed to exist. -->
+        <meta http-equiv="refresh" th:content="${'0; url=' + osfCasLoginContext.orcidLoginUrl}" />
+        <title th:text="#{screen.delegation.heading.orcidredirect}"></title>
+    </head>
+</html>
