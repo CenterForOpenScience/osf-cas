@@ -123,17 +123,19 @@ function resourceLoadedSuccessfully() {
         $('#fm1 input[name="username"]').focus();
 
         let $revealpassword = $('.reveal-password');
-        $revealpassword.mouseup(function (ev) {
-            $('.pwd').attr('type', 'password');
-            $(".reveal-password-icon").removeClass("mdi mdi-eye-off").addClass("mdi mdi-eye");
-            ev.preventDefault();
+        let revealPasswordClicked = false;
+        $revealpassword.click(function (ev) {
+            if (revealPasswordClicked) {
+                $('.pwd').attr('type', 'password');
+                $(".reveal-password-icon").removeClass("mdi mdi-eye-off").addClass("mdi mdi-eye");
+                ev.preventDefault();
+            } else {
+                $('.pwd').attr('type', 'text');
+                $(".reveal-password-icon").removeClass("mdi mdi-eye").addClass("mdi mdi-eye-off");
+                ev.preventDefault();
+            }
+            revealPasswordClicked=!revealPasswordClicked;
         })
-
-        $revealpassword.mousedown(function (ev) {
-            $('.pwd').attr('type', 'text');
-            $(".reveal-password-icon").removeClass("mdi mdi-eye").addClass("mdi mdi-eye-off");
-            ev.preventDefault();
-        });
 
         if (typeof (jqueryReady) == 'function') {
             jqueryReady();
