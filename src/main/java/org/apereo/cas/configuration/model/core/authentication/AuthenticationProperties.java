@@ -1,6 +1,6 @@
 package org.apereo.cas.configuration.model.core.authentication;
 
-import io.cos.cas.osf.configuration.model.OsfApiAuthenticationProperties;
+import io.cos.cas.osf.configuration.model.OsfApiProperties;
 import io.cos.cas.osf.configuration.model.OsfPostgresAuthenticationProperties;
 
 import lombok.Getter;
@@ -101,10 +101,10 @@ public class AuthenticationProperties implements Serializable {
     private JsonResourceAuthenticationProperties json = new JsonResourceAuthenticationProperties();
 
     /**
-     * OSF API authentication settings.
+     * OSF API settings.
      */
     @NestedConfigurationProperty
-    private OsfApiAuthenticationProperties osfApi = new OsfApiAuthenticationProperties();
+    private OsfApiProperties osfApi = new OsfApiProperties();
 
     /**
      * OSF Postgres authentication settings.

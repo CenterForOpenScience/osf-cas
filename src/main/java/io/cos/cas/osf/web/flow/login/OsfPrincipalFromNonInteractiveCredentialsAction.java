@@ -2,7 +2,7 @@ package io.cos.cas.osf.web.flow.login;
 
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
-import io.cos.cas.osf.configuration.model.OsfApiAuthenticationProperties;
+import io.cos.cas.osf.configuration.model.OsfApiProperties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -59,17 +59,9 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     private CentralAuthenticationService centralAuthenticationService;
 
     @NotNull
-    private String osfApiInstnAuthnEndpoint;
+    private OsfApiProperties osfApiProperties;
 
     @NotNull
-    private String osfApiInstnAuthnJwtSecret;
-
-    @NotNull
-    private String osfApiInstnAuthnJweSecret;
-
-    @NotNull
-    private String osfApiInstnAuthnXslLocation;
-
     private Map<String, List<String>> authnDelegationClients;
 
     public OsfPrincipalFromNonInteractiveCredentialsAction(
@@ -77,7 +69,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
             final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy,
             final CentralAuthenticationService centralAuthenticationService,
-            final OsfApiAuthenticationProperties osfApiAuthenticationProperties,
+            final OsfApiProperties osfApiProperties,
             final Map<String, List<String>> authnDelegationClients
     ) {
         super(
@@ -86,11 +78,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 adaptiveAuthenticationPolicy
         );
         this.centralAuthenticationService = centralAuthenticationService;
+        this.osfApiProperties = osfApiProperties;
         this.authnDelegationClients = authnDelegationClients;
-        this.osfApiInstnAuthnEndpoint = osfApiAuthenticationProperties.getInstnAuthnEndpoint();
-        this.osfApiInstnAuthnJwtSecret = osfApiAuthenticationProperties.getInstnAuthnJwtSecret();
-        this.osfApiInstnAuthnJweSecret = osfApiAuthenticationProperties.getInstnAuthnJweSecret();
-        this.osfApiInstnAuthnXslLocation = osfApiAuthenticationProperties.getInstnAuthnXslLocation();
     }
 
     @SneakyThrows

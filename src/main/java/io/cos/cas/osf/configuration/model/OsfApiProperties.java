@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * This is {@link OsfApiAuthenticationProperties}.
+ * This is {@link OsfApiProperties}.
  *
  * @author Longze Chen
  * @since 20.1.0
@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class OsfApiAuthenticationProperties implements Serializable {
+public class OsfApiProperties implements Serializable {
 
     private static final long serialVersionUID = 427830234394415772L;
 
