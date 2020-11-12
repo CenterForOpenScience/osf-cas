@@ -97,7 +97,7 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
 
     private String getInstitutionIdFromRequestContext(final RequestContext context) {
         final String institutionId = context.getRequestParameters().get(PARAMETER_INSTITUTION_ID);
-        return StringUtils.isNotBlank(institutionId) ? null : institutionId;
+        return StringUtils.isNotBlank(institutionId) ? institutionId : null;
     }
 
     private boolean isOrcidLoginAutoRedirect(final RequestContext context) {
