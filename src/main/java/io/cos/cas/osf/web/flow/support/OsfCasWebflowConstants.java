@@ -40,5 +40,7 @@ public interface OsfCasWebflowConstants {
 
     String VIEW_ID_ONE_TIME_PASSWORD_REQUIRED = "casTwoFactorLoginView";
 
+    String VIEW_ID_INSTITUTION_SSO_INIT = "casInstitutionLoginView";
+
     String VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED = "casInstitutionSsoNotImplementedView";
 }

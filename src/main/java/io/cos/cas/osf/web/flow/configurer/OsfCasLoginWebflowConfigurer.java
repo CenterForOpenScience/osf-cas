@@ -71,6 +71,7 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         super.createDefaultViewStates(flow);
         // Create OSF customized view states
         createTwoFactorLoginFormView(flow);
+        createInstitutionLoginView(flow);
         createOrcidLoginAutoRedirectView(flow);
         createOsfCasAuthenticationExceptionViewStates(flow);
     }
@@ -338,6 +339,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 CasWebflowConstants.TRANSITION_ID_ERROR,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED
         );
+        createTransitionForState(
+                action,
+                CasWebflowConstants.TRANSITION_ID_SUCCESS,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT
+        );
     }
 
     /**
@@ -419,4 +425,18 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
             OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT
         );
     }
+
+    /**
+     * Create the institution SSO init view state to support the OSF feature "sign-in via institutions".
+     *
+     * @param flow the flow
+     */
+    protected void createInstitutionLoginView(final Flow flow) {
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT
+        );
+    }
+
 }
