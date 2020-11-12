@@ -38,38 +38,38 @@
             </div>
             <div class="mdc-drawer__content">
                 <nav class="mdc-list">
-                    <a class="mdc-list-item" th:href="#{osf.home.url}">
+                    <a class="mdc-list-item" th:href="@{${osfUrl.home}}">
                         <i class="mdi mdi-home"></i>&nbsp;
                         <span class="mdc-list-item__text">[[#{cas.login.resources.osf.home}]]</span>
                     </a>
                     <hr class="mdc-list-divider"/>
-                    <a class="mdc-list-item" th:href="#{osf.preprints.home.url}">
+                    <a class="mdc-list-item" th:href="@{${osfUrl.preprintsHome}}">
                         <i class="mdi mdi-star"></i>&nbsp;
                         <span class="mdc-list-item__text">[[#{cas.login.resources.osf.preprints}]]</span>
                     </a>
-                    <a class="mdc-list-item" th:href="#{osf.registries.home.url}">
+                    <a class="mdc-list-item" th:href="@{${osfUrl.registriesHome}}">
                         <i class="mdi mdi-star"></i>&nbsp;
                         <span class="mdc-list-item__text">[[#{cas.login.resources.osf.registries}]]</span>
                     </a>
-                    <a class="mdc-list-item" th:href="#{osf.institutions.home.url}">
+                    <a class="mdc-list-item" th:href="@{${osfUrl.institutionsHome}}">
                         <i class="mdi mdi-bank"></i>&nbsp;
                         <span class="mdc-list-item__text">[[#{cas.login.resources.osf.institutions}]]</span>
                     </a>
-                    <a class="mdc-list-item" th:href="#{osf.meetings.home.url}">
+                    <a class="mdc-list-item" th:href="@{${osfUrl.meetingsHome}}">
                         <i class="mdi mdi-account-group"></i>&nbsp;
                         <span class="mdc-list-item__text">[[#{cas.login.resources.osf.meetings}]]</span>
                     </a>
-                    <a class="mdc-list-item" th:href="#{osf.support.url}">
+                    <a class="mdc-list-item" th:href="@{${osfUrl.search}}">
+                        <i class="mdi mdi-magnify"></i>&nbsp;
+                        <span class="mdc-list-item__text">[[#{cas.login.resources.osf.search}]]</span>
+                    </a>
+                    <a class="mdc-list-item" th:href="@{${osfUrl.support}}">
                         <i class="mdi mdi-help-circle"></i>&nbsp;
                         <span class="mdc-list-item__text">[[#{cas.login.resources.osf.support}]]</span>
                     </a>
-                    <a class="mdc-list-item" th:href="#{osf.cos.donation.url}">
+                    <a class="mdc-list-item" th:href="@{${osfUrl.donate}}">
                         <i class="mdi mdi-heart"></i>&nbsp;
-                        <span class="mdc-list-item__text">[[#{cas.login.resources.cos.donate}]]</span>
-                    </a>
-                    <a class="mdc-list-item" th:href="#{osf.cos.home.url}">
-                        <i class="mdi mdi-lightbulb-on"></i>&nbsp;
-                        <span class="mdc-list-item__text">[[#{cas.login.resources.cos.home}]]</span>
+                        <span class="mdc-list-item__text">[[#{cas.login.resources.osf.donate}]]</span>
                     </a>
                 </nav>
             </div>

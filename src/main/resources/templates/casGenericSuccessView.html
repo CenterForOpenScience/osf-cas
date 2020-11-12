@@ -23,10 +23,10 @@
                         <p th:utext="#{screen.generic.login.message}"></p>
                     </div>
                     <div class="form-button-inline">
-                        <a class="mdc-button mdc-button--raised button-osf-green" th:href="@{#{osf.home.url}}">
+                        <a class="mdc-button mdc-button--raised button-osf-green" th:href="@{${osfUrl.dashboard}}">
                             <span class="mdc-button__label" th:utext="#{screen.generic.button.backtoosf}"></span>
                         </a>
-                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
+                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${osfUrl.logout})}">
                             <span class="mdc-button__label" th:utext="#{screen.generic.button.logout}"></span>
                         </a>
                     </div>

@@ -25,7 +25,7 @@
                     <p th:utext="#{screen.institutionssonotimplemented.message}"></p>
                 </div>
                 <div class="form-button">
-                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${osfUrl.logout})}">
                         <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>
                     </a>
                 </div>
