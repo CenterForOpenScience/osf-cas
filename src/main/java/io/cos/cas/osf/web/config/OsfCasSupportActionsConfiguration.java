@@ -80,6 +80,7 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
                 serviceTicketRequestWebflowEventResolver.getObject(),
                 adaptiveAuthenticationPolicy.getObject(),
                 centralAuthenticationService.getObject(),
+                casProperties.getAuthn().getOsfApi(),
                 authnDelegationClients
         );
     }

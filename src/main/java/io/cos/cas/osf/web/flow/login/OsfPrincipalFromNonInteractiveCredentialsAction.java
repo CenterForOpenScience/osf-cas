@@ -2,6 +2,7 @@ package io.cos.cas.osf.web.flow.login;
 
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
+import io.cos.cas.osf.configuration.model.OsfApiAuthenticationProperties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -57,6 +58,18 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     @NotNull
     private CentralAuthenticationService centralAuthenticationService;
 
+    @NotNull
+    private String osfApiInstnAuthnEndpoint;
+
+    @NotNull
+    private String osfApiInstnAuthnJwtSecret;
+
+    @NotNull
+    private String osfApiInstnAuthnJweSecret;
+
+    @NotNull
+    private String osfApiInstnAuthnXslLocation;
+
     private Map<String, List<String>> authnDelegationClients;
 
     public OsfPrincipalFromNonInteractiveCredentialsAction(
@@ -64,6 +77,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
             final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy,
             final CentralAuthenticationService centralAuthenticationService,
+            final OsfApiAuthenticationProperties osfApiAuthenticationProperties,
             final Map<String, List<String>> authnDelegationClients
     ) {
         super(
@@ -73,6 +87,10 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         );
         this.centralAuthenticationService = centralAuthenticationService;
         this.authnDelegationClients = authnDelegationClients;
+        this.osfApiInstnAuthnEndpoint = osfApiAuthenticationProperties.getInstnAuthnEndpoint();
+        this.osfApiInstnAuthnJwtSecret = osfApiAuthenticationProperties.getInstnAuthnJwtSecret();
+        this.osfApiInstnAuthnJweSecret = osfApiAuthenticationProperties.getInstnAuthnJweSecret();
+        this.osfApiInstnAuthnXslLocation = osfApiAuthenticationProperties.getInstnAuthnXslLocation();
     }
 
     @SneakyThrows
