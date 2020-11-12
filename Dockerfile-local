@@ -13,12 +13,13 @@ RUN mkdir -p ~/.gradle \
     && ./gradlew --version;
 
 RUN cd cas-overlay && ./gradlew clean build --parallel --no-daemon;
-# The build process above in docker may takes a long time depending on your local resources. This OK if you only use
+# The build process above in docker may take a long time depending on your local resources. This OK if you only use
 # CAS by building it once. For local development, building in local shell or with your IDE such as IntelliJ is much
-# faster. Afterwards, simply comment out the above "RUN" command and enable the following "COPY" one. In fact, this
-# stage can be skipped if you have the WAR built locally. Just need run the second stage with a modified WAR source.
+# faster. Afterwards, simply comment out the above "RUN" command above and enable the "COPY" one below.
 # COPY ./build cas-overlay/build/
 
+# In fact, the above "overlay" stage can be skipped if you have the WAR built locally. Simply run this second stage
+# "cas" with a modified WAR source.
 FROM adoptopenjdk/openjdk11:alpine-jre AS cas
 
 LABEL "Organization"="Center for Open Science"
@@ -33,9 +34,9 @@ RUN cd / \
 COPY etc/cas/ /etc/cas/
 
 COPY etc/cas/config/ /etc/cas/config/
-# Use "cas-local.properties" and "log4j2-local.xml" for local development
-RUN rm etc/cas/config/cas.properties
+# Use "cas-local.properties", "instn-authn-local.xsl" and "log4j2-local.xml" for local development
 COPY etc/cas/config/local/cas-local.properties etc/cas/config/cas.properties
+COPY etc/cas/config/local/instn-authn-local.xsl etc/cas/config/instn-authn.xsl
 COPY etc/cas/config/local/log4j2-local.xml etc/cas/config/log4j2.xml
 RUN rm -r etc/cas/config/local
 
