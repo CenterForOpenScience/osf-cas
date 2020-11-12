@@ -3,6 +3,7 @@ package io.cos.cas.osf.web.flow.login;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
 import io.cos.cas.osf.configuration.model.OsfApiProperties;
+import io.cos.cas.osf.configuration.model.OsfUrlProperties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * This is {@link OsfPrincipalFromNonInteractiveCredentialsAction}.
@@ -49,6 +51,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
 
     private static final String VERIFICATION_KEY_PARAMETER_NAME = "verification_key";
 
+    private static final String OSF_URL_FLOW_PARAMETER = "osfUrl";
+
     private static final String AUTHENTICATION_EXCEPTION = "authnError";
 
     public static final String INSTITUTION_CLIENTS_PARAMETER_NAME = "institutionClients";
@@ -57,6 +61,9 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
 
     @NotNull
     private CentralAuthenticationService centralAuthenticationService;
+
+    @NotNull
+    private OsfUrlProperties osfUrlProperties;
 
     @NotNull
     private OsfApiProperties osfApiProperties;
@@ -69,6 +76,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
             final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy,
             final CentralAuthenticationService centralAuthenticationService,
+            final OsfUrlProperties osfUrlProperties,
             final OsfApiProperties osfApiProperties,
             final Map<String, List<String>> authnDelegationClients
     ) {
@@ -78,6 +86,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 adaptiveAuthenticationPolicy
         );
         this.centralAuthenticationService = centralAuthenticationService;
+        this.osfUrlProperties = osfUrlProperties;
         this.osfApiProperties = osfApiProperties;
         this.authnDelegationClients = authnDelegationClients;
     }
@@ -139,6 +148,11 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
 
     @Override
     protected Event doPreExecute(final RequestContext context) throws Exception {
+        OsfUrlProperties osfUrl = Optional.of(context).map(requestContext
+                -> (OsfUrlProperties) requestContext.getFlowScope().get(OSF_URL_FLOW_PARAMETER)).orElse(null);
+        if (osfUrl == null) {
+            context.getFlowScope().put(OSF_URL_FLOW_PARAMETER, osfUrlProperties);
+        }
         return super.doPreExecute(context);
     }
 
