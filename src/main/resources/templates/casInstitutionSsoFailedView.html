@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title th:text="#{screen.institutionssonotimplemented.heading}"></title>
+    <title th:text="#{screen.institutionssofailed.pagetitle}"></title>
     <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
 </head>
 
@@ -21,8 +21,8 @@
                 </h3>
                 <hr class="my-4" />
                 <div class="card-message">
-                    <h2 th:utext="#{screen.institutionssonotimplemented.heading}"></h2>
-                    <p th:utext="#{screen.institutionssonotimplemented.message}"></p>
+                    <h2 th:utext="#{screen.institutionssofailed.heading}"></h2>
+                    <p th:utext="#{screen.institutionssofailed.message}"></p>
                 </div>
                 <div class="form-button">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${osfUrl.logout})}">

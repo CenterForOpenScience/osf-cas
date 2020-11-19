@@ -3,7 +3,7 @@ package io.cos.cas.osf.authentication.handler.support;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedIdpException;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedOsfException;
-import io.cos.cas.osf.authentication.exception.InstitutionSsoNotImplementedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidPasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
@@ -128,7 +128,7 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
         );
 
         if (isRemotePrincipal) {
-            throw new InstitutionSsoNotImplementedException(
+            throw new InstitutionSsoFailedException(
                     "Institution SSO not implemented for user [" + username + "] @ [" + institutionId +"]"
             );
         }

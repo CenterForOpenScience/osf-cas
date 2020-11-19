@@ -3,7 +3,7 @@ package io.cos.cas.osf.web.flow.configurer;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedIdpException;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedOsfException;
-import io.cos.cas.osf.authentication.exception.InstitutionSsoNotImplementedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
 import io.cos.cas.osf.authentication.exception.InvalidVerificationKeyException;
@@ -239,8 +239,8 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createTransitionForState(
                 handler,
-                InstitutionSsoNotImplementedException.class.getSimpleName(),
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED
+                InstitutionSsoFailedException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
         );
 
         // The default transition
@@ -337,7 +337,7 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         createTransitionForState(
                 action,
                 CasWebflowConstants.TRANSITION_ID_ERROR,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
         );
         createTransitionForState(
                 action,
@@ -374,8 +374,8 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createViewState(
                 flow,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
         );
     }
 
