@@ -38,9 +38,9 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
 
     public static String AUTHENTICATION_ATTRIBUTE_REMEMBER_ME = "rememberMe";
 
-    private static String DEFAULT_INSTITUTION_ID = "none_osf";
+    private static String DEFAULT_INSTITUTION_ID = "none";
 
-    private static DelegationProtocol DEFAULT_DELEGATION_PROTOCOL = DelegationProtocol.NONE_OSF;
+    private static DelegationProtocol DEFAULT_DELEGATION_PROTOCOL = DelegationProtocol.NONE;
 
     /**
      * The one-time and ephemeral OSF verification key.
