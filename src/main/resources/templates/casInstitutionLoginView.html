@@ -80,7 +80,7 @@
                 </div>
             </div>
 
-            <script>
+            <script th:inline="javascript">
                 function institutionLogin () {
                     let institutionSelect = document.getElementById("institutionselect");
                     let institutionLoginUrl = institutionSelect.options[institutionSelect.selectedIndex].value;
@@ -101,6 +101,10 @@
                     } else if (institutionLoginUrl === "cord") {
                         /*<![CDATA[*/
                             institutionLoginUrl = /*[[${cordUrl}]]*/ 'error: empty login url for cord';
+                        /*]]>*/
+                    } else if (institutionLoginUrl === "fakecas") {
+                        /*<![CDATA[*/
+                            institutionLoginUrl = /*[[${pac4jInstnLoginUrls.get('fakecas')}]]*/ 'error: empty login url for cord';
                         /*]]>*/
                     } else {
                         let lastIndexOfHash = institutionLoginUrl.lastIndexOf("#");

@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.webflow.execution.Action;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -111,7 +112,8 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
                 initialAuthenticationAttemptWebflowEventResolver.getObject(),
                 serviceTicketRequestWebflowEventResolver.getObject(),
                 adaptiveAuthenticationPolicy.getObject(),
-                jpaOsfDao.getObject()
+                jpaOsfDao.getObject(),
+                casProperties.getAuthn().getOsfPostgres().getInstitutionClients()
         );
     }
 }

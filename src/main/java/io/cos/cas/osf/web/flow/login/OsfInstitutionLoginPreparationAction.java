@@ -7,17 +7,23 @@ import io.cos.cas.osf.web.support.OsfCasLoginContext;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apereo.cas.authentication.adaptive.AdaptiveAuthenticationPolicy;
+import org.apereo.cas.web.DelegatedClientIdentityProviderConfiguration;
 import org.apereo.cas.web.flow.resolver.CasDelegatingWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
 
+import org.apereo.cas.web.support.WebUtils;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * This is {@link OsfInstitutionLoginPreparationAction}.
@@ -33,11 +39,15 @@ public class OsfInstitutionLoginPreparationAction extends OsfAbstractLoginPrepar
     @NotNull
     private final JpaOsfDao jpaOsfDao;
 
+    @NotNull
+    private final List<String> pac4jInstnClients;
+
     public OsfInstitutionLoginPreparationAction(
             final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver,
             final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
             final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy,
-            final JpaOsfDao jpaOsfDao
+            final JpaOsfDao jpaOsfDao,
+            final List<String> pac4jInstnClients
     ) {
         super(
                 initialAuthenticationAttemptWebflowEventResolver,
@@ -45,6 +55,7 @@ public class OsfInstitutionLoginPreparationAction extends OsfAbstractLoginPrepar
                 adaptiveAuthenticationPolicy
         );
         this.jpaOsfDao = jpaOsfDao;
+        this.pac4jInstnClients = pac4jInstnClients;
     }
 
     @Override
@@ -82,6 +93,28 @@ public class OsfInstitutionLoginPreparationAction extends OsfAbstractLoginPrepar
             institutionLoginUrlMapSorted = OsfInstitutionUtils.sortByValue(institutionLoginUrlMap);
         }
         context.getFlowScope().put("institutions", institutionLoginUrlMapSorted);
+        putPac4jInstnLoginUrls(context);
         return success();
+    }
+
+    private void putPac4jInstnLoginUrls(final RequestContext context) {
+        final Map<String, String> pac4jInstitutionLoginUrlMap = new HashMap<>();
+        final Set<? extends Serializable> clients = WebUtils.getDelegatedAuthenticationProviderConfigurations(context);
+        for (final Serializable client: clients) {
+            if (client instanceof DelegatedClientIdentityProviderConfiguration) {
+                final String clientType = ((DelegatedClientIdentityProviderConfiguration) client).getType();
+                if (PARAMETER_CAS_CLIENT_TYPE.equals(clientType)) {
+                    final String clientName = ((DelegatedClientIdentityProviderConfiguration) client).getName();
+                    if (!pac4jInstnClients.contains(clientName)) {
+                        LOGGER.error("Invalid PAC4J institution clients: [{}]", clientName);
+                    } else {
+                        final String clientUrl = ((DelegatedClientIdentityProviderConfiguration) client).getRedirectUrl();
+                        pac4jInstitutionLoginUrlMap.put(clientName, clientUrl);
+                        LOGGER.warn("{}: {}", clientName, clientUrl);
+                    }
+                }
+            }
+        }
+        context.getFlowScope().put("pac4jInstnLoginUrls", pac4jInstitutionLoginUrlMap);
     }
 }
