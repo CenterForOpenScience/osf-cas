@@ -36,10 +36,12 @@ import org.apache.http.message.BasicHeader;
 
 import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.Authentication;
+import org.apereo.cas.authentication.AuthenticationException;
 import org.apereo.cas.authentication.adaptive.AdaptiveAuthenticationPolicy;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.principal.ClientCredential;
 import org.apereo.cas.authentication.principal.Principal;
+import org.apereo.cas.web.flow.CasWebflowConstants;
 import org.apereo.cas.web.flow.actions.AbstractNonInteractiveCredentialsAction;
 import org.apereo.cas.web.flow.resolver.CasDelegatingWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
@@ -49,6 +51,7 @@ import org.json.JSONObject;
 import org.json.XML;
 
 import org.springframework.util.ResourceUtils;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -264,7 +267,15 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         if (osfUrl == null) {
             context.getFlowScope().put(OSF_URL_FLOW_PARAMETER, osfUrlProperties);
         }
-        return super.doPreExecute(context);
+        try {
+            return super.doPreExecute(context);
+        } catch (AccountException e) {
+            return new Event(
+                    this,
+                    CasWebflowConstants.TRANSITION_ID_AUTHENTICATION_FAILURE,
+                    new LocalAttributeMap<>(CasWebflowConstants.TRANSITION_ID_ERROR, new AuthenticationException(e))
+            );
+        }
     }
 
     @Override
