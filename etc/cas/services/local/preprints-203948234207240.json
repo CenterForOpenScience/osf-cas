@@ -24,7 +24,8 @@
       "allowedProviders": [
         "java.util.ArrayList",
         [
-          "orcid"
+          "orcid",
+          "fakecas"
         ]
       ],
       "permitUndefined": false

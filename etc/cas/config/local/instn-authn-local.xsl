@@ -49,6 +49,18 @@
                             <middleNames/>
                             <suffix/>
                         </user>
+                    </xsl:when><!--  Example CAS-auth University  -->
+                    <xsl:when test="$idp='fakecas'">
+                        <id>fakecas</id>
+                        <user>
+                            <!-- Tweaked fakeCAS as an institution IdP for local development -->
+                            <username><xsl:value-of select="//attribute[@name='username']/@value"/></username>
+                            <familyName><xsl:value-of select="//attribute[@name='familyName']/@value"/></familyName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <fullname/>
+                            <middleNames/>
+                            <suffix/>
+                        </user>
                     </xsl:when>
                     <!--  Unknown Identity Provider  -->
                     <xsl:otherwise>
