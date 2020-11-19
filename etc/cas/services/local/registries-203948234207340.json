@@ -24,8 +24,10 @@
       "allowedProviders": [
         "java.util.ArrayList",
         [
-          "orcid",
-          "fakecas"
+          "cord",
+          "fakecas",
+          "okstate",
+          "orcid"
         ]
       ],
       "permitUndefined": false
