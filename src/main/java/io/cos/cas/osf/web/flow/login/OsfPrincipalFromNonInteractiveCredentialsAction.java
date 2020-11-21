@@ -51,6 +51,7 @@ import org.json.JSONObject;
 import org.json.XML;
 
 import org.springframework.util.ResourceUtils;
+import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -59,7 +60,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.security.auth.login.AccountException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -73,6 +76,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -82,10 +86,36 @@ import java.util.Optional;
  * This is {@link OsfPrincipalFromNonInteractiveCredentialsAction}.
  *
  * Extends {@link AbstractNonInteractiveCredentialsAction} to check if there is any non-interactive authentication
- * available. In the case of authentication delegation, if credential with matching client found, simply use that
- * credential and return the success event (i.e. to authenticate and create the ticket granting ticket). In the case
- * of "username / verification key" login, if both found in requests parameters, create the OSF credential and return
- * success. Otherwise, return the error event and go to the login page for default "username / password" login.
+ * available. There are five different cases depends on whether there is an active client credential, whether there
+ * is a valid shibboleth authentication session, and whether there is a pair of username and verification key in
+ * request parameters. Credentials are checked first, then the shibboleth session, and finally the verification key.
+ *
+ * 1) In the case of non-institution pac4j authentication delegation (e.g. ORCiD), if credential with a matching
+ * client is found, simply use that credential and return the {@link AbstractAction#success()} event.
+ *
+ * For 1) only, the success event will trigger authentication with pac4j's authentication handler.
+ *
+ * 2) In the case of institution pac4j authentication delegation (e.g. OKState and Concordia), if credential with a
+ * matching client is found, extract the client info, principal ID and authentication attributes and store them into
+ * the {@code OsfPostgresCredential#delegationAttributes} object.
+ *
+ * 3) In the case of institution shibboleth authentication delegation (e.g. the rest of the institutions), if a valid
+ * shibboleth session (by checking the {@code AUTH-Shib-Session-Id} header) head is found, extract all AUTH headers
+ * and store them into the {@code OsfPostgresCredential#delegationAttributes} object.
+ *
+ * For both 2) and 3), OSF CAS then applies an XLS transformation to validate and convert delegation attributes into
+ * a JSON object using the "instn-authn.xsl" file. JWT sign andJWE encrypt the JSON object, and use it as the payload
+ * to authenticate against the OSF API institution authentication endpoint. If successful, update the credential and
+ * return the {@link AbstractAction#success()} event.
+ *
+ * 4) In the case of username and verification key login, if both found in requests parameters, store them into the
+ * {@link OsfPostgresCredential} and return the {@link AbstractAction#success()} event.
+ *
+ * For 2), 3) and 4), the success event will trigger authentication using the {@code OsfPostgresAuthenticationHandler}.
+ *
+ * 5) If none of the credential, shibboleth session or the pair of username and verification key are found, return the
+ * {@link AbstractAction#error()} event so that the login web flow will go to the pre-login check state and prepare for
+ * the username / password login form, ORCiD login button and institution login page.
  *
  * @author Longze Chen
  * @since 20.0.0
@@ -108,6 +138,14 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     public static final String INSTITUTION_CLIENTS_PARAMETER_NAME = "institutionClients";
 
     public static final String NON_INSTITUTION_CLIENTS_PARAMETER_NAME = "nonInstitutionClients";
+
+    private static final String REMOTE_USER = "REMOTE_USER";
+
+    private static final String ATTRIBUTE_PREFIX = "AUTH-";
+
+    private static final String SHIBBOLETH_SESSION_HEADER = ATTRIBUTE_PREFIX + "Shib-Session-Id";
+
+    private static final String SHIBBOLETH_COOKIE_PREFIX = "_shibsession_";
 
     @NotNull
     private CentralAuthenticationService centralAuthenticationService;
@@ -241,22 +279,67 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 LOGGER.debug("Unsupported delegation client [{}]", clientName);
                 return null;
             }
-            LOGGER.debug("Unsupported delegation credential [{}]", credential.getClass().getSimpleName());
+            LOGGER.debug("Unexpected credential of type [{}]", credential.getClass().getSimpleName());
             return null;
         }
 
-        LOGGER.debug("No valid credential found in the request context.");
-        final OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
+        LOGGER.debug("No valid client credential found in the request context: check shibboleth session.");
+        OsfPostgresCredential osfPostgresCredential = null;
+        final String shibbolethSession = request.getHeader(SHIBBOLETH_SESSION_HEADER);
+        if (StringUtils.isNotBlank(shibbolethSession)) {
+            LOGGER.debug("Shibboleth session / header found in request context.");
+            osfPostgresCredential = new OsfPostgresCredential();
+            osfPostgresCredential.setDelegationProtocol(DelegationProtocol.SAML_SHIB);
+            osfPostgresCredential.setRemotePrincipal(Boolean.TRUE);
+            removeShibbolethSessionCookie(context);
+
+            final String remoteUser = request.getHeader(REMOTE_USER);
+            if (StringUtils.isEmpty(remoteUser)) {
+                LOGGER.error("[SAML Shibboleth] Missing or empty Shibboleth header: {}", REMOTE_USER);
+            } else {
+                LOGGER.info("[SAML Shibboleth] User's institutional identity: '{}'", remoteUser);
+            }
+            for (final String headerName : Collections.list(request.getHeaderNames())) {
+                if (headerName.startsWith(ATTRIBUTE_PREFIX)) {
+                    final String headerValue = request.getHeader(headerName);
+                    LOGGER.debug(
+                            "[SAML Shibboleth] User's institutional identity '{}' - auth header '{}': '{}'",
+                            remoteUser,
+                            headerName,
+                            headerValue
+                    );
+                    osfPostgresCredential.getDelegationAttributes().put(
+                            headerName.substring(ATTRIBUTE_PREFIX.length()),
+                            headerValue
+                    );
+                }
+            }
+
+            final OsfApiInstitutionAuthenticationResult remoteUserInfo = notifyOsfApiOfInstnAuthnSuccess(osfPostgresCredential);
+            osfPostgresCredential.setUsername(remoteUserInfo.getUsername());
+            osfPostgresCredential.setInstitutionId(remoteUserInfo.getInstitutionId());
+            if (StringUtils.isEmpty(remoteUser)) {
+                LOGGER.warn(
+                        "[SAML Shibboleth] Missing user's institutional identity: username={}, institutionId={}",
+                        remoteUserInfo.getUsername(),
+                        remoteUserInfo.getInstitutionId()
+                );
+            }
+            return osfPostgresCredential;
+        }
+
+        LOGGER.debug("No valid shibboleth session found in request context: check username and verification key.");
         final String username = request.getParameter(USERNAME_PARAMETER_NAME);
         final String verificationKey = request.getParameter(VERIFICATION_KEY_PARAMETER_NAME);
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(verificationKey)) {
+            osfPostgresCredential = new OsfPostgresCredential();
             osfPostgresCredential.setUsername(username);
             osfPostgresCredential.setVerificationKey(verificationKey);
             osfPostgresCredential.setRememberMe(true);
             LOGGER.debug("User [{}] found in request w/ verificationKey", username);
             return osfPostgresCredential;
         }
-        LOGGER.debug("No username or verification key found in the request parameters.");
+        LOGGER.debug("No valid username or verification key found in request parameters.");
         return null;
     }
 
@@ -476,6 +559,26 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                     e.getMessage()
             );
             throw new InstitutionSsoFailedException("Communication Error between OSF CAS and OSF API");
+        }
+    }
+
+    /**
+     * Remove the shibboleth session cookie which is created by the Apache Shibboleth server after successful SAML authentication.
+     *
+     * @param context the Request Context
+     */
+    private void removeShibbolethSessionCookie(final RequestContext context) {
+        final HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext(context);
+        final Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            final HttpServletResponse response = WebUtils.getHttpServletResponseFromExternalWebflowContext(context);
+            for (final Cookie cookie : cookies) {
+                if (cookie.getName().startsWith(SHIBBOLETH_COOKIE_PREFIX)) {
+                    final Cookie shibbolethCookie = new Cookie(cookie.getName(), null);
+                    shibbolethCookie.setMaxAge(0);
+                    response.addCookie(shibbolethCookie);
+                }
+            }
         }
     }
 }

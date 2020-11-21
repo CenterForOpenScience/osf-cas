@@ -19,9 +19,49 @@
                         <user>
                             <!--  Each institution has its customized mapping of attributes  -->
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayedName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
                             <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <middleNames/>
+                            <suffix/>
+                        </user>
+                    </xsl:when>
+                    <!-- Brown University (BROWN) -->
+                    <xsl:when test="$idp='https://sso.brown.edu/idp/shibboleth'">
+                        <id>brown</id>
+                        <user>
+                            <username>
+                                <xsl:value-of select="//attribute[@name='mail']/@value"/>
+                            </username>
+                            <fullname>
+                                <xsl:value-of select="//attribute[@name='displayName']/@value"/>
+                            </fullname>
+                            <familyName>
+                                <xsl:value-of select="//attribute[@name='sN']/@value"/>
+                            </familyName>
+                            <givenName>
+                                <xsl:value-of select="//attribute[@name='givenName']/@value"/>
+                            </givenName>
+                            <middleNames/>
+                            <suffix/>
+                        </user>
+                    </xsl:when>
+                    <!-- University of Arizona (UA) -->
+                    <xsl:when test="$idp='urn:mace:incommon:arizona.edu'">
+                        <id>ua</id>
+                        <user>
+                            <username>
+                                <xsl:value-of select="//attribute[@name='mail']/@value"/>
+                            </username>
+                            <fullname>
+                                <xsl:value-of select="//attribute[@name='displayName']/@value"/>
+                            </fullname>
+                            <familyName>
+                                <xsl:value-of select="//attribute[@name='sN']/@value"/>
+                            </familyName>
+                            <givenName>
+                                <xsl:value-of select="//attribute[@name='givenName']/@value"/>
+                            </givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
