@@ -186,13 +186,14 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     protected Credential constructCredentialsFromRequest(final RequestContext context) {
 
         final HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext(context);
-
-        // Check if credential already exists from delegated authentication
         final Credential credential = WebUtils.getCredential(context);
+
+        // Check 1: is there an existing credential?
         if (credential != null) {
             LOGGER.debug("Existing credential found in context of type [{}]", credential.getClass());
             if (credential instanceof ClientCredential) {
                 final String clientName = ((ClientCredential) credential).getClientName();
+                // Type 1: non-institution SSO (i.e. ORCiD) via pac4j authentication delegation using the OAuth protocol
                 if (authnDelegationClients.get(NON_INSTITUTION_CLIENTS_PARAMETER_NAME).contains(clientName)) {
                     LOGGER.debug(
                             "Valid non-institution authn delegation client [{}] found with principal [{}]",
@@ -201,124 +202,43 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                     );
                     return credential;
                 }
+                // Type 2: institution SSO via pac4j authentication delegation using the CAS protocol
                 if (authnDelegationClients.get(INSTITUTION_CLIENTS_PARAMETER_NAME).contains(clientName)) {
                     LOGGER.debug(
                             "Valid institution authn delegation client [{}] found with principal [{}]",
                             clientName,
                             credential.getId()
                     );
-                    final Authentication authentication = WebUtils.getAuthentication(context);
-                    final Principal principal = authentication.getPrincipal();
-                    final OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
-                    osfPostgresCredential.setRemotePrincipal(Boolean.TRUE);
-                    osfPostgresCredential.setDelegationProtocol(DelegationProtocol.CAS_PAC4J);
-                    osfPostgresCredential.getDelegationAttributes().put("Cas-Identity-Provider", clientName);
-                    if (principal.getAttributes().size() > 0) {
-                        for (final Map.Entry<String, List<Object>> entry : principal.getAttributes().entrySet()) {
-                            final String attributeKey = entry.getKey();
-                            final List<Object> attributeValues = entry.getValue();
-                            if (attributeValues.isEmpty()) {
-                                LOGGER.error(
-                                        "[CAS PAC4J] Empty-value attribute detected: '{}', '{}', '{}', '{}'",
-                                        clientName,
-                                        principal.getId(),
-                                        attributeKey,
-                                        attributeValues
-                                );
-                            } else if (attributeValues.size() > 1) {
-                                LOGGER.error(
-                                        "[CAS PAC4J] Multi-value attribute detected: '{}', '{}', '{}', '{}'",
-                                        clientName,
-                                        principal.getId(),
-                                        attributeKey,
-                                        attributeValues
-                                );
-                            } else {
-                                final Object firstAttributeValue = attributeValues.get(0);
-                                LOGGER.debug(
-                                        "[CAS PAC4J] User's institutional identity '{}': '{}' w/ attribute '{}': '{}'",
-                                        clientName,
-                                        principal.getId(),
-                                        attributeKey,
-                                        firstAttributeValue
-                                );
-                                if (firstAttributeValue instanceof String) {
-                                    LOGGER.info(
-                                            "[CAS PAC4J] Delegation attribute map updated: '{}', '{}', '{}', '{}'",
-                                            clientName,
-                                            principal.getId(),
-                                            attributeKey,
-                                            firstAttributeValue
-                                    );
-                                    osfPostgresCredential.getDelegationAttributes().put(
-                                            attributeKey,
-                                            String.valueOf(firstAttributeValue)
-                                    );
-                                } else {
-                                    LOGGER.error(
-                                            "[CAS PAC4J] Attribute w/ non-string value: '{}', '{}', '{}', '{}', '{}'",
-                                            clientName,
-                                            principal.getId(),
-                                            entry.getKey(),
-                                            attributeKey,
-                                            firstAttributeValue.getClass().getName()
-                                    );
-                                }
-                            }
-                        }
-                    } else {
-                        LOGGER.error("[CAS PAC4J] No attributes for user '{} with client '{}'", principal.getId(), clientName);
+                    final OsfPostgresCredential osfPostgresCredential = constructCredentialsFromPac4jAuthentication(context, clientName);
+                    if (osfPostgresCredential != null) {
+                        final OsfApiInstitutionAuthenticationResult remoteUserInfo = notifyOsfApiOfInstnAuthnSuccess(osfPostgresCredential);
+                        osfPostgresCredential.setUsername(remoteUserInfo.getUsername());
+                        osfPostgresCredential.setInstitutionId(remoteUserInfo.getInstitutionId());
+                        WebUtils.removeCredential(context);
+                        return osfPostgresCredential;
                     }
-
-                    final OsfApiInstitutionAuthenticationResult remoteUserInfo = notifyOsfApiOfInstnAuthnSuccess(osfPostgresCredential);
-                    osfPostgresCredential.setUsername(remoteUserInfo.getUsername());
-                    osfPostgresCredential.setInstitutionId(remoteUserInfo.getInstitutionId());
-                    WebUtils.removeCredential(context);
-                    return osfPostgresCredential;
+                    LOGGER.error("osfPostgresCredential is null for client [{}]", clientName);
+                    return null;
                 }
-                LOGGER.debug("Unsupported delegation client [{}]", clientName);
+                LOGGER.error("Unsupported delegation client [{}]", clientName);
                 return null;
             }
-            LOGGER.debug("Unexpected credential of type [{}]", credential.getClass().getSimpleName());
+            LOGGER.error("Unexpected credential of type [{}]", credential.getClass().getSimpleName());
             return null;
         }
-
         LOGGER.debug("No valid client credential found in the request context: check shibboleth session.");
-        OsfPostgresCredential osfPostgresCredential = null;
+
+        // Check 2: is there an existing Shibboleth session?
         final String shibbolethSession = request.getHeader(SHIBBOLETH_SESSION_HEADER);
         if (StringUtils.isNotBlank(shibbolethSession)) {
+            // Type 3: institution sso via Shibboleth authentication using the SAML protocol
             LOGGER.debug("Shibboleth session / header found in request context.");
-            osfPostgresCredential = new OsfPostgresCredential();
-            osfPostgresCredential.setDelegationProtocol(DelegationProtocol.SAML_SHIB);
-            osfPostgresCredential.setRemotePrincipal(Boolean.TRUE);
-            removeShibbolethSessionCookie(context);
-
-            final String remoteUser = request.getHeader(REMOTE_USER);
-            if (StringUtils.isEmpty(remoteUser)) {
-                LOGGER.error("[SAML Shibboleth] Missing or empty Shibboleth header: {}", REMOTE_USER);
-            } else {
-                LOGGER.info("[SAML Shibboleth] User's institutional identity: '{}'", remoteUser);
-            }
-            for (final String headerName : Collections.list(request.getHeaderNames())) {
-                if (headerName.startsWith(ATTRIBUTE_PREFIX)) {
-                    final String headerValue = request.getHeader(headerName);
-                    LOGGER.debug(
-                            "[SAML Shibboleth] User's institutional identity '{}' - auth header '{}': '{}'",
-                            remoteUser,
-                            headerName,
-                            headerValue
-                    );
-                    osfPostgresCredential.getDelegationAttributes().put(
-                            headerName.substring(ATTRIBUTE_PREFIX.length()),
-                            headerValue
-                    );
-                }
-            }
+            final OsfPostgresCredential osfPostgresCredential = constructCredentialsFromShibbolethAuthentication(context, request);
 
             final OsfApiInstitutionAuthenticationResult remoteUserInfo = notifyOsfApiOfInstnAuthnSuccess(osfPostgresCredential);
             osfPostgresCredential.setUsername(remoteUserInfo.getUsername());
             osfPostgresCredential.setInstitutionId(remoteUserInfo.getInstitutionId());
-            if (StringUtils.isEmpty(remoteUser)) {
+            if (StringUtils.isBlank(osfPostgresCredential.getInstitutionalIdentity())) {
                 LOGGER.warn(
                         "[SAML Shibboleth] Missing user's institutional identity: username={}, institutionId={}",
                         remoteUserInfo.getUsername(),
@@ -327,29 +247,31 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             }
             return osfPostgresCredential;
         }
-
         LOGGER.debug("No valid shibboleth session found in request context: check username and verification key.");
+
+        // Check 3: is there a pair of username and verification key in the request?
         final String username = request.getParameter(USERNAME_PARAMETER_NAME);
         final String verificationKey = request.getParameter(VERIFICATION_KEY_PARAMETER_NAME);
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(verificationKey)) {
-            osfPostgresCredential = new OsfPostgresCredential();
-            osfPostgresCredential.setUsername(username);
-            osfPostgresCredential.setVerificationKey(verificationKey);
-            osfPostgresCredential.setRememberMe(true);
-            LOGGER.debug("User [{}] found in request w/ verificationKey", username);
-            return osfPostgresCredential;
+            // Type 4: automatic login with short-lived one-time verification key
+            return constructCredentialsFromUsernameAndVerificationKey(username, verificationKey);
         }
         LOGGER.debug("No valid username or verification key found in request parameters.");
+
+        // Default when there is no non-interactive authentication available
+        // Type 5: return a null credential so that the login webflow will prepare login pages
         return null;
     }
 
     @Override
     protected Event doPreExecute(final RequestContext context) throws Exception {
+        // Put server-specific OSF URLs into the flow scope
         OsfUrlProperties osfUrl = Optional.of(context).map(requestContext
                 -> (OsfUrlProperties) requestContext.getFlowScope().get(OSF_URL_FLOW_PARAMETER)).orElse(null);
         if (osfUrl == null) {
             context.getFlowScope().put(OSF_URL_FLOW_PARAMETER, osfUrlProperties);
         }
+        // super.doPreExecute() calls constructCredentialsFromRequest() whose exception must be caught and returned as a flow event
         try {
             return super.doPreExecute(context);
         } catch (AccountException e) {
@@ -395,6 +317,158 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     }
 
     /**
+     * Construct an {@link OsfPostgresCredential} object form pac4j delegated authentication via the CAS client.
+     *
+     * @param context the request context
+     * @param clientName the client name
+     * @return an {@link OsfPostgresCredential} object
+     */
+    private OsfPostgresCredential constructCredentialsFromPac4jAuthentication(final RequestContext context, final String clientName) {
+
+        final Authentication authentication = WebUtils.getAuthentication(context);
+        final Principal principal = authentication.getPrincipal();
+        final OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
+        osfPostgresCredential.setRemotePrincipal(Boolean.TRUE);
+        osfPostgresCredential.setDelegationProtocol(DelegationProtocol.CAS_PAC4J);
+        osfPostgresCredential.getDelegationAttributes().put("Cas-Identity-Provider", clientName);
+        if (principal.getAttributes().size() > 0) {
+            for (final Map.Entry<String, List<Object>> entry : principal.getAttributes().entrySet()) {
+                final String attributeKey = entry.getKey();
+                final List<Object> attributeValues = entry.getValue();
+                if (attributeValues.isEmpty()) {
+                    LOGGER.error(
+                            "[CAS PAC4J] Empty-value attribute detected: '{}', '{}', '{}', '{}'",
+                            clientName,
+                            principal.getId(),
+                            attributeKey,
+                            attributeValues
+                    );
+                } else if (attributeValues.size() > 1) {
+                    LOGGER.error(
+                            "[CAS PAC4J] Multi-value attribute detected: '{}', '{}', '{}', '{}'",
+                            clientName,
+                            principal.getId(),
+                            attributeKey,
+                            attributeValues
+                    );
+                } else {
+                    final Object firstAttributeValue = attributeValues.get(0);
+                    LOGGER.debug(
+                            "[CAS PAC4J] User's institutional identity '{}': '{}' w/ attribute '{}': '{}'",
+                            clientName,
+                            principal.getId(),
+                            attributeKey,
+                            firstAttributeValue
+                    );
+                    if (firstAttributeValue instanceof String) {
+                        LOGGER.info(
+                                "[CAS PAC4J] Delegation attribute map updated: '{}', '{}', '{}', '{}'",
+                                clientName,
+                                principal.getId(),
+                                attributeKey,
+                                firstAttributeValue
+                        );
+                        osfPostgresCredential.getDelegationAttributes().put(
+                                attributeKey,
+                                String.valueOf(firstAttributeValue)
+                        );
+                    } else {
+                        LOGGER.error(
+                                "[CAS PAC4J] Attribute w/ non-string value: '{}', '{}', '{}', '{}', '{}'",
+                                clientName,
+                                principal.getId(),
+                                entry.getKey(),
+                                attributeKey,
+                                firstAttributeValue.getClass().getName()
+                        );
+                    }
+                }
+            }
+            return osfPostgresCredential;
+        } else {
+            LOGGER.error("[CAS PAC4J] No attributes for user '{} with client '{}'", principal.getId(), clientName);
+            return null;
+        }
+    }
+
+    /**
+     * Construct an {@link OsfPostgresCredential} object from Shibboleth authentication.
+     *
+     * @param context the request context
+     * @param request the shibboleth authentication request with "auth-" prefixed headers
+     * @return an {@link OsfPostgresCredential} object
+     */
+    private OsfPostgresCredential constructCredentialsFromShibbolethAuthentication(
+            final RequestContext context,
+            final HttpServletRequest request
+    ) {
+        final OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
+        osfPostgresCredential.setDelegationProtocol(DelegationProtocol.SAML_SHIB);
+        osfPostgresCredential.setRemotePrincipal(Boolean.TRUE);
+        removeShibbolethSessionCookie(context);
+
+        final String remoteUser = request.getHeader(REMOTE_USER);
+        if (StringUtils.isEmpty(remoteUser)) {
+            LOGGER.error("[SAML Shibboleth] Missing or empty Shibboleth header: {}", REMOTE_USER);
+        } else {
+            LOGGER.info("[SAML Shibboleth] User's institutional identity: '{}'", remoteUser);
+        }
+        for (final String headerName : Collections.list(request.getHeaderNames())) {
+            if (headerName.startsWith(ATTRIBUTE_PREFIX)) {
+                final String headerValue = request.getHeader(headerName);
+                LOGGER.debug(
+                        "[SAML Shibboleth] User's institutional identity '{}' - auth header '{}': '{}'",
+                        remoteUser,
+                        headerName,
+                        headerValue
+                );
+                osfPostgresCredential.getDelegationAttributes().put(
+                        headerName.substring(ATTRIBUTE_PREFIX.length()),
+                        headerValue
+                );
+            }
+        }
+        osfPostgresCredential.setInstitutionalIdentity(remoteUser);
+        return osfPostgresCredential;
+    }
+
+    /**
+     * Construct an {@link OsfPostgresCredential} object with username and verification key.
+     *
+     * @param username the username in request parameters
+     * @param verificationKey the verification key in request parameters
+     * @return an {@link OsfPostgresCredential} object
+     */
+    private OsfPostgresCredential constructCredentialsFromUsernameAndVerificationKey(final String username, final String verificationKey) {
+        final OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
+        osfPostgresCredential.setUsername(username);
+        osfPostgresCredential.setVerificationKey(verificationKey);
+        osfPostgresCredential.setRememberMe(false);
+        LOGGER.debug("User [{}] found in request w/ verificationKey", username);
+        return osfPostgresCredential;
+    }
+
+    /**
+     * Remove the shibboleth session cookie which is created by the Apache Shibboleth server after successful SAML authentication.
+     *
+     * @param context the Request Context
+     */
+    private void removeShibbolethSessionCookie(final RequestContext context) {
+        final HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext(context);
+        final Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            final HttpServletResponse response = WebUtils.getHttpServletResponseFromExternalWebflowContext(context);
+            for (final Cookie cookie : cookies) {
+                if (cookie.getName().startsWith(SHIBBOLETH_COOKIE_PREFIX)) {
+                    final Cookie shibbolethCookie = new Cookie(cookie.getName(), null);
+                    shibbolethCookie.setMaxAge(0);
+                    response.addCookie(shibbolethCookie);
+                }
+            }
+        }
+    }
+
+    /**
      * Extract delegated authentication data from the given {@link OsfPostgresCredential} object and normalize it as
      * required by the OSF API institution authentication endpoint.
      *
@@ -404,7 +478,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
      * @throws ParserConfigurationException a parser configuration exception
      * @throws TransformerException a transformer exception
      */
-    protected JSONObject extractInstnAuthnDataFromCredential(final OsfPostgresCredential credential)
+    private JSONObject extractInstnAuthnDataFromCredential(final OsfPostgresCredential credential)
             throws ParserConfigurationException, TransformerException {
 
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -444,7 +518,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
      * @return {@link OsfApiInstitutionAuthenticationResult} an object that stores institution and user info on success
      * @throws AccountException if there is an issue with authentication data or if the OSF API request has failed
      */
-    protected OsfApiInstitutionAuthenticationResult notifyOsfApiOfInstnAuthnSuccess(
+    private OsfApiInstitutionAuthenticationResult notifyOsfApiOfInstnAuthnSuccess(
             final OsfPostgresCredential credential
     ) throws AccountException {
 
@@ -559,26 +633,6 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                     e.getMessage()
             );
             throw new InstitutionSsoFailedException("Communication Error between OSF CAS and OSF API");
-        }
-    }
-
-    /**
-     * Remove the shibboleth session cookie which is created by the Apache Shibboleth server after successful SAML authentication.
-     *
-     * @param context the Request Context
-     */
-    private void removeShibbolethSessionCookie(final RequestContext context) {
-        final HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext(context);
-        final Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            final HttpServletResponse response = WebUtils.getHttpServletResponseFromExternalWebflowContext(context);
-            for (final Cookie cookie : cookies) {
-                if (cookie.getName().startsWith(SHIBBOLETH_COOKIE_PREFIX)) {
-                    final Cookie shibbolethCookie = new Cookie(cookie.getName(), null);
-                    shibbolethCookie.setMaxAge(0);
-                    response.addCookie(shibbolethCookie);
-                }
-            }
         }
     }
 }
