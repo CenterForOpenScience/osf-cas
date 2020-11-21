@@ -10,7 +10,7 @@ import java.io.Serializable;
  * This is {@link OsfApiProperties}.
  *
  * @author Longze Chen
- * @since 20.1.0
+ * @since 20.2.0
  */
 @Getter
 @Setter

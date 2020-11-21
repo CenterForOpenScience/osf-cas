@@ -17,7 +17,7 @@ import org.springframework.webflow.execution.RequestContext;
  * are NOOP.
  *
  * @author Longze Chen
- * @since 20.0.0
+ * @since 20.1.0
  */
 public abstract class OsfAbstractLoginPreparationAction extends AbstractAuthenticationAction {
 

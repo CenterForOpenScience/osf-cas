@@ -29,7 +29,7 @@ import java.util.Set;
  * pass, current and potential future states; and finally 3) return respective transition events to the login web flow.
  *
  * @author Longze Chen
- * @since 20.0.0
+ * @since 20.1.0
  */
 @Slf4j
 public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparationAction {

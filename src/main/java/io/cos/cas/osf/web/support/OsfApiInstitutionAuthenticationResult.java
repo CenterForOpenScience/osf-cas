@@ -12,7 +12,7 @@ import java.io.Serializable;
  * This is {@link OsfApiInstitutionAuthenticationResult}.
  *
  * @author Longze Chen
- * @since 20.1.0
+ * @since 20.2.0
  */
 @AllArgsConstructor
 @Getter

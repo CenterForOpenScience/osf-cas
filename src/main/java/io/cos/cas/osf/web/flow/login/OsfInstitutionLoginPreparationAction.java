@@ -31,7 +31,7 @@ import java.util.Set;
  * Extends {@link OsfAbstractLoginPreparationAction} to prepare the institution login page.
  *
  * @author Longze Chen
- * @since 20.0.0
+ * @since 20.1.0
  */
 @Slf4j
 public class OsfInstitutionLoginPreparationAction extends OsfAbstractLoginPreparationAction {

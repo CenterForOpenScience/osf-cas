@@ -15,7 +15,7 @@ import java.io.Serializable;
  * staging servers) URLs need to be manually put into the flow context for the templates to access.
  *
  * @author Longze Chen
- * @since 20.1.0
+ * @since 20.2.0
  */
 @Getter
 @Setter

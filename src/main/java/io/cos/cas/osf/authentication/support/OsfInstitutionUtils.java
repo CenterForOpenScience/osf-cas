@@ -17,7 +17,7 @@ import java.util.Map;
  * This is {@link OsfInstitutionUtils}.
  *
  * @author Longze Chen
- * @since 20.1.0
+ * @since 20.2.0
  */
 @Slf4j
 public final class OsfInstitutionUtils {
