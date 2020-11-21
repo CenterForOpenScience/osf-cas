@@ -139,11 +139,11 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
 
     public static final String NON_INSTITUTION_CLIENTS_PARAMETER_NAME = "nonInstitutionClients";
 
-    private static final String REMOTE_USER = "REMOTE_USER";
+    private static final String REMOTE_USER = "remote_user";
 
-    private static final String ATTRIBUTE_PREFIX = "AUTH-";
+    private static final String ATTRIBUTE_PREFIX = "auth-";
 
-    private static final String SHIBBOLETH_SESSION_HEADER = ATTRIBUTE_PREFIX + "Shib-Session-Id";
+    private static final String SHIBBOLETH_SESSION_HEADER = ATTRIBUTE_PREFIX + "shib-session-id";
 
     private static final String SHIBBOLETH_COOKIE_PREFIX = "_shibsession_";
 
