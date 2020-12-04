@@ -26,6 +26,7 @@ import org.apereo.cas.web.flow.configurer.DefaultLoginWebflowConfigurer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
+import org.springframework.webflow.engine.ActionList;
 import org.springframework.webflow.engine.ActionState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.History;
@@ -64,6 +65,13 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
             final CasConfigurationProperties casProperties
     ) {
         super(flowBuilderServices, flowDefinitionRegistry, applicationContext, casProperties);
+    }
+
+    @Override
+    protected void createInitialFlowActions(final Flow flow) {
+        final ActionList startActionList = flow.getStartActionList();
+        startActionList.add(createEvaluateAction(OsfCasWebflowConstants.ACTION_ID_OSF_PRE_INITIAL_FLOW_SETUP));
+        super.createInitialFlowActions(flow);
     }
 
     @Override
@@ -438,5 +446,4 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT
         );
     }
-
 }

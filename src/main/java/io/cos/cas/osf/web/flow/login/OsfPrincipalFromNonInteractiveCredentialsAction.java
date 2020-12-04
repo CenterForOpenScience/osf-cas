@@ -80,7 +80,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * This is {@link OsfPrincipalFromNonInteractiveCredentialsAction}.
@@ -265,12 +264,6 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
 
     @Override
     protected Event doPreExecute(final RequestContext context) throws Exception {
-        // Put server-specific OSF URLs into the flow scope
-        OsfUrlProperties osfUrl = Optional.of(context).map(requestContext
-                -> (OsfUrlProperties) requestContext.getFlowScope().get(OSF_URL_FLOW_PARAMETER)).orElse(null);
-        if (osfUrl == null) {
-            context.getFlowScope().put(OSF_URL_FLOW_PARAMETER, osfUrlProperties);
-        }
         // super.doPreExecute() calls constructCredentialsFromRequest() whose exception must be caught and returned as a flow event
         try {
             return super.doPreExecute(context);

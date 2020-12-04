@@ -10,6 +10,8 @@ package io.cos.cas.osf.web.flow.support;
 
 public interface OsfCasWebflowConstants {
 
+    String ACTION_ID_OSF_PRE_INITIAL_FLOW_SETUP = "osfCasPreInitialFlowSetupAction";
+
     String ACTION_ID_OSF_DEFAULT_LOGIN_CHECK = "osfDefaultLoginCheckAction";
 
     String STATE_ID_OSF_DEFAULT_LOGIN_CHECK = "osfDefaultLoginCheck";
