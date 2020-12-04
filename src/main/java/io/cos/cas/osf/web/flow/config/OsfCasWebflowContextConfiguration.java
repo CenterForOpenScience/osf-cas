@@ -1,6 +1,7 @@
 package io.cos.cas.osf.web.flow.config;
 
 import io.cos.cas.osf.web.flow.configurer.OsfCasLoginWebflowConfigurer;
+import io.cos.cas.osf.web.flow.configurer.OsfCasLogoutWebFlowConfigurer;
 
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.web.flow.CasWebflowConfigurer;
@@ -45,5 +46,17 @@ public class OsfCasWebflowContextConfiguration extends CasWebflowContextConfigur
         osfCasLoginWebflowConfigurer.setLogoutFlowDefinitionRegistry(logoutFlowRegistry());
         osfCasLoginWebflowConfigurer.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return osfCasLoginWebflowConfigurer;
+    }
+
+    @Override
+    @Bean
+    @Order(DEFAULT_WEB_FLOW_CONFIGURER_ORDER)
+    @Lazy(false)
+    public CasWebflowConfigurer defaultLogoutWebflowConfigurer() {
+        OsfCasLogoutWebFlowConfigurer osfCasLogoutWebFlowConfigurer
+                = new OsfCasLogoutWebFlowConfigurer(builder(), loginFlowRegistry(), applicationContext, casProperties);
+        osfCasLogoutWebFlowConfigurer.setLogoutFlowDefinitionRegistry(logoutFlowRegistry());
+        osfCasLogoutWebFlowConfigurer.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return osfCasLogoutWebFlowConfigurer;
     }
 }
