@@ -81,6 +81,7 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         createTwoFactorLoginFormView(flow);
         createInstitutionLoginView(flow);
         createOrcidLoginAutoRedirectView(flow);
+        createDefaultServiceLoginAutoRedirectView(flow);
         createOsfCasAuthenticationExceptionViewStates(flow);
     }
 
@@ -326,6 +327,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createTransitionForState(
                 action,
+                OsfCasWebflowConstants.TRANSITION_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT,
+                OsfCasWebflowConstants.VIEW_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT
+        );
+        createTransitionForState(
+                action,
                 CasWebflowConstants.TRANSITION_ID_ERROR,
                 CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM
         );
@@ -431,6 +437,19 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
             flow,
             OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT,
             OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT
+        );
+    }
+
+    /**
+     * Create the ORCiD login auto-redirect view to support the OSF feature "sign-up via ORCiD".
+     *
+     * @param flow the flow
+     */
+    protected void createDefaultServiceLoginAutoRedirectView(final Flow flow) {
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT,
+                OsfCasWebflowConstants.VIEW_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT
         );
     }
 

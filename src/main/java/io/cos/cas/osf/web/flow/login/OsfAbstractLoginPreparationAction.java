@@ -8,6 +8,10 @@ import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * This is {@link OsfAbstractLoginPreparationAction}.
  *
@@ -38,6 +42,10 @@ public abstract class OsfAbstractLoginPreparationAction extends AbstractAuthenti
     protected static final String PARAMETER_ORCID_REDIRECT = "redirectOrcid";
 
     protected static final String PARAMETER_ORCID_REDIRECT_VALUE = "true";
+
+    protected static final String PARAMETER_ERROR_SOURCE = "errorSource";
+
+    protected static final List<String> EXPECTED_ERROR_CODES = new LinkedList<>(Arrays.asList("401", "403", "404", "405", "423"));
 
     public OsfAbstractLoginPreparationAction(
             final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver,
