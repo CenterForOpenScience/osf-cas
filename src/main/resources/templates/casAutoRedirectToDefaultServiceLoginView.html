@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+    <head th:with="defaultServiceLoginUrl=@{/login(service=${osfCasLoginContext.defaultServiceUrl})}">
+        <!-- When this template is rendered, both ${osfCasLoginContext.defaultSerivceUrl}
+             and #{screen.flowless.heading.defaultserviceredirect} are guranteed to exist. -->
+        <meta http-equiv="refresh" th:content="${'0; url=' + defaultServiceLoginUrl}" />
+        <title th:text="#{screen.flowless.heading.defaultserviceredirect}"></title>
+    </head>
+</html>

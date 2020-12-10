@@ -26,6 +26,7 @@ import org.apereo.cas.web.flow.configurer.DefaultLoginWebflowConfigurer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
+import org.springframework.webflow.engine.ActionList;
 import org.springframework.webflow.engine.ActionState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.History;
@@ -67,12 +68,20 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
     }
 
     @Override
+    protected void createInitialFlowActions(final Flow flow) {
+        final ActionList startActionList = flow.getStartActionList();
+        startActionList.add(createEvaluateAction(OsfCasWebflowConstants.ACTION_ID_OSF_PRE_INITIAL_FLOW_SETUP));
+        super.createInitialFlowActions(flow);
+    }
+
+    @Override
     protected void createDefaultViewStates(final Flow flow) {
         super.createDefaultViewStates(flow);
         // Create OSF customized view states
         createTwoFactorLoginFormView(flow);
         createInstitutionLoginView(flow);
         createOrcidLoginAutoRedirectView(flow);
+        createDefaultServiceLoginAutoRedirectView(flow);
         createOsfCasAuthenticationExceptionViewStates(flow);
     }
 
@@ -318,6 +327,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createTransitionForState(
                 action,
+                OsfCasWebflowConstants.TRANSITION_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT,
+                OsfCasWebflowConstants.VIEW_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT
+        );
+        createTransitionForState(
+                action,
                 CasWebflowConstants.TRANSITION_ID_ERROR,
                 CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM
         );
@@ -427,6 +441,19 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
     }
 
     /**
+     * Create the ORCiD login auto-redirect view to support the OSF feature "sign-up via ORCiD".
+     *
+     * @param flow the flow
+     */
+    protected void createDefaultServiceLoginAutoRedirectView(final Flow flow) {
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT,
+                OsfCasWebflowConstants.VIEW_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT
+        );
+    }
+
+    /**
      * Create the institution SSO init view state to support the OSF feature "sign-in via institutions".
      *
      * @param flow the flow
@@ -438,5 +465,4 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT
         );
     }
-
 }

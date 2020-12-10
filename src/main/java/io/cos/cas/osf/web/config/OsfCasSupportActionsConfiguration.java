@@ -3,6 +3,7 @@ package io.cos.cas.osf.web.config;
 import io.cos.cas.osf.dao.JpaOsfDao;
 import io.cos.cas.osf.web.flow.login.OsfDefaultLoginPreparationAction;
 import io.cos.cas.osf.web.flow.login.OsfInstitutionLoginPreparationAction;
+import io.cos.cas.osf.web.flow.login.OsfCasPreInitialFlowSetupAction;
 import io.cos.cas.osf.web.flow.login.OsfPrincipalFromNonInteractiveCredentialsAction;
 
 import org.apereo.cas.CentralAuthenticationService;
@@ -22,7 +23,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.webflow.execution.Action;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +48,6 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
     @Qualifier("initialAuthenticationAttemptWebflowEventResolver")
     private ObjectProvider<CasDelegatingWebflowEventResolver> initialAuthenticationAttemptWebflowEventResolver;
 
-
     @Autowired
     @Qualifier("adaptiveAuthenticationPolicy")
     private ObjectProvider<AdaptiveAuthenticationPolicy> adaptiveAuthenticationPolicy;
@@ -59,6 +58,16 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
 
     @Autowired
     private ObjectProvider<JpaOsfDao> jpaOsfDao;
+
+    /**
+     * Bean configuration for {@link OsfCasPreInitialFlowSetupAction}.
+     *
+     * @return the initialized action
+     */
+    @Bean
+    public Action osfCasPreInitialFlowSetupAction() {
+        return new OsfCasPreInitialFlowSetupAction(casProperties.getAuthn().getOsfUrl());
+    }
 
     /**
      * Bean configuration for {@link OsfPrincipalFromNonInteractiveCredentialsAction}.

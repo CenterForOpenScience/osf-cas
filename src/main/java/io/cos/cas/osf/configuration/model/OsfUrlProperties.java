@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This is {@link OsfUrlProperties}.
@@ -38,6 +40,11 @@ public class OsfUrlProperties implements Serializable {
      * OSF sign-up page URL.
      */
     private String register;
+
+    /**
+     * OSF login endpoint with "?next=".
+     */
+    private String loginWithNext;
 
     /**
      * OSF logout endpoint URL.
@@ -88,4 +95,11 @@ public class OsfUrlProperties implements Serializable {
      * OSF / COS donation page URL.
      */
     private String donate;
+
+    /**
+     * Build the default service URL using OSF login endpoint with OSF home page as destination.
+     */
+    public String constructDefaultServiceUrl() {
+        return loginWithNext + URLEncoder.encode(home, StandardCharsets.UTF_8);
+    }
 }
