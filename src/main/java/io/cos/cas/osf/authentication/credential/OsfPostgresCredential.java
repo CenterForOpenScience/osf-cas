@@ -38,9 +38,9 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
 
     public static String AUTHENTICATION_ATTRIBUTE_REMEMBER_ME = "rememberMe";
 
-    private static String DEFAULT_INSTITUTION_ID = "none_osf";
+    private static String DEFAULT_INSTITUTION_ID = "none";
 
-    private static DelegationProtocol DEFAULT_DELEGATION_PROTOCOL = DelegationProtocol.NONE_OSF;
+    private static DelegationProtocol DEFAULT_DELEGATION_PROTOCOL = DelegationProtocol.NONE;
 
     /**
      * The one-time and ephemeral OSF verification key.
@@ -52,12 +52,29 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
      */
     private String oneTimePassword;
 
+    /**
+     * The boolean flag that indicates successful delegated authentication if true.
+     */
     private boolean remotePrincipal = Boolean.FALSE;
 
+    /**
+     * The ID that indicates which institution it is after successful authentication between CAS / Shib and institutions.
+     */
     private String institutionId = DEFAULT_INSTITUTION_ID;
 
+    /**
+     * The user's institutional identity when authenticated via institutional SSO.
+     */
+    private String institutionalIdentity = "";
+
+    /**
+     * The authentication delegation protocol that is used between CAS / Shib and institutions.
+     */
     private DelegationProtocol delegationProtocol = DEFAULT_DELEGATION_PROTOCOL;
 
+    /**
+     * The authentication attributes that are parsed from raw authentication response.
+     */
     private Map<String, String> delegationAttributes = new LinkedHashMap<>();
 
     @Override

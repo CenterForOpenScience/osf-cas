@@ -2,7 +2,7 @@ package io.cos.cas.osf.web.flow.config;
 
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedIdpException;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedOsfException;
-import io.cos.cas.osf.authentication.exception.InstitutionSsoNotImplementedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidPasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
@@ -42,7 +42,7 @@ public class OsfCasCoreWebflowConfiguration extends CasCoreWebflowConfiguration 
         errors.add(AccountNotConfirmedIdpException.class);
         errors.add(AccountNotConfirmedOsfException.class);
         errors.add(InvalidOneTimePasswordException.class);
-        errors.add(InstitutionSsoNotImplementedException.class);
+        errors.add(InstitutionSsoFailedException.class);
         errors.add(InvalidPasswordException.class);
         errors.add(InvalidUserStatusException.class);
         errors.add(InvalidVerificationKeyException.class);

@@ -17,7 +17,7 @@ import org.springframework.webflow.execution.RequestContext;
  * are NOOP.
  *
  * @author Longze Chen
- * @since 20.0.0
+ * @since 20.1.0
  */
 public abstract class OsfAbstractLoginPreparationAction extends AbstractAuthenticationAction {
 
@@ -32,6 +32,8 @@ public abstract class OsfAbstractLoginPreparationAction extends AbstractAuthenti
     protected static final String PARAMETER_INSTITUTION_ID = "institutionId";
 
     protected static final String PARAMETER_ORCID_CLIENT_TYPE = "orcid";
+
+    protected static final String PARAMETER_CAS_CLIENT_TYPE = "cas";
 
     protected static final String PARAMETER_ORCID_REDIRECT = "redirectOrcid";
 

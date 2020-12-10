@@ -28,7 +28,7 @@
                         </a>
                     </div>
                     <div class="form-button">
-                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
+                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${osfUrl.logout})}">
                             <span class="mdc-button__label" th:utext="#{screen.generic.button.backtoosf}"></span>
                         </a>
                     </div>

@@ -863,6 +863,26 @@ body {
     max-width: 48rem;
 }
 
+.login-instn-card .card-message {
+    padding: 0.25rem 0;
+}
+
+.login-instn-card .instn-select select {
+    width: 100%;
+    height: 3rem;
+    font-size: 1.25rem;
+    padding: 0 1rem;
+    margin: 0.5rem 0;
+}
+
+.login-instn-card .instn-consent {
+    padding: 1rem 0;
+}
+
+.login-instn-card .instn-consent input {
+    margin-right: 0.5rem;
+}
+
 @media all and (min-width: 639.99px) {
     .w-card-narrow {
         width: 50%;

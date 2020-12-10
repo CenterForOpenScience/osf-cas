@@ -1,5 +1,6 @@
 package io.cos.cas.osf.web.config;
 
+import io.cos.cas.osf.dao.JpaOsfDao;
 import io.cos.cas.osf.web.flow.login.OsfDefaultLoginPreparationAction;
 import io.cos.cas.osf.web.flow.login.OsfInstitutionLoginPreparationAction;
 import io.cos.cas.osf.web.flow.login.OsfPrincipalFromNonInteractiveCredentialsAction;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.webflow.execution.Action;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +57,9 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
     @Qualifier("centralAuthenticationService")
     private ObjectProvider<CentralAuthenticationService> centralAuthenticationService;
 
+    @Autowired
+    private ObjectProvider<JpaOsfDao> jpaOsfDao;
+
     /**
      * Bean configuration for {@link OsfPrincipalFromNonInteractiveCredentialsAction}.
      *
@@ -76,6 +81,8 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
                 serviceTicketRequestWebflowEventResolver.getObject(),
                 adaptiveAuthenticationPolicy.getObject(),
                 centralAuthenticationService.getObject(),
+                casProperties.getAuthn().getOsfUrl(),
+                casProperties.getAuthn().getOsfApi(),
                 authnDelegationClients
         );
     }
@@ -104,7 +111,9 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
         return new OsfInstitutionLoginPreparationAction(
                 initialAuthenticationAttemptWebflowEventResolver.getObject(),
                 serviceTicketRequestWebflowEventResolver.getObject(),
-                adaptiveAuthenticationPolicy.getObject()
+                adaptiveAuthenticationPolicy.getObject(),
+                jpaOsfDao.getObject(),
+                casProperties.getAuthn().getOsfPostgres().getInstitutionClients()
         );
     }
 }

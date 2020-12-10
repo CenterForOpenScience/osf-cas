@@ -26,7 +26,7 @@
                     <div th:utext="#{screen.unavailable.message}"></div>
                 </div>
                 <div class="form-button-inline">
-                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${osfUrl.logout})}">
                         <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>
                     </a>
                     <button id="buttonViewErrorDetails" type="button"

@@ -14,15 +14,15 @@
     <div th:fragment="pmlinks" id="pmlinks" class="my-2">
         <div class="text-with-mdi">
             <i class="mdi mdi-shield-alert mdi-before-text"></i>
-            <span><a th:href="#{osf.forgot.password.url}" th:utext="#{screen.pm.button.forgotpwd}"></a></span>
+            <span><a th:href="@{${osfUrl.forgotPassword}}" th:utext="#{screen.pm.button.forgotpwd}"></a></span>
         </div>
         <div class="text-with-mdi">
             <i class="mdi mdi-account-plus mdi-before-text"></i>
-            <span><a th:href="#{osf.create.account.url}" th:utext="#{screen.pm.button.createaccount}"></a></span>
+            <span><a th:href="@{${osfUrl.register}}" th:utext="#{screen.pm.button.createaccount}"></a></span>
         </div>
         <div class="text-with-mdi">
             <i class="mdi mdi-home mdi-before-text"></i>
-            <span><a th:href="#{osf.home.url}" th:utext="#{screen.pm.button.backtoosf}"></a></span>
+            <span><a th:href="@{${osfUrl.home}}" th:utext="#{screen.pm.button.backtoosf}"></a></span>
         </div>
     </div>
 </body>

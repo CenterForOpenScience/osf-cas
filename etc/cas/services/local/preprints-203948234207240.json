@@ -24,6 +24,9 @@
       "allowedProviders": [
         "java.util.ArrayList",
         [
+          "cord",
+          "fakecas",
+          "okstate",
           "orcid"
         ]
       ],

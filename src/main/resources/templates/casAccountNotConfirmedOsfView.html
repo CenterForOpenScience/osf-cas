@@ -25,12 +25,12 @@
                     <p th:utext="#{screen.accountnotconfirmedosf.message}"></p>
                 </div>
                 <div class="form-button">
-                    <a class="mdc-button mdc-button--raised button-osf-green" th:href="#{osf.resend.osf.confirmation.url}">
+                    <a class="mdc-button mdc-button--raised button-osf-green" th:href="@{${osfUrl.resendConfirmation}}">
                         <span class="mdc-button__label" th:utext="#{screen.authnerror.button.resendosfconfirmation}"></span>
                     </a>
                 </div>
                 <div class="form-button">
-                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${osfUrl.logout})}">
                         <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>
                     </a>
                 </div>

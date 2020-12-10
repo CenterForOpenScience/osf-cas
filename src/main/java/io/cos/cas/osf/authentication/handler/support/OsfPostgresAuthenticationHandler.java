@@ -3,7 +3,7 @@ package io.cos.cas.osf.authentication.handler.support;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedIdpException;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedOsfException;
-import io.cos.cas.osf.authentication.exception.InstitutionSsoNotImplementedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidPasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
@@ -127,12 +127,6 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
                 delegationProtocol
         );
 
-        if (isRemotePrincipal) {
-            throw new InstitutionSsoNotImplementedException(
-                    "Institution SSO not implemented for user [" + username + "] @ [" + institutionId +"]"
-            );
-        }
-
         final OsfUser osfUser = jpaOsfDao.findOneUserByEmail(username);
         if (osfUser == null) {
             throw new AccountNotFoundException("User [" + username + "] not found");
@@ -143,16 +137,21 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
         }
         final String userStatus = OsfUserUtils.verifyUserStatus(osfUser);
 
-        if (plainTextPassword != null) {
-            if (!OsfPasswordUtils.verifyPassword(plainTextPassword, osfUser.getPassword())) {
-                throw new InvalidPasswordException("Invalid password for user [" + username + "]");
-            }
-        } else if (verificationKey != null) {
-            if (!verificationKey.equals(osfUser.getVerificationKey())) {
-                throw new InvalidVerificationKeyException("Invalid verification key for user [" + username + "]");
-            }
+        if (isRemotePrincipal) {
+            LOGGER.info("Skip password and verification key check for institution SSO [" + username + "] @ [" + institutionId +"]");
         } else {
-            throw new FailedLoginException("Missing credential for user [" + username + "]");
+            if (plainTextPassword != null) {
+                if (!OsfPasswordUtils.verifyPassword(plainTextPassword, osfUser.getPassword())) {
+                    throw new InvalidPasswordException("Invalid password for user [" + username + "]");
+                }
+            } else if (verificationKey != null) {
+                if (!verificationKey.equals(osfUser.getVerificationKey())) {
+                    throw new InvalidVerificationKeyException("Invalid verification key for user [" + username + "]");
+                }
+            } else {
+                LOGGER.info("Missing credential for user [" + username + "] @ [" + institutionId +"]");
+                throw new FailedLoginException("Missing credential for user [" + username + "]");
+            }
         }
 
         final OsfTotp osfTotp = jpaOsfDao.findOneTotpByOwnerId(osfUser.getId());
