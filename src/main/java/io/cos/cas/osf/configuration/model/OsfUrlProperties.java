@@ -62,6 +62,11 @@ public class OsfUrlProperties implements Serializable {
     private String forgotPassword;
 
     /**
+     * OSF forgot-password-institutions page URL
+     */
+    private String forgotPasswordInstitution;
+
+    /**
      * Build the default service URL using OSF login endpoint with OSF home page as destination.
      */
     public String constructDefaultServiceUrl() {

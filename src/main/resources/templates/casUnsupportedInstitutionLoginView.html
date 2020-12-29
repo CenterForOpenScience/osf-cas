@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <title th:text="#{screen.institutionlogin.pagetitle}"></title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag"/>
+    <style type="text/css">
+        #pmlink-forgotpwd { display: none; }
+    </style>
+</head>
+
+<body>
+    <main role="main" class="container mt-3 mb-3">
+
+        <div layout:fragment="content" class="row">
+            <div class="banner-generic m-auto mdc-card p-4 w-card-narrow">
+                <div class="login-generic-card login-instn-card">
+                    <div th:replace="fragments/osfinstitutionbannerui :: osfInstitutionBannerUI">
+                        <a href="fragments/osfinstitutionbannerui.html"></a>
+                    </div>
+                    <hr class="my-4" />
+                    <div class="card-message">
+                        <h2 th:utext="#{screen.unsupportedinstitutionlogin.heading}"></h2>
+                        <p th:utext="#{screen.unsupportedinstitutionlogin.message(${osfUrl.institutionsHome})}"></p>
+                    </div>
+                    <div id="osfDefaultLogin">
+                        <div class="card-message">
+                            <h3 th:utext="#{screen.unsupportedinstitutionlogin.existing.heading}"></h3>
+                            <p th:utext="#{screen.unsupportedinstitutionlogin.existing.osf.message}"></p>
+                        </div>
+                        <section class="delegation-row">
+                            <a class="delegation-button" th:href="@{/login(service=${service?.originalUrl ?: ''})}">
+                                <img class="delegation-button-logo" src="/images/osf-logo.png">
+                                <span class="delegation-button-label" th:utext="#{screen.unsupportedinstitutionlogin.existing.osf.button}"></span>
+                            </a>
+                        </section>
+                    </div>
+
+                    <div id="osfUnsupportedInstitutionLogin">
+                        <div class="card-message">
+                            <p th:utext="#{screen.unsupportedinstitutionlogin.existing.institution.message}"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-wrapper">
+                        <form method="post" id="fm1" th:object="${credential}" th:action="@{${osfUrl.forgotPasswordInstitution}}">
+
+                            <section class="cas-field cas-field-primary my-3">
+                                <div class="mdc-text-field  d-flex">
+                                    <input class="mdc-text-field__input"
+                                           id="username"
+                                           size="256"
+                                           type="email"
+                                           name="forgot_password-email"
+                                           th:accesskey="#{screen.unsupportedinstitutionlogin.existing.institution.label.email.accesskey}"
+                                           autocomplete="off" />
+                                    <label for="username" class="mdc-floating-label" th:utext="#{screen.unsupportedinstitutionlogin.existing.institution.label.email}"></label>
+                                </div>
+                            </section>
+
+                            <div th:replace="fragments/submitbutton :: submitButton (buttonCustomization='button-osf-green', messageKey='screen.unsupportedinstitutionlogin.existing.institution.button')" />
+
+                        </form>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <div th:replace="fragments/pmlinks :: pmlinks" />
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+
+</html>

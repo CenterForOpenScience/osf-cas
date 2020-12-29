@@ -52,6 +52,7 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
 
         final boolean institutionLogin = isInstitutionLogin(context);
         final String institutionId = getInstitutionIdFromRequestContext(context);
+        final boolean unsupportedInstitutionLogin = isUnsupportedInstitutionLogin(context);
         final boolean orcidRedirect = isOrcidLoginAutoRedirect(context);
         final String orcidLoginUrl = getOrcidLoginUrlFromFlowScope(context);
 
@@ -74,6 +75,7 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
                     encodedServiceUrl,
                     institutionLogin,
                     institutionId,
+                    unsupportedInstitutionLogin,
                     orcidRedirect,
                     orcidLoginUrl,
                     defaultService,
@@ -83,6 +85,7 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
             loginContext.setDefaultServiceUrl(encodedServiceUrl);
             loginContext.setInstitutionLogin(institutionLogin);
             loginContext.setInstitutionId(institutionId);
+            loginContext.setUnsupportedInstitutionLogin(unsupportedInstitutionLogin);
             loginContext.setOrcidLoginUrl(orcidLoginUrl);
             loginContext.setOrcidRedirect(false);
             loginContext.setDefaultService(defaultService);
@@ -98,6 +101,8 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
             return error();
         } else if (loginContext.isInstitutionLogin()) {
             return switchToInstitutionLogin();
+        } else if (loginContext.isUnsupportedInstitutionLogin()) {
+            return switchToUnsupportedInstitutionLogin();
         } else if (loginContext.isOrcidRedirect()) {
             if (StringUtils.isNotBlank(orcidLoginUrl)) {
                 return autoRedirectToOrcidLogin();
@@ -117,6 +122,11 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
     private String getInstitutionIdFromRequestContext(final RequestContext context) {
         final String institutionId = context.getRequestParameters().get(PARAMETER_INSTITUTION_ID);
         return StringUtils.isNotBlank(institutionId) ? institutionId : null;
+    }
+
+    private boolean isUnsupportedInstitutionLogin(final RequestContext context) {
+        final String campaign = context.getRequestParameters().get(PARAMETER_CAMPAIGN);
+        return StringUtils.isNotBlank(campaign) && PARAMETER_CAMPAIGN_UNSUPPORTED_INSTITUTION_VALUE.equals(campaign.toLowerCase());
     }
 
     private boolean isOrcidLoginAutoRedirect(final RequestContext context) {
@@ -157,6 +167,10 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
 
     private Event switchToInstitutionLogin() {
         return new Event(this, OsfCasWebflowConstants.TRANSITION_ID_INSTITUTION_LOGIN);
+    }
+
+    private Event switchToUnsupportedInstitutionLogin() {
+        return new Event(this, OsfCasWebflowConstants.TRANSITION_ID_UNSUPPORTED_INSTITUTION_LOGIN);
     }
 
     private Event autoRedirectToOrcidLogin() {

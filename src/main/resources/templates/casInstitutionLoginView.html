@@ -56,6 +56,11 @@
                         <span><a th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}" th:utext="#{screen.institutionlogin.link.select}"></a></span>
                     </section>
 
+                    <div class="instn-unsupported" th:unless=${osfCasLoginContext.institutionId}>
+                        <i class="mdi mdi-menu mdi-before-text"></i>
+                        <span><a th:href="@{/login(campaign=unsupportedinstitution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}" th:utext="#{screen.institutionlogin.select.unsupported}"></a></span>
+                    </div>
+
                     <section class="form-button">
                         <button type="button" id="institutionSubmit" class="mdc-button mdc-button--raised" name="submit" onclick="institutionLogin()"
                                 th:classappend="${osfCasLoginContext.institutionId == null ? 'button-osf-disabled' : 'button-osf-blue'}"
