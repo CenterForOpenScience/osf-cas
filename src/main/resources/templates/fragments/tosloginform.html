@@ -85,6 +85,13 @@
                     </div>
                 </form>
 
+                <hr class="my-4" />
+
+                <div class="text-with-mdi">
+                    <i class="mdi mdi-logout mdi-before-text"></i>
+                    <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.tosconsent.link.cancel}"></a></span>
+                </div>
+
                 <script type="text/javascript">
                     function checkTosConsent(checkbox) {
                         let submitButton = document.getElementById("primarySubmitButton");
