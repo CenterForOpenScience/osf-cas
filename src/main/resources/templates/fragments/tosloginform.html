@@ -78,11 +78,8 @@
                         </p>
                     </section>
 
-                    <div class="form-button">
-                        <button type="submit" name="submit" id="primarySubmitButton" accesskey="l" class="mdc-button mdc-button--raised button-osf-disabled" disabled>
-                            <span class="mdc-button__label" th:text="#{screen.tosconsent.button.agree}"></span>
-                        </button>
-                    </div>
+                    <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=true, buttonCustomization='button-osf-disabled', messageKey='screen.tosconsent.button.agree')" />
+
                 </form>
 
                 <hr class="my-4" />
