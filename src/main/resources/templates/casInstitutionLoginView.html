@@ -43,16 +43,6 @@
                             <a href="#" onclick="dismissErrorBanner('selecterrormessage'); return false;" class="close">&times;</a>
                         </div>
                     </div>
-                    <div class="instn-consent">
-                        <input type="checkbox" id="consentcheckbox" value="true" tabindex="5" onchange="checkConsent(this)" />
-                        <label for="consentcheckbox" th:utext="#{screen.institutionlogin.consent.checkbox}"></label>
-                    </div>
-                    <div class="instn-login-error">
-                        <div id="consenterrormessage" style="display: none;" class="banner banner-danger banner-dismissible" >
-                            <p class="login-error-inline" th:utext="#{screen.institutionlogin.consent.errormessage}"></p>
-                            <a href="#" onclick="dismissErrorBanner('consenterrormessage'); return false;" class="close">&times;</a>
-                        </div>
-                    </div>
                     <div class="form-button">
                         <button type="button" id="instnsubmit" class="mdc-button mdc-button--raised button-osf-green" name="submit" onclick="institutionLogin()">
                             <span class="mdc-button__label" th:text="#{screen.institutionlogin.button.submit}"></span>
@@ -85,13 +75,8 @@
                     let institutionSelect = document.getElementById("institutionselect");
                     let institutionLoginUrl = institutionSelect.options[institutionSelect.selectedIndex].value;
                     let selectErrorMessage = document.getElementById("selecterrormessage");
-                    let consentCheckbox = document.getElementById('consentcheckbox');
-                    let consentErrorMessage = document.getElementById("consenterrormessage");
                     if (institutionLoginUrl == null || institutionLoginUrl === "") {
                         selectErrorMessage.style.display = "block";
-                        if (consentCheckbox != null) {
-                            consentErrorMessage.style.display = consentCheckbox.checked ? "none" : "block";
-                        }
                         return;
                     }
                     if (institutionLoginUrl === "okstate") {
@@ -112,17 +97,7 @@
                             institutionLoginUrl = institutionLoginUrl.substring(0, lastIndexOfHash);
                         }
                     }
-                    if (consentCheckbox != null && !consentCheckbox.checked) {
-                        consentErrorMessage.style.display = "block";
-                    } else {
-                        window.location = institutionLoginUrl;
-                    }
-                }
-                function checkConsent(consentCheckbox) {
-                    let consentErrorMessage = document.getElementById("consenterrormessage");
-                    if (consentErrorMessage != null) {
-                        consentErrorMessage.style.display = consentCheckbox.checked ? "none" : "block";
-                    }
+                    window.location = institutionLoginUrl;
                 }
                 function checkSelect() {
                     let selectErrorMessage = document.getElementById("selecterrormessage");
