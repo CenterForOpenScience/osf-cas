@@ -99,7 +99,6 @@
                     var j = /*[[@{#{screen.tosconsent.button.agree}}]]*/ 'Continue';
                     /*]]>*/
                     $(window).on('pageshow', function () {
-                        $(':submit').prop('disabled', false);
                         $(':submit').attr('value', j);
                     });
                     $(document).ready(function () {
