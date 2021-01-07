@@ -38,6 +38,8 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
 
     public static String AUTHENTICATION_ATTRIBUTE_REMEMBER_ME = "rememberMe";
 
+    public static String AUTHENTICATION_ATTRIBUTE_TOS_CONSENT = "termsOfServiceChecked";
+
     private static String DEFAULT_INSTITUTION_ID = "none";
 
     private static DelegationProtocol DEFAULT_DELEGATION_PROTOCOL = DelegationProtocol.NONE;
