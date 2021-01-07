@@ -53,6 +53,11 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
     private String oneTimePassword;
 
     /**
+     * The boolean flag that indicates whether the user has checked the terms of service consent agreement
+     */
+    private boolean termsOfServiceChecked;
+
+    /**
      * The boolean flag that indicates successful delegated authentication if true.
      */
     private boolean remotePrincipal = Boolean.FALSE;

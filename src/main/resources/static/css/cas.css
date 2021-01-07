@@ -593,6 +593,7 @@ button.close {
     --cas-theme-osf-green: #357935;
     --cas-theme-osf-blue: #1b6d85;
     --cas-theme-osf-red: #b52b27;
+    --cas-theme-osf-disabled: #EFEFEF;
     --cas-theme-primary: var(--cas-theme-osf-navbar, #263947);
     --cas-theme-danger: var(--cas-theme-osf-red, #b52b27);
     --mdc-theme-primary: var(--cas-theme-primary, #263947);
@@ -809,6 +810,11 @@ body {
 .form-button .button-osf-red,
 .form-button-inline .button-osf-red {
     background-color: var(--cas-theme-osf-red, #b52b27);
+}
+
+.form-button .button-osf-disabled,
+.form-button-inline .button-osf-disabled {
+    background-color: var(--cas-theme-osf-disabled, #EFEFEF);
 }
 
 .login-error-inline {

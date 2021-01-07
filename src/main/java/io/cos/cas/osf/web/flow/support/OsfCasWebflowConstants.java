@@ -42,6 +42,8 @@ public interface OsfCasWebflowConstants {
 
     String VIEW_ID_ONE_TIME_PASSWORD_REQUIRED = "casTwoFactorLoginView";
 
+    String VIEW_ID_TERMS_OF_SERVICE_CONSENT_REQUIRED = "casTermsOfServiceConsentView";
+
     String VIEW_ID_ACCOUNT_NOT_CONFIRMED_OSF = "casAccountNotConfirmedOsfView";
 
     String VIEW_ID_ACCOUNT_NOT_CONFIRMED_IDP = "casAccountNotConfirmedIdPView";
