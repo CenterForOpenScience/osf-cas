@@ -38,6 +38,8 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
 
     public static String AUTHENTICATION_ATTRIBUTE_REMEMBER_ME = "rememberMe";
 
+    public static String AUTHENTICATION_ATTRIBUTE_TOS_CONSENT = "termsOfServiceChecked";
+
     private static String DEFAULT_INSTITUTION_ID = "none";
 
     private static DelegationProtocol DEFAULT_DELEGATION_PROTOCOL = DelegationProtocol.NONE;
@@ -51,6 +53,11 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
      * The time-based one-time password (TOTP) for OSF two-factor authentication.
      */
     private String oneTimePassword;
+
+    /**
+     * The boolean flag that indicates whether the user has checked the terms of service consent agreement
+     */
+    private boolean termsOfServiceChecked;
 
     /**
      * The boolean flag that indicates successful delegated authentication if true.

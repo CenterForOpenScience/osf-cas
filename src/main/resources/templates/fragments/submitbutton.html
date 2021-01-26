@@ -12,11 +12,22 @@
 
 <body>
     <main role="main" class="container mt-3 mb-3">
-        <div class="form-button" th:fragment="submitButton (buttonCustomization, messageKey)">
+        <div class="form-button" th:fragment="submitButton (buttonDisabled, buttonCustomization, messageKey)">
             <button
                     class="mdc-button mdc-button--raised"
                     th:classappend="${buttonCustomization}"
-                    th:if="${recaptchaSiteKey == null}"
+                    th:if="${recaptchaSiteKey == null && !buttonDisabled}"
+                    name="submit"
+                    accesskey="l"
+                    type="submit">
+                <span class="mdc-button__label" th:text="#{${messageKey}}">Login</span>
+            </button>
+            <button
+                    disabled
+                    id="primarySubmitButton"
+                    class="mdc-button mdc-button--raised"
+                    th:classappend="${buttonCustomization}"
+                    th:if="${recaptchaSiteKey == null && buttonDisabled}"
                     name="submit"
                     accesskey="l"
                     type="submit">

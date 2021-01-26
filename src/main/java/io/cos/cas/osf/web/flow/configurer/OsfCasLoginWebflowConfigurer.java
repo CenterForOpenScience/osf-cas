@@ -8,6 +8,7 @@ import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
 import io.cos.cas.osf.authentication.exception.InvalidVerificationKeyException;
 import io.cos.cas.osf.authentication.exception.OneTimePasswordRequiredException;
+import io.cos.cas.osf.authentication.exception.TermsOfServiceConsentRequiredException;
 import io.cos.cas.osf.web.flow.support.OsfCasWebflowConstants;
 
 import org.apereo.cas.authentication.PrincipalException;
@@ -79,6 +80,7 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         super.createDefaultViewStates(flow);
         // Create OSF customized view states
         createTwoFactorLoginFormView(flow);
+        createTermsOfServiceConsentLoginFormView(flow);
         createInstitutionLoginView(flow);
         createOrcidLoginAutoRedirectView(flow);
         createDefaultServiceLoginAutoRedirectView(flow);
@@ -248,6 +250,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createTransitionForState(
                 handler,
+                TermsOfServiceConsentRequiredException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_TERMS_OF_SERVICE_CONSENT_REQUIRED
+        );
+        createTransitionForState(
+                handler,
                 InstitutionSsoFailedException.class.getSimpleName(),
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
         );
@@ -412,6 +419,40 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 flow,
                 OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED,
                 OsfCasWebflowConstants.VIEW_ID_ONE_TIME_PASSWORD_REQUIRED,
+                binder
+        );
+        state.getRenderActionList().add(createEvaluateAction(CasWebflowConstants.ACTION_ID_RENDER_LOGIN_FORM));
+        createStateModelBinding(state, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfPostgresCredential.class);
+        Transition transition = createTransitionForState(
+                state,
+                CasWebflowConstants.TRANSITION_ID_SUBMIT,
+                CasWebflowConstants.STATE_ID_REAL_SUBMIT
+        );
+        MutableAttributeMap<Object> attributes = transition.getAttributes();
+        attributes.put("bind", Boolean.TRUE);
+        attributes.put("validate", Boolean.TRUE);
+        attributes.put("history", History.INVALIDATE);
+    }
+
+    /**
+     * Create the customized terms of service consent form submission view state for OSF CAS.
+     *
+     * @param flow the flow
+     */
+    private void createTermsOfServiceConsentLoginFormView(final Flow flow) {
+        List<String> propertiesToBind = CollectionUtils.wrapList("termsOfServiceChecked", "source");
+        BinderConfiguration binder = createStateBinderConfiguration(propertiesToBind);
+        casProperties.getView().getCustomLoginFormFields()
+                .forEach((field, props) -> {
+                    String fieldName = String.format("customFields[%s]", field);
+                    binder.addBinding(
+                            new BinderConfiguration.Binding(fieldName, props.getConverter(), props.isRequired())
+                    );
+                });
+        ViewState state = createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_TERMS_OF_SERVICE_CONSENT_REQUIRED,
+                OsfCasWebflowConstants.VIEW_ID_TERMS_OF_SERVICE_CONSENT_REQUIRED,
                 binder
         );
         state.getRenderActionList().add(createEvaluateAction(CasWebflowConstants.ACTION_ID_RENDER_LOGIN_FORM));
