@@ -99,8 +99,8 @@
 
                 <script type="text/javascript" th:inline="javascript">
                     /*<![CDATA[*/
-                    var i = /*[[@{#{screen.tosconsent.button.agreewip}}]]*/ 'One moment please...';
-                    var j = /*[[@{#{screen.tosconsent.button.agree}}]]*/ 'Continue';
+                        var i = /*[[@{#{screen.generic.button.wip}}]]*/ 'One moment please...';
+                        var j = /*[[@{#{screen.tosconsent.button.agree}}]]*/ 'Continue';
                     /*]]>*/
                     $(window).on('pageshow', function () {
                         $(':submit').attr('value', j);

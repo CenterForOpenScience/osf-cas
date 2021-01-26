@@ -129,8 +129,8 @@
 
                 <script type="text/javascript" th:inline="javascript">
                     /*<![CDATA[*/
-                        var i = /*[[@{#{screen.twofactor.button.verifywip}}]]*/
-                        var j = /*[[@{#{screen.twofactor.button.verify}}]]*/
+                        var i = /*[[@{#{screen.generic.button.wip}}]]*/ 'One moment please ...' ;
+                        var j = /*[[@{#{screen.twofactor.button.verify}}]]*/ 'Verify' ;
                     /*]]>*/
                     $(window).on('pageshow', function () {
                         $(':submit').prop('disabled', false);
