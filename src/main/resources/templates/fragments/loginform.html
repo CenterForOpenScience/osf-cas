@@ -51,15 +51,6 @@
             <div class="form-wrapper">
                 <form method="post" id="fm1" th:object="${credential}" action="login">
 
-                    <div id="loginformerrorlist" th:if="${#fields.hasErrors('*')}">
-                        <div th:each="err : ${#fields.errors('*')}" th:if="${not #strings.isEmpty(err)}" th:with="errorDivElementId=${'loginformerror' + #strings.randomAlphanumeric(16)}">
-                            <div th:id="${errorDivElementId}" class="banner banner-danger banner-dismissible" >
-                                <p class="login-error-inline" th:utext="${err + ' '}"></p>
-                                <a th:href="${'javascript:document.getElementById(''' + errorDivElementId + ''').remove();'}" class="close">&times;</a>
-                            </div>
-                        </div>
-                    </div>
-
                     <section class="cas-field my-2=3">
                         <span th:if="${availableAuthenticationHandlerNames != null}">
                             <span th:if="${availableAuthenticationHandlerNames.size() > 1}">
@@ -94,7 +85,8 @@
                                 th:field="*{username}"
                                 th:accesskey="#{screen.welcome.label.email.accesskey}"
                                 th:value="${@casThymeleafLoginFormDirector.getLoginFormUsername(#vars)}"
-                                autocomplete="off" />
+                                autocomplete="off"
+                                required />
                             <label for="username" class="mdc-floating-label" th:utext="#{screen.welcome.label.email}"></label>
                         </div>
                     </section>
@@ -108,12 +100,12 @@
                                     size="25"
                                     th:accesskey="#{screen.welcome.label.password.accesskey}"
                                     th:field="*{password}"
-                                    autocomplete="off" />
+                                    autocomplete="off"
+                                    required />
                                 <label for="username" class="mdc-floating-label" th:utext="#{screen.welcome.label.password}"></label>
                             </div>
                             <div class="mdc-text-field-helper-line caps-warn">
-                                <p
-                                    class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg text-danger">
+                                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg text-danger">
                                     <span th:utext="#{screen.capslock.on}" />
                                 </p>
                             </div>
@@ -123,6 +115,14 @@
                             <span class="sr-only">Toggle Password</span>
                         </button>
                     </section>
+
+                    <div id="loginformerrorlist" class="login-error-list" th:if="${#fields.hasErrors('*')}">
+                        <div th:each="err : ${#fields.errors('*')}" th:if="${not #strings.isEmpty(err)}">
+                            <div class="banner banner-danger banner-dismissible" >
+                                <p class="login-error-inline" th:utext="${err + ' '}"></p>
+                            </div>
+                        </div>
+                    </div>
 
                     <section class="cas-field">
 

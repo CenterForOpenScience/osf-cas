@@ -767,10 +767,6 @@ body {
     background-color: var(--cas-theme-osf-disabled, #EFEFEF);
 }
 
-.login-error-inline {
-    margin: 0.25rem 0;
-}
-
 .login-error-card,
 .login-generic-card {
     min-width: fit-content;
@@ -784,16 +780,6 @@ body {
 .banner-generic,
 .banner-danger {
     min-width: fit-content;
-}
-
-.banner-dismissible {
-    background-color: var(--cas-theme-osf-red, #b52b27);
-    color: white;
-    margin: 0.25rem 0;
-}
-
-.banner-dismissible .close {
-    padding: 0rem 0.75rem;
 }
 
 .banner-danger .title-danger {
@@ -879,6 +865,25 @@ body {
 
 .service-ui .service-ui-info {
     display: none;
+}
+
+.login-section .login-error-list {
+    margin-bottom: -0.5rem;
+}
+
+.login-error-list .banner {
+    border: none;
+    position: relative;
+}
+
+.login-error-list .banner-dismissible {
+    background-color: transparent;
+    color: var(--cas-theme-osf-red, #b52b27);
+    margin: -0.5rem 0;
+}
+
+.login-error-list .login-error-inline {
+    margin: 0.25rem 0;
 }
 
 .cas-field-col-2 {
