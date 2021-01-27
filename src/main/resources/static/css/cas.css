@@ -574,6 +574,7 @@ button.close {
     --cas-theme-osf-navbar: #263947;
     --cas-theme-osf-surface: #F7F7F7;
     --cas-theme-osf-footer: #EFEFEF;
+    --cas-theme-osf-grey: #EEEEEE;
     --cas-theme-osf-green: #357935;
     --cas-theme-osf-blue: #1b6d85;
     --cas-theme-osf-red: #b52b27;
@@ -603,20 +604,6 @@ body {
     justify-content: center;
 }
 
-.cas-footer {
-    font-size: 0.75rem;
-    background: var(--cas-theme-osf-footer, #efefef);
-}
-
-.cas-brand-drawer {
-    margin: 2rem 0 0.5rem 0;
-}
-
-.login-section {
-    max-width: 36rem;
-    min-width: fit-content;
-}
-
 .text-with-mdi {
     font-size: 1rem;
     margin: 0.5rem 0;
@@ -629,55 +616,6 @@ body {
 .mdi-before-text {
     vertical-align: middle;
     margin-right: 0.5rem;
-}
-
-.delegation-row {
-    margin: 0.5rem 0;
-}
-
-.delegation-button {
-    position: relative;
-    outline: none;
-    -webkit-appearance: none;
-    width: 100%;
-    text-decoration: none;
-    font-size: 1rem;
-    background-image: linear-gradient(to bottom, #f7f7f7, #d7d7d7);
-    border: 1px solid var(--cas-theme-primary, #153e50);
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    display: inline-block;
-    padding: 10px 0;
-    text-align: center;
-}
-
-.delegation-button:hover {
-    cursor: pointer;
-    -webkit-box-shadow: 0px 0px 5px 0px #ababab;
-    -moz-box-shadow: 0px 0px 5px 0px #ababab;
-    box-shadow: 0px 0px 5px 0px #ababab;
-}
-
-.delegation-button:active {
-    background-image: linear-gradient(to top, #f7f7f7, #d7d7d7);
-}
-
-.delegation-button-logo {
-    position: absolute;
-    left: 0;
-    top: 0;
-    border-right: 1px solid var(--cas-theme-primary, #153e50);
-    padding: 6px;
-    height: 38px
-}
-
-.delegation-button-label {
-    font-size: 1rem;
-    color: black;
-    opacity: 0.75;
-    white-space: nowrap;
-    padding-left: 39px;
 }
 
 .cas-field-primary {
@@ -740,11 +678,20 @@ body {
     width: 100%;
     min-width: fit-content;
     text-transform: none;
+    white-space: nowrap;
+    height: 56px;
 }
 
 .form-button-inline .mdc-button {
     flex-basis: 48%;
     margin: 0.25rem 0;
+    padding: 0 8px;
+}
+
+.form-button .button-osf-grey,
+.form-button-inline .button-osf-grey {
+    background-color: var(--cas-theme-osf-grey, #EEEEEE);
+    box-shadow: 0px 5px 4px 0px rgba(0, 0, 0, 0.2), 0px 4px 4px 0px rgba(0, 0, 0, 0.14), 0px 3px 8px 0px rgba(0, 0, 0, 0.12);
 }
 
 .form-button .button-osf-green,
@@ -849,6 +796,10 @@ body {
     font-weight: normal;
 }
 
+.login-section {
+    width: 512px;
+}
+
 #serviceui {
     background-color: transparent;
 }
@@ -865,6 +816,26 @@ body {
 
 .service-ui .service-ui-info {
     display: none;
+}
+
+.form-button-inline .delegation-button-logo {
+    position: absolute;
+    left: 4px;
+    top: 12px;
+    padding: 6px;
+    height: 36px;
+}
+
+.form-button-inline .delegation-button-label {
+    font-size: 0.875rem;
+    color: black;
+    white-space: nowrap;
+    padding-left: 28px;
+}
+
+.login-section .mdc-text-field,
+.login-section .mdc-button {
+    font-size: 1rem;
 }
 
 .login-section .login-error-list {
@@ -901,6 +872,7 @@ body {
 
 .cas-footer-osf {
     text-align: center;
+    background: var(--cas-theme-osf-footer, #efefef);
 }
 
 @media all and (min-height: 1199.99px) {
@@ -1101,6 +1073,33 @@ body {
 
     .login-error-card .title-danger {
         font-size: 0.875rem;
+    }
+}
+
+@media all and (max-width: 511.99px) {
+
+    .login-section {
+        width: fit-content;
+        min-width: 360px;
+    }
+
+    .form-button-inline .mdc-button {
+        flex-basis: 100%;
+        min-width: fit-content;
+        font-size: 1rem;
+        padding: 0 16px;
+    }
+
+    .form-button-inline .delegation-button-logo {
+        position: absolute;
+        left: 20px;
+        top: 11px;
+        padding: 2px;
+        height: 36px;
+    }
+
+    .form-button-inline .delegation-button-label {
+        font-size: 1rem;
     }
 }
 
