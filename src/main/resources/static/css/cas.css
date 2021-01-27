@@ -591,6 +591,12 @@ body {
         url(/images/page-background.png) center center no-repeat;
     background-size: cover;
     background-blend-mode: normal;
+    backdrop-filter: brightness(0.8);
+    min-width: 360px;
+}
+
+.mdc-typography {
+    font-family: 'Open Sans','Helvetica Neue',sans-serif!important;
 }
 
 .mdc-top-app-bar__section--align-start,
@@ -772,10 +778,6 @@ body {
     margin-right: 0.5rem;
 }
 
-.body {
-    min-width: 360px;
-}
-
 .mdc-top-app-bar__row,
 .mdc-top-app-bar__row .mdc-top-app-bar__section {
     min-width: fit-content;
@@ -785,6 +787,17 @@ body {
 .mdc-top-app-bar__row .cas-brand-text {
     margin-right: 0.5em!important;
     margin-left: 0.5em!important;
+}
+
+.cas-brand-text .navbar-link {
+    text-decoration: none;
+    color: #F7F7F7;
+}
+
+.cas-brand-text .navbar-link:hover,
+.cas-brand-text .navbar-link:visited,
+.cas-brand-text .navbar-link:active {
+    color: #F7F7F7;
 }
 
 .mdc-top-app-bar__row .cas-brand-name {
@@ -881,8 +894,8 @@ body {
         height: 64px;
     }
     .mdc-top-app-bar__row .mdc-button {
-        height: 48px;
-        font-size: 1.125rem
+        height: 44px;
+        font-size: 1rem
     }
     .mdc-top-app-bar__row .cas-brand {
         height: 40px;
