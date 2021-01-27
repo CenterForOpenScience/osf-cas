@@ -20,10 +20,9 @@
                 </div>
             </div>
 
-            <h3 class="text-center text-with-mdi">
-                <i class="mdi mdi-security mdi-before-text"></i>
+            <p class="text-center text-without-mdi">
                 <span th:utext="#{screen.welcome.instructions}"></span>
-            </h3>
+            </p>
 
             <div id="orcidlogin" th:if="${delegatedAuthenticationProviderConfigurations}">
                 <section class="delegation-row"

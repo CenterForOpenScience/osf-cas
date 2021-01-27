@@ -617,35 +617,7 @@ body {
     min-width: fit-content;
 }
 
-#serviceui {
-    background-color: transparent;
-}
-
-.service-ui {
-    margin-top: 1rem!important;
-    margin-bottom: 1rem!important;
-}
-
-.service-ui .service-ui-logo {
-    max-height: 5rem;
-}
-
-.service-ui .service-ui-info {
-    margin-left: 1rem!important;
-    margin-right: 1rem!important;
-}
-
-.service-ui-info .service-ui-name {
-    margin: 1rem 0;
-}
-
-.service-ui-info.service-ui-desc {
-    font-size: 1rem;
-    margin: 1rem 0;
-}
-
-.text-with-mdi,
-.text-without-mdi {
+.text-with-mdi {
     font-size: 1rem;
     margin: 0.5rem 0;
 }
@@ -891,12 +863,21 @@ body {
     font-weight: normal;
 }
 
-.service-ui .service-ui-logo {
-    max-height: 56px;
+#serviceui {
+    background-color: transparent;
 }
 
-.service-ui-info .service-ui-name,
-.service-ui-info .service-ui-desc {
+.service-ui {
+    margin-top: 1rem!important;
+    margin-bottom: 1rem!important;
+}
+
+.service-ui .service-ui-logo {
+    max-height: 56px;
+    max-width: 360px;
+}
+
+.service-ui .service-ui-info {
     display: none;
 }
 
@@ -944,6 +925,10 @@ body {
         margin-bottom: 1rem!important;
     }
 
+    .login-section .text-without-mdi {
+        margin: 1rem 0;
+    }
+
     .cas-footer-osf {
         font-size: 1.125rem!important;
         padding-bottom: 1.125rem!important;
@@ -973,6 +958,10 @@ body {
     .service-ui {
         margin-top: 0.875rem!important;
         margin-bottom: 0.875rem!important;
+    }
+
+    .login-section .text-without-mdi {
+        margin: 0.875rem 0;
     }
 
     .cas-footer-osf {
@@ -1006,6 +995,10 @@ body {
         margin-bottom: 0.75rem!important;
     }
 
+    .login-section .text-without-mdi {
+        margin: 0.75rem 0;
+    }
+
     .cas-footer-osf {
         font-size: 0.875rem!important;
         padding-bottom: 0.875rem!important;
@@ -1035,6 +1028,10 @@ body {
     .service-ui {
         margin-top: 0.5rem!important;
         margin-bottom: 0.5rem!important;
+    }
+
+    .login-section .text-without-mdi {
+        margin: 0.625rem 0;
     }
 
     .cas-footer-osf {
