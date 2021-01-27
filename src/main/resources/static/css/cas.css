@@ -114,16 +114,6 @@ header>nav .cas-brand .cas-logo {
     border: none;
 }
 
-@media screen and (max-width: 767.99px) {
-    .login-section {
-        border-right: none;
-        border-bottom: 1px solid rgba(0, 0, 0, .2);
-        border-bottom: var(--cas-theme-border-light, 1px solid rgba(0, 0, 0, .2));
-        max-width: none;
-        padding: 0 1.5rem;
-    }
-}
-
 .close {
     font-size: 1.5rem;
     font-weight: 700;
@@ -217,12 +207,6 @@ button.close {
 
 .login-provider-item .mdc-button .mdi {
     margin-right: 0.375rem;
-}
-
-@media screen and (max-width: 767.99px) {
-    .logout-banner {
-        width: 100%;
-    }
 }
 
 .cas-footer {
@@ -633,12 +617,6 @@ body {
     min-width: fit-content;
 }
 
-@media screen and (max-width: 767.99px) {
-    .login-section {
-        padding: 1rem 1.5rem;
-    }
-}
-
 #serviceui {
     background-color: transparent;
 }
@@ -889,134 +867,251 @@ body {
     margin-right: 0.5rem;
 }
 
-@media all and (min-width: 639.99px) {
+.body {
+    min-width: 360px;
+}
+
+.mdc-top-app-bar__row,
+.mdc-top-app-bar__row .mdc-top-app-bar__section {
+    min-width: fit-content;
+}
+
+.mdc-top-app-bar__row .cas-brand,
+.mdc-top-app-bar__row .cas-brand-text {
+    margin-right: 0.5em!important;
+    margin-left: 0.5em!important;
+}
+
+.mdc-top-app-bar__row .cas-brand-name {
+    font-weight: bold;
+    color: #F7F7F7;
+}
+
+.mdc-top-app-bar__row .hidden-narrow {
+    font-weight: normal;
+}
+
+.service-ui .service-ui-logo {
+    max-height: 56px;
+}
+
+.service-ui-info .service-ui-name,
+.service-ui-info .service-ui-desc {
+    display: none;
+}
+
+.cas-footer-osf {
+    text-align: center;
+}
+
+@media all and (min-height: 1199.99px) {
+
+    .mdc-top-app-bar__row {
+        height: 64px;
+    }
+    .mdc-top-app-bar__row .mdc-button {
+        height: 48px;
+        font-size: 1.125rem
+    }
+    .mdc-top-app-bar__row .cas-brand {
+        height: 40px;
+    }
+    .mdc-top-app-bar__row .cas-brand-name {
+        font-size: 2rem;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 64px;
+    }
+
+    .mdc-top-app-bar__row .mdc-button {
+    }
+
+    .service-ui {
+        margin-top: 1rem!important;
+        margin-bottom: 1rem!important;
+    }
+
+    .cas-footer-osf {
+        font-size: 1.125rem!important;
+        padding-bottom: 1.125rem!important;
+        padding-top: 1.125rem!important;
+    }
+}
+
+@media all and (max-height: 1199.99px) {
+
+    .mdc-top-app-bar__row {
+        height: 56px;
+    }
+    .mdc-top-app-bar__row .mdc-button {
+        height: 40px;
+        font-size: 1rem
+    }
+    .mdc-top-app-bar__row .cas-brand {
+        height: 36px;
+    }
+    .mdc-top-app-bar__row .cas-brand-name {
+        font-size: 1.75rem;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 48px;
+    }
+
+    .service-ui {
+        margin-top: 0.875rem!important;
+        margin-bottom: 0.875rem!important;
+    }
+
+    .cas-footer-osf {
+        font-size: 1rem!important;
+        padding-bottom: 1rem!important;
+        padding-top: 1rem!important;
+    }
+}
+
+@media all and (max-height: 899.99px) {
+
+    .mdc-top-app-bar__row {
+        height: 48px;
+    }
+    .mdc-top-app-bar__row .mdc-button {
+        height: 32px;
+        font-size: 0.875rem
+    }
+    .mdc-top-app-bar__row .cas-brand {
+        height: 32px;
+    }
+    .mdc-top-app-bar__row .cas-brand-name {
+        font-size: 1.5rem;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 36px;
+    }
+
+    .service-ui {
+        margin-top: 0.75rem!important;
+        margin-bottom: 0.75rem!important;
+    }
+
+    .cas-footer-osf {
+        font-size: 0.875rem!important;
+        padding-bottom: 0.875rem!important;
+        padding-top: 0.875rem!important;
+    }
+}
+
+@media all and (max-height: 699.99px) {
+
+    .mdc-top-app-bar__row {
+        height: 40px;
+    }
+    .mdc-top-app-bar__row .cas-brand {
+        height: 28px;
+    }
+    .mdc-top-app-bar__row .cas-brand-name {
+        font-size: 1.25rem;
+    }
+    .mdc-top-app-bar__row .mdc-button {
+        height: 28px;
+        font-size: 0.75rem;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 24px;
+    }
+
+    .service-ui {
+        margin-top: 0.5rem!important;
+        margin-bottom: 0.5rem!important;
+    }
+
+    .cas-footer-osf {
+        font-size: 0.625rem!important;
+        padding-bottom: 0.625rem!important;
+        padding-top: 0.625rem!important;
+    }
+}
+
+@media all and (min-width: 699.99px) {
+
+    .mdc-top-app-bar__row .hidden-narrow {
+        display: inline;
+    }
+
     .w-card-narrow {
         width: 50%;
     }
     .w-card-wide {
         width: 75%;
     }
+
+    .service-ui .service-ui-logo {
+        max-width: 320px;
+    }
+
+    .login-section .text-with-mdi {
+        font-size: 1rem;
+    }
+    .login-section .text-without-mdi {
+        font-size: 1rem;
+    }
+
+    .login-error-card .title-danger {
+        font-size: 1rem;
+    }
 }
 
-@media all and (min-width: 479.99px) and (max-width: 639.99px) {
+@media all and (max-width: 699.99px) {
+
+    .mdc-top-app-bar__row .hidden-narrow {
+        display: None;
+    }
+
     .w-card-narrow {
         width: 100%;
     }
     .w-card-wide {
         width: 100%;
     }
-    footer {
-        display: none
-    }
-}
 
-@media all and (min-height: 1439.99) {
-    .mdc-top-app-bar__row {
-        height: 64px;
+    .service-ui .service-ui-logo {
+        max-width: 280px;
     }
-    .cas-brand {
-        height: 56px;
-    }
-    .mdc-top-app-bar--fixed-adjust {
-        padding-top: 72px;
-    }
-    .mdc-drawer {
-        top: 56px;
-    }
-    .cas-footer-osf {
-        font-size: 1rem;
-        padding-bottom: 1.5rem!important;
-        padding-top: 1.5rem!important;
-        text-align: center;
-    }
-}
 
-@media all and (min-width: 639.99px),
-all and (min-height: 1079.99) {
-    .mdc-top-app-bar__row {
-        height: 56px;
-    }
-    .cas-brand {
-        height: 48px;
-    }
-    .mdc-top-app-bar--fixed-adjust {
-        padding-top: 64px;
-    }
-    .mdc-drawer {
-        top: 48px;
-    }
-    .cas-footer-osf {
+    .login-section .text-with-mdi {
         font-size: 0.875rem;
-        padding-bottom: 1rem!important;
-        padding-top: 1rem!important;
-        text-align: center;
+    }
+    .login-section .text-without-mdi {
+        font-size: 0.875rem;
+    }
+
+    .login-error-card .title-danger {
+        font-size: 0.875rem;
     }
 }
 
-@media all and (min-width: 479.99px) and (max-width: 639.99px),
-all and (max-height: 1079.99px) {
-    .mdc-top-app-bar__row {
-        height: 40px;
-    }
-    .cas-brand {
-        height: 32px;
-    }
-    .mdc-drawer {
-        top: 32px;
-    }
-    .mdc-top-app-bar--fixed-adjust {
-        padding-top: 32px;
-    }
-    .cas-footer-osf {
-        font-size: 0.75rem;
-        padding-bottom: 0.75rem!important;
-        padding-top: 0.75rem!important;
-        text-align: center;
-    }
-}
+@media all and (max-width: 399.99px) {
 
-@media all and (max-width: 479.99px),
-all and (max-height: 899.99px) {
-    .service-ui {
-        margin-top: 0.5rem!important;
-        margin-bottom: 0.5rem!important;
-    }
     .service-ui .service-ui-logo {
         max-width: 240px;
-        max-height: 3rem;
     }
-    .service-ui-info .service-ui-name,
-    .service-ui-info .service-ui-desc {
-        display: none;
+
+    .login-section .text-with-mdi {
+        font-size: 0.875rem;
     }
     .login-section .mdi-before-text {
         display: none;
     }
-    .login-section .text-with-mdi {
-        font-size: 0.75rem;
-    }
     .login-section .text-without-mdi {
-        font-size: 0.75rem;
+        font-size: 0.875rem;
     }
+
     .login-error-card .title-danger {
         font-size: 0.875rem;
     }
-    .mdc-top-app-bar__row {
-        height: 32px;
-    }
-    .cas-brand {
-        height: 24px;
-    }
-    .mdc-drawer {
-        top: 32px;
-    }
-    .mdc-top-app-bar--fixed-adjust {
-        padding-top: 16px;
-    }
+
     .cas-footer-osf {
-        font-size: 0.625rem;
-        padding-bottom: 0.5rem!important;
-        padding-top: 0.5rem!important;
-        text-align: center;
+        font-size: 0.625rem!important;
+        padding-bottom: 0.625rem!important;
+        padding-top: 0.625rem!important;
     }
 }
