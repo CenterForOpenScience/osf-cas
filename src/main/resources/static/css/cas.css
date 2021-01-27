@@ -831,6 +831,12 @@ body {
     display: none;
 }
 
+.login-section .text-without-mdi {
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
 .form-button-inline .delegation-button-logo {
     position: absolute;
     left: 4px;
@@ -915,10 +921,6 @@ body {
         margin-bottom: 1rem!important;
     }
 
-    .login-section .text-without-mdi {
-        margin: 1rem 0;
-    }
-
     .cas-footer-osf {
         font-size: 1.125rem!important;
         padding-bottom: 1.125rem!important;
@@ -948,10 +950,6 @@ body {
     .service-ui {
         margin-top: 0.875rem!important;
         margin-bottom: 0.875rem!important;
-    }
-
-    .login-section .text-without-mdi {
-        margin: 0.875rem 0;
     }
 
     .cas-footer-osf {
@@ -985,10 +983,6 @@ body {
         margin-bottom: 0.75rem!important;
     }
 
-    .login-section .text-without-mdi {
-        margin: 0.75rem 0;
-    }
-
     .cas-footer-osf {
         font-size: 0.875rem!important;
         padding-bottom: 0.875rem!important;
@@ -1020,10 +1014,6 @@ body {
         margin-bottom: 0.5rem!important;
     }
 
-    .login-section .text-without-mdi {
-        margin: 0.625rem 0;
-    }
-
     .cas-footer-osf {
         font-size: 0.625rem!important;
         padding-bottom: 0.625rem!important;
@@ -1051,9 +1041,6 @@ body {
     .login-section .text-with-mdi {
         font-size: 1rem;
     }
-    .login-section .text-without-mdi {
-        font-size: 1rem;
-    }
 
     .login-error-card .title-danger {
         font-size: 1rem;
@@ -1078,9 +1065,6 @@ body {
     }
 
     .login-section .text-with-mdi {
-        font-size: 0.875rem;
-    }
-    .login-section .text-without-mdi {
         font-size: 0.875rem;
     }
 
@@ -1127,9 +1111,6 @@ body {
     }
     .login-section .mdi-before-text {
         display: none;
-    }
-    .login-section .text-without-mdi {
-        font-size: 0.875rem;
     }
 
     .login-error-card .title-danger {
