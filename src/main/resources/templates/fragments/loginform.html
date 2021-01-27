@@ -125,13 +125,6 @@
                         </button>
                     </section>
 
-                    <section class="cas-field cas-field-primary " th:if="${rememberMeAuthenticationEnabled}">
-                        <p>
-                            <input type="checkbox" name="rememberMe" id="rememberMe" value="true"/>&nbsp;
-                            <label for="rememberMe" th:text="#{screen.rememberme.checkbox.title}"></label>
-                        </p>
-                    </section>
-
                     <section class="cas-field">
 
                         <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
@@ -151,9 +144,19 @@
 
                 </form>
 
-                <hr class="my-4" />
+                    <section class="cas-field cas-field-primary cas-field-col-2">
+                        <span class="cas-field-float-left" th:if="${rememberMeAuthenticationEnabled}">
+                            <input type="checkbox" name="rememberMe" id="rememberMe" value="true"/>&nbsp;
+                            <label for="rememberMe" th:text="#{screen.rememberme.checkbox.title}"></label>
+                        </span>
+                        <span class="cas-field-float-right">
+                            <a th:href="@{${osfUrl.forgotPassword}}" th:utext="#{screen.help.link.resetpassword}"></a>
+                            <br>
+                            <a href="https://help.osf.io/hc/en-us/articles/360019737194-Sign-in-to-OSF" th:utext="#{screen.generic.link.loginsupport}"></a>
+                        </span>
+                    </section>
 
-                <div th:replace="fragments/pmlinks :: pmlinks" />
+                </form>
 
                 <script type="text/javascript" th:inline="javascript">
                     /*<![CDATA[*/

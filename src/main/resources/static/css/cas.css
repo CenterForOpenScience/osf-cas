@@ -900,6 +900,19 @@ body {
     display: none;
 }
 
+.cas-field-col-2 {
+    margin-top: 1rem!important;
+    margin-bottom: 1.5rem!important;
+}
+
+.cas-field-float-left {
+    float: left;
+}
+
+.cas-field-float-right {
+    float: right;
+}
+
 .cas-footer-osf {
     text-align: center;
 }
