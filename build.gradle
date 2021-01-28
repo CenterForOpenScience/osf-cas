@@ -23,6 +23,7 @@ buildscript {
         classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:${project.jibVersion}"
         classpath "io.freefair.gradle:maven-plugin:${project.gradleMavenPluginVersion}"
         classpath "io.freefair.gradle:lombok-plugin:${project.gradleLombokPluginVersion}"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.1.1"
     }
 }
 
@@ -167,9 +168,7 @@ idea {
     }
 }
 
-plugins {
-  id "org.sonarqube" version "3.0"
-}
+apply plugin: "org.sonarqube"
 
 sonarqube {
   properties {
