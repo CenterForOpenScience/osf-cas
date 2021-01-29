@@ -27,11 +27,11 @@
             <div class="form-button-inline" id="orcidlogin" th:if="${osfCasLoginContext.orcidLoginUrl}">
                 <a class="mdc-button mdc-button--raised button-osf-grey" th:href="@{${osfCasLoginContext.orcidLoginUrl}}">
                     <img class="delegation-button-logo" src="/images/orcid-logo.png">
-                    <span class="delegation-button-label" th:utext="#{screen.delegation.button.orcid}"></span>
+                    <span class="delegation-button-label" th:utext="#{screen.welcome.button.orcidlogin}"></span>
                 </a>
                 <a class="mdc-button mdc-button--raised button-osf-grey" th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}">
                     <img class="delegation-button-logo" src="/images/institution-logo.png">
-                    <span class="delegation-button-label" th:utext="#{screen.delegation.button.institution}"></span>
+                    <span class="delegation-button-label" th:utext="#{screen.welcome.button.institutionlogin}"></span>
                 </a>
             </div>
 
@@ -135,12 +135,12 @@
                     <section class="cas-field cas-field-primary cas-field-col-2">
                         <span class="cas-field-float-left" th:if="${rememberMeAuthenticationEnabled}">
                             <input type="checkbox" name="rememberMe" id="rememberMe" value="true"/>&nbsp;
-                            <label for="rememberMe" th:text="#{screen.rememberme.checkbox.title}"></label>
+                            <label for="rememberMe" th:text="#{screen.welcome.checkbox.rememberme}"></label>
                         </span>
                         <span class="cas-field-float-right">
-                            <a th:href="@{${osfUrl.forgotPassword}}" th:utext="#{screen.help.link.resetpassword}"></a>
+                            <a th:href="@{${osfUrl.forgotPassword}}" th:utext="#{screen.welcome.link.resetpassword}"></a>
                             <br>
-                            <a href="https://help.osf.io/hc/en-us/articles/360019737194-Sign-in-to-OSF" th:utext="#{screen.generic.link.loginsupport}"></a>
+                            <a href="https://help.osf.io/hc/en-us/articles/360019737194-Sign-in-to-OSF" th:utext="#{screen.generic.link.support}"></a>
                         </span>
                     </section>
 
