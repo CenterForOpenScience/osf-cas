@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-            <p class="text-center text-without-mdi">
+            <p class="text-without-mdi text-center text-bold text-large margin-large-vertical">
                 <span th:utext="#{screen.welcome.instructions}"></span>
             </p>
 
@@ -45,7 +45,7 @@
                     <section class="cas-field my-2=3">
                         <span th:if="${availableAuthenticationHandlerNames != null}">
                             <span th:if="${availableAuthenticationHandlerNames.size() > 1}">
-                                <label for="source" th:utext="#{screen.welcome.label.source}"></label>
+                                <label for="source" th:utext="#{screen.generic.label.source}"></label>
                                 <div>
                                     <select class="form-control required"
                                             id="source"
@@ -101,7 +101,7 @@
                                 </p>
                             </div>
                         </div>
-                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append mdc-icon-button" type="button">
+                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append" type="button">
                             <i class="mdi mdi-eye reveal-password-icon"></i>
                             <span class="sr-only">Toggle Password</span>
                         </button>

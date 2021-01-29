@@ -572,13 +572,14 @@ button.close {
 
 :root {
     --cas-theme-osf-navbar: #263947;
-    --cas-theme-osf-surface: #F7F7F7;
-    --cas-theme-osf-footer: #EFEFEF;
-    --cas-theme-osf-grey: #EEEEEE;
+    --cas-theme-osf-surface: #f7f7f7;
+    --cas-theme-osf-footer: #efefef;
+    --cas-theme-osf-grey: #eeeeee;
     --cas-theme-osf-green: #357935;
     --cas-theme-osf-blue: #1b6d85;
     --cas-theme-osf-red: #b52b27;
-    --cas-theme-osf-disabled: #EFEFEF;
+    --cas-theme-osf-disabled: var(--cas-theme-osf-grey, #eeeeee);
+    --cas-theme-osf-disabled-dark: #cccccc;
     --cas-theme-primary: var(--cas-theme-osf-navbar, #263947);
     --cas-theme-danger: var(--cas-theme-osf-red, #b52b27);
     --mdc-theme-primary: var(--cas-theme-primary, #263947);
@@ -610,18 +611,15 @@ body {
     justify-content: center;
 }
 
-.text-with-mdi {
-    font-size: 1rem;
-    margin: 0.5rem 0;
-}
-
-.login-section .text-with-mdi {
-    white-space: nowrap;
-}
 
 .mdi-before-text {
+    font-size: inherit;
     vertical-align: middle;
     margin-right: 0.5rem;
+}
+
+.mdi-before-text:before {
+    font-size:inherit;
 }
 
 .cas-field-primary {
@@ -696,7 +694,7 @@ body {
 
 .form-button .button-osf-grey,
 .form-button-inline .button-osf-grey {
-    background-color: var(--cas-theme-osf-grey, #EEEEEE);
+    background-color: var(--cas-theme-osf-grey, #eeeeee);
     box-shadow: 0px 5px 4px 0px rgba(0, 0, 0, 0.2), 0px 4px 4px 0px rgba(0, 0, 0, 0.14), 0px 3px 8px 0px rgba(0, 0, 0, 0.12);
 }
 
@@ -831,9 +829,25 @@ body {
     display: none;
 }
 
-.login-section .text-without-mdi {
-    font-size: 1.125rem;
+.text-with-mdi,
+.text-without-mdi {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+}
+
+.text-no-wrap {
+    white-space: nowrap;
+}
+
+.text-bold {
     font-weight: bold;
+}
+
+.text-large {
+    font-size: 1.125rem;
+}
+
+.margin-large-vertical {
     margin: 1rem 0;
 }
 
@@ -855,6 +869,14 @@ body {
 .login-section .mdc-text-field,
 .login-section .mdc-button {
     font-size: 1rem;
+}
+
+.login-section .background-disabled {
+    background-color: var(--cas-theme-osf-disabled-dark, #cccccc);
+}
+
+.login-section .reveal-password {
+    background-color: var(--cas-theme-osf-blue, #1b6d85);
 }
 
 .login-section .login-error-list {

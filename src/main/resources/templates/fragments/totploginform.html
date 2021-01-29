@@ -21,27 +21,17 @@
                 </div>
             </div>
 
-            <h3 class="text-center text-with-mdi">
-                <i class="mdi mdi-cellphone mdi-before-text"></i>
+            <p class="text-without-mdi text-center text-bold text-large margin-large-vertical">
                 <span th:utext="#{screen.twofactor.instructions.top}"></span>
-            </h3>
+            </p>
 
             <div class="form-wrapper">
                 <form method="post" id="fm1" th:object="${credential}" action="login">
 
-                    <div id="loginformerrorlist" th:if="${#fields.hasErrors('*')}">
-                        <div th:each="err : ${#fields.errors('*')}" th:if="${not #strings.isEmpty(err)}" th:with="errorDivElementId=${'' + #strings.randomAlphanumeric(16)}">
-                            <div th:id="${errorDivElementId}" class="banner banner-danger banner-dismissible" >
-                                <p class="login-error-inline" th:utext="${err + ' '}"></p>
-                                <a th:href="${'javascript:document.getElementById(''' + errorDivElementId + ''').remove();'}" class="close">&times;</a>
-                            </div>
-                        </div>
-                    </div>
-
                     <section class="cas-field my-2=3">
                         <span th:if="${availableAuthenticationHandlerNames != null}">
                             <span th:if="${availableAuthenticationHandlerNames.size() > 1}">
-                                <label for="source" th:utext="#{screen.welcome.label.source}"></label>
+                                <label for="source" th:utext="#{screen.generic.label.source}"></label>
                                 <div>
                                     <select class="form-control required"
                                             id="source"
@@ -62,7 +52,7 @@
                     </section>
 
                     <section class="cas-field my-3">
-                        <div class="mdc-text-field  d-flex">
+                        <div class="mdc-text-field d-flex background-disabled">
                             <input class="mdc-text-field__input"
                                 id="username"
                                 size="25"
@@ -70,7 +60,7 @@
                                 readonly
                                 th:disabled="${@casThymeleafLoginFormDirector.isLoginFormUsernameInputDisabled(#vars)}"
                                 th:field="*{username}"
-                                th:accesskey="#{screen.welcome.label.email.accesskey}"
+                                th:accesskey="#{screen.twofactor.label.email.accesskey}"
                                 th:value="${@casThymeleafLoginFormDirector.getLoginFormUsername(#vars)}"
                                 autocomplete="off" />
                             <label for="username" class="mdc-floating-label" th:utext="#{screen.twofactor.label.email}"></label>
@@ -92,11 +82,19 @@
                                 <label for="username" class="mdc-floating-label" th:utext="#{screen.twofactor.label.onetimepassword}"></label>
                             </div>
                         </div>
-                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append mdc-icon-button" type="button">
+                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append" type="button">
                             <i class="mdi mdi-eye reveal-password-icon"></i>
                             <span class="sr-only">Toggle One-time Password</span>
                         </button>
                     </section>
+
+                    <div id="loginformerrorlist" class="login-error-list" th:if="${#fields.hasErrors('*')}">
+                        <div th:each="err : ${#fields.errors('*')}" th:if="${not #strings.isEmpty(err)}">
+                            <div class="banner banner-danger banner-dismissible" >
+                                <p class="login-error-inline" th:utext="${err + ' '}"></p>
+                            </div>
+                        </div>
+                    </div>
 
                     <section class="cas-field">
                         <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
@@ -111,21 +109,25 @@
                         </p>
                     </section>
 
-                    <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=false, buttonCustomization='button-osf-green', messageKey='screen.twofactor.button.verify')" />
-
-                    <div class="form-button">
-                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${osfUrl.logout})}">
-                            <span class="mdc-button__label" th:utext="#{screen.twofactor.button.cancel}"></span>
-                        </a>
-                    </div>
+                    <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=false, buttonCustomization='button-osf-blue', messageKey='screen.twofactor.button.verify')" />
 
                 </form>
 
                 <hr class="my-4" />
 
-                <div class="text-without-mdi">
+                <section class="text-without-mdi">
                     <p th:utext="#{screen.twofactor.instructions.bottom}"></p>
-                </div>
+                </section>
+
+                <section class="cas-field-col-2">
+                    <span class="text-with-mdi cas-field-float-left">
+                        <i class="mdi mdi-before-text mdi-keyboard-backspace"></i>
+                        <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.twofactor.link.cancel}"></a></span>
+                    </span>
+                    <span class="text-without-mdi cas-field-float-right">
+                        <a href="https://help.osf.io/hc/en-us/articles/360019738054-Enable-or-Disable-Two-Factor-Authentication" th:utext="#{screen.generic.link.support}"></a>
+                    </span>
+                </section>
 
                 <script type="text/javascript" th:inline="javascript">
                     /*<![CDATA[*/
