@@ -1,0 +1,31 @@
+{
+  "@class": "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId": "^/(login|logout)\\?.*",
+  "name": "",
+  "description": "",
+  "id": 203948234207101,
+  "evaluationOrder": 10,
+  "logo": "/images/osf-banner.png",
+  "attributeReleasePolicy": {
+    "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
+    "allowedAttributes": [
+      "java.util.ArrayList",
+      [
+        "givenName",
+        "familyName",
+        "username"
+      ]
+    ]
+  },
+  "accessStrategy": {
+    "@class": "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
+    "delegatedAuthenticationPolicy": {
+      "@class": "org.apereo.cas.services.DefaultRegisteredServiceDelegatedAuthenticationPolicy",
+      "allowedProviders": [
+        "java.util.ArrayList",
+        []
+      ],
+      "permitUndefined": false
+    }
+  }
+}
