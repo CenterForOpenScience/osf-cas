@@ -30,78 +30,80 @@
                         </table>
                     </section>
 
-                    <hr class="my-4" />
-                    <div class="card-message">
-                        <h2 th:utext="#{screen.institutionlogin.heading}"></h2>
-                        <p th:utext="#{screen.institutionlogin.message}"></p>
-                    </div>
-                    <h3 class="text-with-mdi">
+                    <section class="text-without-mdi text-center text-bold text-large margin-large-vertical">
+                        <span th:utext="#{screen.institutionlogin.instructions}"></span>
+                    </section>
+
+                    <section class="card-message">
+                        <p th:unless=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.message.select}"></p>
+                        <p th:if=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.message.auto}"></p>
+                    </section>
+
+                    <section class="text-with-mdi text-bold text-large">
                         <i class="mdi mdi-bank mdi-before-text"></i>
-                        <span th:unless=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.select}"></span>
-                        <span th:if=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.select.auto}"></span>
-                    </h3>
-                    <div class="instn-select">
-                        <select class="select" id="institutionselect" autofocus="autofocus" onchange="checkSelect()" th:disabled="${osfCasLoginContext.institutionId != null}">
+                        <span th:unless=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.heading.select}"></span>
+                        <span th:if=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.heading.auto}"></span>
+                    </section>
+
+                    <section class="instn-select">
+                        <select class="select" id="institutionSelect" autofocus="autofocus" onchange="checkSelection()" th:disabled="${osfCasLoginContext.institutionId != null}">
                             <option th:each="key: ${institutions.keySet()}" th:value="${key}" th:text="${institutions.get(key)}"></option>
                         </select>
-                    </div>
-                    <div class="text-with-mdi" th:if=${osfCasLoginContext.institutionId}>
-                        <i class="mdi mdi-menu mdi-before-text"></i>
-                        <span><a th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}" th:utext="#{screen.institutionlogin.select.all}"></a></span>
-                    </div>
-                    <div class="instn-login-error" th:unless=${osfCasLoginContext.institutionId}>
-                        <div id="selecterrormessage" style="display: none;" class="banner banner-danger banner-dismissible" >
-                            <p class="login-error-inline" th:utext="#{screen.institutionlogin.select.errormessage}"></p>
-                            <a href="#" onclick="dismissErrorBanner('selecterrormessage'); return false;" class="close">&times;</a>
-                        </div>
-                    </div>
-                    <div class="form-button">
-                        <button type="button" id="instnsubmit" class="mdc-button mdc-button--raised button-osf-green" name="submit" onclick="institutionLogin()">
+                    </section>
+
+                    <section class="text-with-mdi" th:if=${osfCasLoginContext.institutionId}>
+                        <i class="mdi mdi-checkbox-blank-off-outline mdi-before-text"></i>
+                        <span><a th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}" th:utext="#{screen.institutionlogin.link.select}"></a></span>
+                    </section>
+
+                    <section class="form-button">
+                        <button type="button" id="institutionSubmit" class="mdc-button mdc-button--raised" name="submit" onclick="institutionLogin()"
+                                th:classappend="${osfCasLoginContext.institutionId == null ? 'button-osf-disabled' : 'button-osf-blue'}"
+                                th:disabled="${osfCasLoginContext.institutionId == null}" >
                             <span class="mdc-button__label" th:text="#{screen.institutionlogin.button.submit}"></span>
                         </button>
-                    </div>
-                    <div>
-                        <hr class="hr-text" data-content="OR" />
-                    </div>
-                    <div id="orcidlogin" th:if="${osfCasLoginContext.orcidLoginUrl}">
-                        <section class="delegation-row">
-                            <a class="delegation-button" th:href="@{${osfCasLoginContext.orcidLoginUrl}}">
-                                <img class="delegation-button-logo" src="/images/orcid-logo.png">
-                                <span class="delegation-button-label" th:utext="#{screen.delegation.button.orcid}"></span>
-                            </a>
-                        </section>
-                    </div>
-                    <div id="osfDefaultLogin">
-                        <section class="delegation-row">
-                            <a class="delegation-button" th:href="@{/login(service=${service?.originalUrl ?: ''})}">
-                                <img class="delegation-button-logo" src="/images/osf-logo.png">
-                                <span class="delegation-button-label" th:utext="#{screen.institutionlogin.osf}"></span>
-                            </a>
-                        </section>
-                    </div>
+                    </section>
+
+                    <hr class="my-4" />
+
+                    <section class="text-with-mdi">
+                        <i class="mdi mdi-account-question-outline mdi-before-text"></i>
+                        <span>
+                            <a href="https://help.osf.io/hc/en-us/articles/360019737194-Sign-in-to-OSF" th:utext="#{screen.generic.link.support}"></a>
+                        </span>
+                    </section>
+
+                    <section class="text-with-mdi">
+                        <i class="mdi mdi-backburger mdi-before-text"></i>
+                        <span>
+                            <a th:href="@{/login(service=${service?.originalUrl ?: ''})}" th:utext="#{screen.institutionlogin.osf}"></a>
+                        </span>
+                    </section>
+
                 </section>
             </div>
 
-            <script th:inline="javascript">
+            <script type="text/javascript" th:inline="javascript">
                 function institutionLogin () {
-                    let institutionSelect = document.getElementById("institutionselect");
-                    let institutionLoginUrl = institutionSelect.options[institutionSelect.selectedIndex].value;
-                    let selectErrorMessage = document.getElementById("selecterrormessage");
+                    let submitButton = document.getElementById("institutionSubmit");
+                    let selectDropdownList = document.getElementById("institutionSelect");
+                    let institutionLoginUrl = selectDropdownList.options[selectDropdownList.selectedIndex].value;
                     if (institutionLoginUrl == null || institutionLoginUrl === "") {
-                        selectErrorMessage.style.display = "block";
+                        submitButton.disabled = true;
+                        submitButton.style.backgroundColor = "#efefef";
                         return;
                     }
                     if (institutionLoginUrl === "okstate") {
                         /*<![CDATA[*/
-                            institutionLoginUrl = /*[[${okstateUrl}]]*/ 'error: empty login url for okstate';
+                            institutionLoginUrl = /*[[${okstateUrl}]]*/ '';
                         /*]]>*/
                     } else if (institutionLoginUrl === "cord") {
                         /*<![CDATA[*/
-                            institutionLoginUrl = /*[[${cordUrl}]]*/ 'error: empty login url for cord';
+                            institutionLoginUrl = /*[[${cordUrl}]]*/ '';
                         /*]]>*/
                     } else if (institutionLoginUrl === "fakecas") {
                         /*<![CDATA[*/
-                            institutionLoginUrl = /*[[${pac4jInstnLoginUrls.get('fakecas')}]]*/ 'error: empty login url for cord';
+                            institutionLoginUrl = /*[[${pac4jInstnLoginUrls.get('fakecas')}]]*/ '';
                         /*]]>*/
                     } else {
                         let lastIndexOfHash = institutionLoginUrl.lastIndexOf("#");
@@ -111,19 +113,23 @@
                     }
                     window.location = institutionLoginUrl;
                 }
-                function checkSelect() {
-                    let selectErrorMessage = document.getElementById("selecterrormessage");
-                    if (selectErrorMessage != null) {
-                        selectErrorMessage.style.display = "none";
-                    }
-                }
-                function dismissErrorBanner(bannerId) {
-                    let bannerToDismiss = document.getElementById(bannerId);
-                    if (bannerToDismiss != null) {
-                        bannerToDismiss.style.display = "none";
+            </script>
+
+            <script type="text/javascript">
+                function checkSelection() {
+                    let submitButton = document.getElementById("institutionSubmit");
+                    let selectDropdownList = document.getElementById("institutionSelect");
+                    let institutionLoginUrl = selectDropdownList.options[selectDropdownList.selectedIndex].value;
+                    if (institutionLoginUrl == null || institutionLoginUrl === "") {
+                        submitButton.disabled = true;
+                        submitButton.style.backgroundColor = "#efefef";
+                    } else {
+                        submitButton.disabled = false;
+                        submitButton.style.backgroundColor = "#1b6d85";
                     }
                 }
             </script>
+
         </div>
     </main>
 </body>

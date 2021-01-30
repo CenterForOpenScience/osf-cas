@@ -614,7 +614,7 @@ body {
 
 .mdi-before-text {
     font-size: inherit;
-    vertical-align: middle;
+    vertical-align: text-bottom;
     margin-right: 0.5rem;
 }
 
@@ -842,6 +842,10 @@ body {
     font-size: 1.125rem;
 }
 
+.text-extra-large {
+    font-size: 1.25rem;
+}
+
 .margin-large-vertical {
     margin: 1rem 0;
 }
@@ -885,7 +889,7 @@ body {
 .login-section .instn-select select {
     width: 100%;
     height: 56px;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     margin: 0.5rem 0;
 }
 
@@ -1062,10 +1066,6 @@ body {
         max-width: 320px;
     }
 
-    .login-section .text-with-mdi {
-        font-size: 1rem;
-    }
-
     .login-error-card .title-danger {
         font-size: 1rem;
     }
@@ -1095,10 +1095,6 @@ body {
 
     .osf-shield-with-name .service-ui-name {
         font-size: 2rem;
-    }
-
-    .login-section .text-with-mdi {
-        font-size: 0.875rem;
     }
 
     .login-error-card .title-danger {
@@ -1147,9 +1143,6 @@ body {
         font-size: 1.75rem;
     }
 
-    .login-section .text-with-mdi {
-        font-size: 0.875rem;
-    }
     .login-section .mdi-before-text {
         display: none;
     }
