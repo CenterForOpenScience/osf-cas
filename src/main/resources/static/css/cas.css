@@ -688,6 +688,11 @@ body {
     padding: 0 8px;
 }
 
+.form-button .button-osf-navbar,
+.form-button-inline .button-osf-navbar {
+    background-color: var(--cas-theme-osf-navbar, #263947);
+}
+
 .form-button .button-osf-grey,
 .form-button-inline .button-osf-grey {
     background-color: var(--cas-theme-osf-grey, #eeeeee);
@@ -712,11 +717,6 @@ body {
 .form-button .button-osf-disabled,
 .form-button-inline .button-osf-disabled {
     background-color: var(--cas-theme-osf-disabled, #EFEFEF);
-}
-
-.login-error-card .pre-formatted-small pre {
-    font-size: 0.75rem;
-    white-space: pre-wrap;
 }
 
 .title-danger {
@@ -830,6 +830,10 @@ body {
     margin: 1rem 0;
 }
 
+.hidden-details {
+    display: none;
+}
+
 .form-button-inline .delegation-button-logo {
     position: absolute;
     left: 4px;
@@ -850,6 +854,11 @@ body {
 .login-error-card .mdc-button,
 .login-error-card .mdc-text-field {
     font-size: 1rem;
+}
+
+.login-error-card .pre-formatted-small pre {
+    font-size: 0.75rem;
+    white-space: pre-wrap;
 }
 
 .login-section .background-disabled {
