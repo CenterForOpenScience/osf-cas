@@ -13,8 +13,7 @@
 <body class="login mdc-typography">
     <div layout:fragment="content" class="d-flex justify-content-center">
 
-        <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content"
-            th:classappend="${delegatedAuthenticationProviderConfigurations} OR ${accepttoApplicationId} ? 'w-lg-30' : 'w-lg-50'">
+        <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
             <section id="loginForm" class="login-section login-form"
                 th:if="${@casThymeleafLoginFormDirector.isLoginFormViewable(#vars)}">
                 <div th:replace="fragments/loginform :: loginform">

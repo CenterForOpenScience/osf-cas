@@ -883,6 +883,10 @@ body {
     margin-bottom: -0.5rem;
 }
 
+.login-section .card-message {
+    padding: 1rem 0;
+}
+
 .login-error-list .banner {
     border: none;
     position: relative;
