@@ -1,3 +1,7 @@
+/**************************************************
+ * Start of default styles as of Apereo CAS 6.2.x *
+ **************************************************/
+
 /* Root / Reset */
 
 :root {
@@ -114,6 +118,20 @@ header>nav .cas-brand .cas-logo {
     border: none;
 }
 
+/**
+ * Disabled for OSF CAS.
+ *
+ * @media screen and (max-width: 767.99px) {
+ *     .login-section {
+ *         border-right: none;
+ *         border-bottom: 1px solid rgba(0, 0, 0, .2);
+ *         border-bottom: var(--cas-theme-border-light, 1px solid rgba(0, 0, 0, .2));
+ *         max-width: none;
+ *         padding: 0 1.5rem;
+ *     }
+ * }
+ */
+
 .close {
     font-size: 1.5rem;
     font-weight: 700;
@@ -122,7 +140,6 @@ header>nav .cas-brand .cas-logo {
     text-shadow: 0 1px 0 #fff;
     text-transform: none;
     text-decoration: none;
-    ;
 }
 
 button.close {
@@ -208,6 +225,16 @@ button.close {
 .login-provider-item .mdc-button .mdi {
     margin-right: 0.375rem;
 }
+
+/**
+ * Disabled for OSF CAS.
+ *
+ * @media screen and (max-width: 767.99px) {
+ *     .logout-banner {
+ *         width: 100%;
+ *     }
+ * }
+ */
 
 .cas-footer {
     font-size: 0.75rem;
@@ -568,7 +595,13 @@ button.close {
     border-radius: 4px;
 }
 
-/* customized styles for OSF CAS */
+/************************************************
+ * End of default styles as of Apereo CAS 6.2.x *
+ ************************************************/
+
+/******************************************
+ * Start of customized styles for OSF CAS *
+ ******************************************/
 
 :root {
     --cas-theme-osf-navbar: #263947;
@@ -578,12 +611,12 @@ button.close {
     --cas-theme-osf-green: #357935;
     --cas-theme-osf-blue: #1b6d85;
     --cas-theme-osf-red: #b52b27;
-    --cas-theme-osf-disabled: var(--cas-theme-osf-grey, #eeeeee);
+    --cas-theme-osf-disabled: #eeeeee;
     --cas-theme-osf-disabled-dark: #cccccc;
     --cas-theme-primary: var(--cas-theme-osf-navbar, #263947);
     --cas-theme-danger: var(--cas-theme-osf-red, #b52b27);
     --mdc-theme-primary: var(--cas-theme-primary, #263947);
-    --mdc-theme-surface: var(--cas-theme-osf-surface, #F7F7F7);
+    --mdc-theme-surface: var(--cas-theme-osf-surface, #f7f7f7);
 }
 
 body {
@@ -611,22 +644,6 @@ body {
     justify-content: center;
 }
 
-
-.mdi-before-text {
-    font-size: inherit;
-    vertical-align: text-bottom;
-    margin-right: 0.5rem;
-}
-
-.mdi-before-text:before {
-    font-size:inherit;
-}
-
-.cas-field-primary {
-    margin-bottom: 1rem!important;
-    margin-top: 0.5rem!important;
-}
-
 .hr-text {
     line-height: 1rem;
     position: relative;
@@ -638,7 +655,6 @@ body {
     opacity: .5;
     font-size: 1rem;
 }
-
 
 .hr-text::before {
     content: '';
@@ -717,10 +733,6 @@ body {
 .form-button .button-osf-disabled,
 .form-button-inline .button-osf-disabled {
     background-color: var(--cas-theme-osf-disabled, #EFEFEF);
-}
-
-.title-danger {
-    color: var(--cas-theme-osf-red, #b52b27);
 }
 
 .mdc-top-app-bar__row,
@@ -810,6 +822,20 @@ body {
     margin: 0.5rem 0;
 }
 
+.mdi-before-text {
+    font-size: inherit;
+    vertical-align: text-bottom;
+    margin-right: 0.5rem;
+}
+
+.mdi-before-text:before {
+    font-size: inherit;
+}
+
+.title-danger {
+    color: var(--cas-theme-osf-red, #b52b27);
+}
+
 .text-no-wrap {
     white-space: nowrap;
 }
@@ -822,14 +848,11 @@ body {
     font-size: 1.125rem;
 }
 
-.text-extra-large {
-    font-size: 1.25rem;
-}
-
 .margin-large-vertical {
     margin: 1rem 0;
 }
 
+.hidden-button,
 .hidden-details {
     display: none;
 }
@@ -847,6 +870,10 @@ body {
     color: black;
     white-space: nowrap;
     padding-left: 28px;
+}
+
+.login-error-card .form-button {
+    padding-top: 1rem;
 }
 
 .login-section .mdc-button,
@@ -901,6 +928,11 @@ body {
 
 .login-error-list .login-error-inline {
     margin: 0.25rem 0;
+}
+
+.cas-field-primary {
+    margin-bottom: 1rem!important;
+    margin-top: 0.5rem!important;
 }
 
 .cas-field-col-2 {
@@ -1142,3 +1174,7 @@ body {
         padding-top: 0.625rem!important;
     }
 }
+
+/****************************************
+ * End of customized styles for OSF CAS *
+ ****************************************/

@@ -14,7 +14,7 @@
 
         <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
             <section class="login-error-card">
-            <section>
+                <section>
                     <div th:replace="fragments/osfbannerui :: osfBannerUI">
                         <a href="fragments/osfbannerui.html"></a>
                     </div>
@@ -37,9 +37,9 @@
                     <i class="mdi mdi-logout mdi-before-text"></i>
                     <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.authnerror.button.backtoosf}"></a></span>
                 </section>
-                <hr class="my-4" />
                 <section>
-                <!-- <section th:if="${osfCasLoginContext.devMode}"> -->
+                <!-- <section th:if="${devMode}"> -->
+                    <hr class="my-4" />
                     <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
                         <span th:utext="#{screen.authnerror.instructions.devmode}"></span>
                     </section>
@@ -54,8 +54,8 @@
                                 onclick="showErrorDetails();">
                             <span class="mdc-button__label" th:utext="#{screen.unavailable.button.viewdetails}"></span>
                         </button>
-                        <button id="buttonHideErrorDetails" type="button" style="display: none;"
-                                class="mdc-button mdc-button--raised button-osf-navbar"
+                        <button id="buttonHideErrorDetails" type="button"
+                                class="mdc-button mdc-button--raised button-osf-navbar hidden-button"
                                 onclick="hideErrorDetails();">
                             <span class="mdc-button__label" th:utext="#{screen.unavailable.button.hidedetails}"></span>
                         </button>
@@ -70,7 +70,10 @@
 
         <script type="text/javascript">
             disableSignUpButton();
+        </script>
 
+        <script type="text/javascript">
+        <!-- <script type="text/javascript" th:if="${devMode}"> -->
             function showErrorDetails() {
                 $("#buttonViewErrorDetails").hide()
                 $("#buttonHideErrorDetails").show()
