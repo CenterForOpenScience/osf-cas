@@ -29,7 +29,7 @@
 
                 <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
                     <div class="form-button form-button-navbar">
-                        <a class="mdc-button mdc-button--raised button-osf-green" th:href="@{${osfUrl.register}}">
+                        <a id="osfRegister" class="mdc-button mdc-button--raised button-osf-green" th:href="@{${osfUrl.register}}">
                             <span class="mdc-button__label">Sign up</span>
                         </a>
                     </div>
@@ -37,6 +37,19 @@
 
             </nav>
         </header>
+
+        <script type="text/javascript">
+            function disableSignUpButton() {
+                let signUpButton = document.getElementById("osfRegister");
+                if (signUpButton != null) {
+                    signUpButton.removeAttribute("href");
+                    signUpButton.style.opacity = "0.8";
+                    signUpButton.style.cursor = "not-allowed";
+                    signUpButton.style.backgroundColor = "#efefef";
+                    signUpButton.style.color = "#cccccc";
+                }
+            }
+        </script>
 
         <script type="text/javascript">
             (function (material) {
