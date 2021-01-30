@@ -45,7 +45,7 @@ public abstract class OsfAbstractLoginPreparationAction extends AbstractAuthenti
 
     protected static final String PARAMETER_ERROR_SOURCE = "errorSource";
 
-    protected static final List<String> EXPECTED_ERROR_CODES = new LinkedList<>(Arrays.asList("401", "403", "404", "405", "423"));
+    protected static final List<String> EXPECTED_ERROR_CODES = new LinkedList<>(Arrays.asList("401", "403", "404", "405", "423", "-1"));
 
     public OsfAbstractLoginPreparationAction(
             final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver,

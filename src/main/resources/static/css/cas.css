@@ -639,10 +639,6 @@ body {
     font-size: 1rem;
 }
 
-.login-error-card .hr-text,
-.login-generic-card .hr-text {
-    margin: 1.5rem 0;
-}
 
 .hr-text::before {
     content: '';
@@ -718,42 +714,13 @@ body {
     background-color: var(--cas-theme-osf-disabled, #EFEFEF);
 }
 
-.login-error-card,
-.login-generic-card {
-    min-width: fit-content;
-}
-
 .login-error-card .pre-formatted-small pre {
     font-size: 0.75rem;
     white-space: pre-wrap;
 }
 
-.banner-generic,
-.banner-danger {
-    min-width: fit-content;
-}
-
-.banner-danger .title-danger {
-    margin: 0.5rem 0;
+.title-danger {
     color: var(--cas-theme-osf-red, #b52b27);
-    white-space: nowrap;
-}
-
-.banner-generic hr,
-.banner-danger hr {
-    width: 100%;
-}
-
-.card-message {
-    padding: 1rem 0;
-}
-
-.w-card-narrow .card-message {
-    max-width: 36rem;
-}
-
-.w-card-wide .card-message {
-    max-width: 48rem;
 }
 
 .mdc-top-app-bar__row,
@@ -778,6 +745,12 @@ body {
     color: #F7F7F7;
 }
 
+.mdc-top-app-bar__row .button-osf-disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+    color: var(--cas-theme-osf-disabled-dark, #cccccc);
+}
+
 .mdc-top-app-bar__row .cas-brand-name {
     font-weight: bold;
     color: #F7F7F7;
@@ -788,8 +761,15 @@ body {
     font-weight: normal;
 }
 
-.login-section {
+.login-section,
+.login-error-card {
+    border: none;
     width: 512px;
+}
+
+.login-error-card {
+    padding: 2rem 2.5rem;
+    flex: 1;
 }
 
 #serviceui {
@@ -865,8 +845,10 @@ body {
     padding-left: 28px;
 }
 
+.login-section .mdc-button,
 .login-section .mdc-text-field,
-.login-section .mdc-button {
+.login-error-card .mdc-button,
+.login-error-card .mdc-text-field {
     font-size: 1rem;
 }
 
@@ -884,6 +866,10 @@ body {
 
 .login-section .card-message {
     padding: 1rem 0;
+}
+
+.login-error-card .card-message {
+    padding: 0;
 }
 
 .login-section .instn-select select {
@@ -1065,10 +1051,6 @@ body {
     .service-ui .service-ui-logo {
         max-width: 320px;
     }
-
-    .login-error-card .title-danger {
-        font-size: 1rem;
-    }
 }
 
 @media all and (max-width: 699.99px) {
@@ -1096,15 +1078,12 @@ body {
     .osf-shield-with-name .service-ui-name {
         font-size: 2rem;
     }
-
-    .login-error-card .title-danger {
-        font-size: 0.875rem;
-    }
 }
 
 @media all and (max-width: 511.99px) {
 
-    .login-section {
+    .login-section,
+    .login-error-card {
         width: fit-content;
         min-width: 360px;
     }
@@ -1143,12 +1122,9 @@ body {
         font-size: 1.75rem;
     }
 
-    .login-section .mdi-before-text {
+    .login-section .mdi-before-text,
+    .login-error-card .mdi-before-text {
         display: none;
-    }
-
-    .login-error-card .title-danger {
-        font-size: 0.875rem;
     }
 
     .cas-footer-osf {
