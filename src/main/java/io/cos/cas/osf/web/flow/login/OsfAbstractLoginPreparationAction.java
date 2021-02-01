@@ -43,9 +43,9 @@ public abstract class OsfAbstractLoginPreparationAction extends AbstractAuthenti
 
     protected static final String PARAMETER_ORCID_REDIRECT_VALUE = "true";
 
-    protected static final String PARAMETER_ERROR_SOURCE = "errorSource";
+    protected static final String PARAMETER_REDIRECT_SOURCE = "casRedirectSource";
 
-    protected static final List<String> EXPECTED_ERROR_CODES = new LinkedList<>(Arrays.asList("401", "403", "404", "405", "423", "-1"));
+    protected static final List<String> EXPECTED_REDIRECT_CODES = new LinkedList<>(Arrays.asList("tomcat", "cas"));
 
     public OsfAbstractLoginPreparationAction(
             final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver,

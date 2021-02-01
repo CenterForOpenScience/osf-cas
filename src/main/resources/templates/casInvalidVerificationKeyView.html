@@ -33,7 +33,7 @@
                     </a>
                 </section>
                 <hr class="my-4" />
-                <section class="text-with-mdi" th:with="loginUrl=@{/login(errorSource=401)}">
+                <section class="text-with-mdi" th:with="loginUrl=@{/login(casRedirectSource=cas)}">
                     <i class="mdi mdi-login mdi-before-text"></i>
                     <span><a th:href="@{/logout(service=${loginUrl})}" th:utext="#{screen.error.page.loginagain}"></a></span>
                 </section>
