@@ -798,8 +798,9 @@ body {
     max-width: 360px;
 }
 
-.service-ui .service-ui-info {
-    display: none;
+.service-ui .service-ui-logo-branded {
+    max-height: 48px;
+    max-width: 360px;
 }
 
 .service-ui .osf-shield-with-name {
@@ -807,13 +808,27 @@ body {
     padding-bottom: 1rem;
 }
 
+.osf-shield-with-name-branded {
+    width: 1px;
+}
+
 .osf-shield-with-name .service-ui-logo {
     padding-right: 0.5rem;
+}
+
+.osf-shield-with-name .service-ui-logo-branded {
+    padding-right: 1rem;
 }
 
 .osf-shield-with-name .service-ui-name {
     font-size: 2.25rem;
     font-weight: bold;
+}
+
+.osf-shield-with-name .service-ui-name-branded {
+    font-size: 2rem;
+    font-weight: normal;
+    white-space: nowrap;
 }
 
 .text-with-mdi,
@@ -1119,6 +1134,10 @@ body {
     .osf-shield-with-name .service-ui-name {
         font-size: 2rem;
     }
+
+    .osf-shield-with-name .service-ui-name-branded {
+        font-size: 1.75rem;
+    }
 }
 
 @media all and (max-width: 511.99px) {
@@ -1147,6 +1166,10 @@ body {
     .form-button-inline .delegation-button-label {
         font-size: 1rem;
     }
+
+    .osf-shield-with-name .service-ui-name-branded {
+        white-space: normal;
+    }
 }
 
 @media all and (max-width: 399.99px) {
@@ -1161,6 +1184,10 @@ body {
 
     .osf-shield-with-name .service-ui-name {
         font-size: 1.75rem;
+    }
+
+    .osf-shield-with-name .service-ui-name-branded {
+        font-size: 1.5rem;
     }
 
     .login-section .mdi-before-text,
