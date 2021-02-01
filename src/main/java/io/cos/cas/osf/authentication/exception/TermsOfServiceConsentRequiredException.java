@@ -8,7 +8,7 @@ import javax.security.auth.login.AccountException;
  * Describes an authentication error condition where a user account needs to agree to OSF's terms of service.
  *
  * @author Longze Chen
- * @since 21.1.0
+ * @since 21.0.0
  */
 @NoArgsConstructor
 public class TermsOfServiceConsentRequiredException extends AccountException {

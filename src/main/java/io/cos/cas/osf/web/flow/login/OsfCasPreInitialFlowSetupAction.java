@@ -17,7 +17,7 @@ import java.util.Optional;
  * This is {@link OsfCasPreInitialFlowSetupAction}.
  *
  * @author Longze Chen
- * @since 20.2.0
+ * @since 21.0.0
  */
 @RequiredArgsConstructor
 @Slf4j

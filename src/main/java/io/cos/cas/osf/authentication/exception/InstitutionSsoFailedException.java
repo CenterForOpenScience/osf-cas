@@ -8,7 +8,7 @@ import javax.security.auth.login.AccountException;
  * Describes an authentication error condition where institution SSO has failed.
  *
  * @author Longze Chen
- * @since 20.2.0
+ * @since 21.0.0
  */
 @NoArgsConstructor
 public class InstitutionSsoFailedException extends AccountException {
