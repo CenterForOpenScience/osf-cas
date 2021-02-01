@@ -62,41 +62,6 @@ public class OsfUrlProperties implements Serializable {
     private String forgotPassword;
 
     /**
-     * OSF Preprints landing page URL.
-     */
-    private String preprintsHome;
-
-    /**
-     * OSF Registries landing page URL.
-     */
-    private String registriesHome;
-
-    /**
-     * OSF Institutions landing page URL.
-     */
-    private String institutionsHome;
-
-    /**
-     * OSF meetings landing page URL.
-     */
-    private String meetingsHome;
-
-    /**
-     * OSF search page URL.
-     */
-    private String search;
-
-    /**
-     * OSF support page URL.
-     */
-    private String support;
-
-    /**
-     * OSF / COS donation page URL.
-     */
-    private String donate;
-
-    /**
      * Build the default service URL using OSF login endpoint with OSF home page as destination.
      */
     public String constructDefaultServiceUrl() {

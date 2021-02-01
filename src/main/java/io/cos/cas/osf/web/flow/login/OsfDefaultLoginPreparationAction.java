@@ -147,8 +147,8 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
     }
 
     private boolean isFromFlowlessErrorPage(final RequestContext context) {
-        final String errorCode = context.getRequestParameters().get(PARAMETER_ERROR_SOURCE);
-        return !StringUtils.isBlank(errorCode) && EXPECTED_ERROR_CODES.contains(errorCode);
+        final String errorCode = context.getRequestParameters().get(PARAMETER_REDIRECT_SOURCE);
+        return !StringUtils.isBlank(errorCode) && EXPECTED_REDIRECT_CODES.contains(errorCode);
     }
 
     private Event continueToUsernamePasswordLogin() {

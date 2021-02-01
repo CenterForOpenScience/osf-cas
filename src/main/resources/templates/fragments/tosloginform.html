@@ -12,33 +12,34 @@
 
 <body>
     <main role="main" class="container mt-3 mb-3">
+
         <!-- Terms of service consent check login form template begins here -->
         <div th:fragment="tosloginform" class="d-flex flex-column justify-content-between m-auto">
 
-            <div>
+            <section>
                 <div class="service-ui" th:replace="fragments/osfbannerui :: osfBannerUI">
                     <a href="fragments/osfbannerui.html"></a>
                 </div>
-            </div>
+            </section>
 
-            <h3 class="text-center text-with-mdi">
-                <i class="mdi mdi-file-document mdi-before-text"></i>
-                <span th:utext="#{screen.tosconsent.instructions.top}"></span>
-            </h3>
+            <section class="text-without-mdi text-center text-bold text-large margin-large-vertical">
+                <span th:utext="#{screen.tosconsent.tips}"></span>
+            </section>
 
-            <div class="card-message">
+            <section class="card-message">
                 <p th:utext="#{screen.tosconsent.message.p1}"></p>
                 <p th:utext="#{screen.tosconsent.message.p2}"></p>
                 <p th:utext="#{screen.tosconsent.message.p3}"></p>
-            </div>
+            </section>
 
             <div class="form-wrapper">
+
                 <form method="post" id="fm1" th:object="${credential}" action="login">
 
                     <section class="cas-field my-2=3">
                         <span th:if="${availableAuthenticationHandlerNames != null}">
                             <span th:if="${availableAuthenticationHandlerNames.size() > 1}">
-                                <label for="source" th:utext="#{screen.welcome.label.source}"></label>
+                                <label for="source" th:utext="#{screen.generic.label.source}"></label>
                                 <div>
                                     <select class="form-control required"
                                             id="source"
@@ -78,22 +79,24 @@
                         </p>
                     </section>
 
-                    <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=true, buttonCustomization='button-osf-disabled', messageKey='screen.tosconsent.button.agree')" />
+                    <section>
+                        <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=true, buttonCustomization='button-osf-disabled', messageKey='screen.tosconsent.button.agree')" />
+                    </section>
 
                 </form>
 
                 <hr class="my-4" />
 
-                <div class="text-with-mdi">
-                    <i class="mdi mdi-logout mdi-before-text"></i>
+                <section class="text-with-mdi">
+                    <i class="mdi mdi-keyboard-backspace mdi-before-text"></i>
                     <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.tosconsent.link.cancel}"></a></span>
-                </div>
+                </section>
 
                 <script type="text/javascript">
                     function checkTosConsent(checkbox) {
                         let submitButton = document.getElementById("primarySubmitButton");
                         submitButton.disabled = !checkbox.checked;
-                        submitButton.style.backgroundColor = checkbox.checked ? "#357935": "#EFEFEF";
+                        submitButton.style.backgroundColor = checkbox.checked ? "#1b6d85": "#efefef";
                     }
                 </script>
 
