@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * This is {@link OsfInstitution}.
  *
  * @author Longze Chen
- * @since 20.2.0
+ * @since 21.0.0
  */
 @Entity
 @Table(name = "osf_institution")

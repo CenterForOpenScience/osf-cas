@@ -15,7 +15,7 @@ import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
  * This is {@link OsfCasLogoutWebFlowConfigurer}.
  *
  * @author Longze Chen
- * @since 20.2.0
+ * @since 21.0.0
  */
 public class OsfCasLogoutWebFlowConfigurer extends DefaultLogoutWebflowConfigurer {
 
