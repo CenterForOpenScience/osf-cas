@@ -919,6 +919,7 @@ body {
     padding: 1rem 0;
 }
 
+.login-instn-card .card-message,
 .login-error-card .card-message {
     padding: 0;
 }
@@ -943,29 +944,6 @@ body {
 
 .login-error-list .login-error-inline {
     margin: 0.25rem 0;
-}
-
-#unknown-institution-login, #unknown-institution-login:active {
-    background-image: linear-gradient(to bottom, #2bc1f3 0, #337591 100%);
-    color: white;
-    font-weight: bold;
-}
-
-#unknown-institution-login:hover {
-    cursor: pointer;
-    -webkit-box-shadow: 0px 0px 5px 0px #337591;
-    -moz-box-shadow: 0px 0px 5px 0px #337591;
-    box-shadow: 0px 0px 5px 0px #337591;
-}
-
-#unknown-institution-login .label-login {
-    opacity: 0.9;
-    font-size: 1em;
-}
-
-.unsupported-inst-body-header {
-    font-weight: bold;
-    font-size: 110%;
 }
 
 .cas-field-primary {
