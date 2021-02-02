@@ -59,7 +59,12 @@ def casWebApplicationBinaryName = "cas.war"
 project.ext."casServerVersion" = casServerVersion
 project.ext."casWebApplicationBinaryName" = casWebApplicationBinaryName
 
+apply plugin: "war"
 apply plugin: "io.freefair.war-overlay"
+
+apply from: rootProject.file("gradle/tasks.gradle")
+apply from: rootProject.file("gradle/springboot.gradle")
+apply from: rootProject.file("gradle/dockerjib.gradle")
 
 apply plugin: "io.freefair.lombok"
 lombok {
@@ -71,14 +76,30 @@ lombok {
     config["lombok.toString.doNotUseGetters"] = "true"
 }
 
-apply from: rootProject.file("gradle/tasks.gradle")
-
-apply plugin: "war"
 apply plugin: "eclipse"
-apply plugin: "idea"
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
 
-apply from: rootProject.file("gradle/springboot.gradle")
-apply from: rootProject.file("gradle/dockerjib.gradle")
+apply plugin: "idea"
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+apply plugin: "org.sonarqube"
+sonarqube {
+    properties {
+        property "sonar.projectKey", "CenterForOpenScience_osf-cas"
+        property "sonar.organization", "centerforopenscience"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
 
 dependencies {
     // Other CAS dependencies/modules may be listed here...
@@ -152,28 +173,4 @@ configurations.all {
             failOnVersionConflict()
         }
     }
-}
-
-eclipse {
-    classpath {
-       downloadSources = true
-       downloadJavadoc = true
-    }
-}
-
-idea {
-    module {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
-
-apply plugin: "org.sonarqube"
-
-sonarqube {
-  properties {
-    property "sonar.projectKey", "CenterForOpenScience_osf-cas"
-    property "sonar.organization", "centerforopenscience"
-    property "sonar.host.url", "https://sonarcloud.io"
-  }
 }
