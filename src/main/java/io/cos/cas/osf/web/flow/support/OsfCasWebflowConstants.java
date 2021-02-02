@@ -20,8 +20,6 @@ public interface OsfCasWebflowConstants {
 
     String ACTION_ID_OSF_INSTITUTION_LOGIN_CHECK = "osfInstitutionLoginCheckAction";
 
-    String ACTION_ID_OSF_UNSUPPORTED_INSTITUTION_LOGIN_CHECK = "osfUnsupportedInstitutionLoginCheckAction";
-
     String TRANSITION_ID_USERNAME_PASSWORD_LOGIN = "continueToUsernamePasswordLogin";
 
     String TRANSITION_ID_INSTITUTION_LOGIN = "switchToInstitutionLogin";
@@ -37,8 +35,6 @@ public interface OsfCasWebflowConstants {
     String STATE_ID_OSF_DEFAULT_LOGIN_CHECK = "osfDefaultLoginCheck";
 
     String STATE_ID_OSF_INSTITUTION_LOGIN_CHECK = "osfInstitutionLoginCheck";
-
-    String STATE_ID_OSF_UNSUPPORTED_INSTITUTION_LOGIN_CHECK = "osfUnsupportedInstitutionLoginCheck";
 
     String VIEW_ID_INSTITUTION_SSO_INIT = "casInstitutionLoginView";
 

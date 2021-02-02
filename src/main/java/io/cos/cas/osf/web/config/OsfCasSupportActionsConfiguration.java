@@ -3,7 +3,6 @@ package io.cos.cas.osf.web.config;
 import io.cos.cas.osf.dao.JpaOsfDao;
 import io.cos.cas.osf.web.flow.login.OsfDefaultLoginPreparationAction;
 import io.cos.cas.osf.web.flow.login.OsfInstitutionLoginPreparationAction;
-import io.cos.cas.osf.web.flow.login.OsfUnsupportedInstitutionLoginPreparationAction;
 import io.cos.cas.osf.web.flow.login.OsfCasPreInitialFlowSetupAction;
 import io.cos.cas.osf.web.flow.login.OsfPrincipalFromNonInteractiveCredentialsAction;
 
@@ -124,20 +123,6 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
                 adaptiveAuthenticationPolicy.getObject(),
                 jpaOsfDao.getObject(),
                 casProperties.getAuthn().getOsfPostgres().getInstitutionClients()
-        );
-    }
-
-    /**
-     * Bean configuration for {@link OsfUnsupportedInstitutionLoginPreparationAction}.
-     *
-     * @return the initialized action
-     */
-    @Bean
-    public Action osfUnsupportedInstitutionLoginCheckAction() {
-        return new OsfUnsupportedInstitutionLoginPreparationAction(
-                initialAuthenticationAttemptWebflowEventResolver.getObject(),
-                serviceTicketRequestWebflowEventResolver.getObject(),
-                adaptiveAuthenticationPolicy.getObject()
         );
     }
 }

@@ -140,7 +140,6 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         // Create the customized interactive login check actions
         createOsfDefaultLoginCheckAction(flow);
         createOsfInstitutionLoginCheckAction(flow);
-        createOsfUnsupportedInstitutionLoginCheckAction(flow);
         // Create the customized non-interactive authentication check action
         createOsfNonInteractiveAuthenticationCheckAction(flow);
     }
@@ -332,7 +331,7 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         createTransitionForState(
                 action,
                 OsfCasWebflowConstants.TRANSITION_ID_UNSUPPORTED_INSTITUTION_LOGIN,
-                OsfCasWebflowConstants.STATE_ID_OSF_UNSUPPORTED_INSTITUTION_LOGIN_CHECK
+                OsfCasWebflowConstants.VIEW_ID_UNSUPPORTED_INSTITUTION_SSO_INIT
         );
         createTransitionForState(
                 action,
@@ -371,29 +370,6 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 action,
                 CasWebflowConstants.TRANSITION_ID_SUCCESS,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT
-        );
-    }
-
-    /**
-     * Create the unsupported institution login check / preparation action for OSF CAS.
-     *
-     * @param flow the flow
-     */
-    private void createOsfUnsupportedInstitutionLoginCheckAction(final Flow flow) {
-        ActionState action = createActionState(
-                flow,
-                OsfCasWebflowConstants.STATE_ID_OSF_UNSUPPORTED_INSTITUTION_LOGIN_CHECK,
-                OsfCasWebflowConstants.ACTION_ID_OSF_UNSUPPORTED_INSTITUTION_LOGIN_CHECK
-        );
-        createTransitionForState(
-                action,
-                CasWebflowConstants.TRANSITION_ID_ERROR,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
-        );
-        createTransitionForState(
-                action,
-                CasWebflowConstants.TRANSITION_ID_SUCCESS,
-                OsfCasWebflowConstants.VIEW_ID_UNSUPPORTED_INSTITUTION_SSO_INIT
         );
     }
 
@@ -538,7 +514,7 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
     }
 
     /**
-     * Create the institution SSO init view state to support the OSF feature "sign-in via institutions".
+     * Create the unsupported institution view state to support the OSF feature "I can't find my institution".
      *
      * @param flow the flow
      */

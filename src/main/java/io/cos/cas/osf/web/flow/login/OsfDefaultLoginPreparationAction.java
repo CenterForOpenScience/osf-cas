@@ -82,7 +82,7 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
                     defaultServiceUrl
             );
         } else {
-            loginContext.setDefaultServiceUrl(encodedServiceUrl);
+            loginContext.setEncodedServiceUrl(encodedServiceUrl);
             loginContext.setInstitutionLogin(institutionLogin);
             loginContext.setInstitutionId(institutionId);
             loginContext.setUnsupportedInstitutionLogin(unsupportedInstitutionLogin);
@@ -116,7 +116,7 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
 
     private boolean isInstitutionLogin(final RequestContext context) {
         final String campaign = context.getRequestParameters().get(PARAMETER_CAMPAIGN);
-        return StringUtils.isNotBlank(campaign) && PARAMETER_CAMPAIGN_VALUE.equals(campaign.toLowerCase());
+        return StringUtils.isNotBlank(campaign) && PARAMETER_CAMPAIGN_VALUE.equalsIgnoreCase(campaign);
     }
 
     private String getInstitutionIdFromRequestContext(final RequestContext context) {
@@ -126,13 +126,13 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
 
     private boolean isUnsupportedInstitutionLogin(final RequestContext context) {
         final String campaign = context.getRequestParameters().get(PARAMETER_CAMPAIGN);
-        return StringUtils.isNotBlank(campaign) && PARAMETER_CAMPAIGN_UNSUPPORTED_INSTITUTION_VALUE.equals(campaign.toLowerCase());
+        return StringUtils.isNotBlank(campaign) && PARAMETER_CAMPAIGN_UNSUPPORTED_INSTITUTION_VALUE.equalsIgnoreCase(campaign);
     }
 
     private boolean isOrcidLoginAutoRedirect(final RequestContext context) {
         final String orcidRedirect = context.getRequestParameters().get(PARAMETER_ORCID_REDIRECT);
         return StringUtils.isNotBlank(orcidRedirect)
-                && PARAMETER_ORCID_REDIRECT_VALUE.equals(orcidRedirect.toLowerCase());
+                && PARAMETER_ORCID_REDIRECT_VALUE.equalsIgnoreCase(orcidRedirect);
     }
 
     private String getOrcidLoginUrlFromFlowScope(final RequestContext context) {
