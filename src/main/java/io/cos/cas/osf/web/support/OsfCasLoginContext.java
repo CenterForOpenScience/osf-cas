@@ -15,7 +15,7 @@ import java.io.Serializable;
  * and retrieved from the flow context conveniently.
  *
  * @author Longze Chen
- * @since 20.0.0
+ * @since 20.1.0
  */
 @AllArgsConstructor
 @Getter
@@ -26,7 +26,13 @@ public class OsfCasLoginContext implements Serializable  {
 
     private static final long serialVersionUID = 7523144720609509742L;
 
-    private String serviceUrl;
+    /**
+     * The encoded service URL provided by the "service=" query param in the request URL.
+     *
+     * This attribute is deprecated and should be removed since 1) ThymeLeaf handles URL building elegantly in the template and 2) both of
+     * the flow parameters "service.originalUrl" and "originalUrl" stores the current service information.
+     */
+    private String encodedServiceUrl;
 
     private String handleErrorName;
 
@@ -34,22 +40,39 @@ public class OsfCasLoginContext implements Serializable  {
 
     private String institutionId;
 
+    private boolean unsupportedInstitutionLogin;
+
     private boolean orcidRedirect;
 
     private String orcidLoginUrl;
 
+    private boolean defaultService;
+
+    /**
+     * The default service URL that uses OSF login endpoint with OSF home as destination.
+     *
+     * e.g. http(s)://[OSF Domain]/login?next=[encoded version of http(s)://[OSF Domain]/]
+     */
+    private String defaultServiceUrl;
+
     public OsfCasLoginContext (
-            final String serviceUrl,
+            final String encodedServiceUrl,
             final boolean institutionLogin,
             final String institutionId,
+            final boolean unsupportedInstitutionLogin,
             final boolean orcidRedirect,
-            final String orcidLoginUrl
+            final String orcidLoginUrl,
+            final boolean defaultService,
+            final String defaultServiceUrl
     ) {
-        this.serviceUrl = serviceUrl;
+        this.encodedServiceUrl = encodedServiceUrl;
         this.handleErrorName = null;
         this.institutionLogin = institutionLogin;
         this.institutionId = institutionId;
+        this.unsupportedInstitutionLogin = unsupportedInstitutionLogin;
         this.orcidRedirect = orcidRedirect;
         this.orcidLoginUrl = orcidLoginUrl;
+        this.defaultService = defaultService;
+        this.defaultServiceUrl = defaultServiceUrl;
     }
 }

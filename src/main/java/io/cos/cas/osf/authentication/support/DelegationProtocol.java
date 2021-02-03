@@ -8,7 +8,7 @@ package io.cos.cas.osf.authentication.support;
  */
 public enum DelegationProtocol {
 
-    NONE_OSF("none-osf"),
+    NONE("none"),
 
     OAUTH_PAC4J("oauth-pac4j"),
 

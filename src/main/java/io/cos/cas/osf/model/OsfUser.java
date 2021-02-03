@@ -63,6 +63,10 @@ public final class OsfUser extends AbstractOsfModel {
     private Date dateConfirmed;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "accepted_terms_of_service")
+    private Date dateTermsOfServiceAccepted;
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_disabled")
     private Date dateDisabled;
 
@@ -84,6 +88,10 @@ public final class OsfUser extends AbstractOsfModel {
 
     public boolean isConfirmed() {
         return dateConfirmed != null;
+    }
+
+    public boolean isTermsOfServiceAccepted() {
+        return dateTermsOfServiceAccepted != null;
     }
 
     public boolean isDisabled() {

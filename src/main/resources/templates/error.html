@@ -2,70 +2,91 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title th:text="#{screen.unavailable.header}">CAS Error View</title>
+    <title th:text="#{screen.servererror.title}"></title>
     <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
 </head>
 
-<body>
-    <main role="main" class="container mt-3 mb-3">
-        <div layout:fragment="content" class="banner banner-danger mdc-card p-4 w-md-wide">
+<body class="mdc-typography">
+    <div layout:fragment="content" class="d-flex justify-content-center">
 
-            <div class="login-error-card">
-                <div th:replace="fragments/osfbannerui :: osfBannerUI">
-                    <a href="fragments/osfbannerui.html"></a>
-                </div>
-                <h3 class="text-center title-danger">
-                    <span th:utext="#{screen.authnerror.instructions}"></span>
-                </h3>
+        <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
+            <section class="login-error-card">
+                <section>
+                    <div th:replace="fragments/osfbannerui :: osfBannerUI">
+                        <a href="fragments/osfbannerui.html"></a>
+                    </div>
+                </section>
+                <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
+                    <span th:utext="#{screen.authnerror.tips}"></span>
+                </section>
                 <hr class="my-4" />
-                <div class="card-message">
+                <section class="card-message">
                     <h2 th:utext="#{screen.unavailable.heading}"></h2>
                     <div th:utext="#{screen.unavailable.message}"></div>
-                </div>
-                <div class="form-button-inline">
-                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
-                        <span class="mdc-button__label" th:utext="#{screen.authnerror.button.backtoosf}"></span>
+                </section>
+                <section class="form-button" th:with="loginUrl=@{/login(casRedirectSource=cas)}">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${loginUrl})}">
+                        <span class="mdc-button__label" th:utext="#{screen.error.page.loginagain}"></span>
                     </a>
-                    <button id="buttonViewErrorDetails" type="button"
-                        class="mdc-button mdc-button--raised button-osf-red"
-                        onclick="showErrorDetails();">
-                        <span class="mdc-button__label" th:utext="#{screen.unavailable.button.viewdetails}"></span>
-                    </button>
-                    <button id="buttonHideErrorDetails" type="button" style="display: none;"
-                        class="mdc-button mdc-button--raised button-osf-red"
-                        onclick="hideErrorDetails();">
-                        <span class="mdc-button__label" th:utext="#{screen.unavailable.button.hidedetails}"></span>
-                    </button>
-                </div>
-                <div id="errorDetails" class="pre-formatted-small word-break-all" style="display: none;">
-                    <hr class="hr-text" data-content="DETAILS" />
-                    <pre th:utext="${'Error: ' + status + ' - ' + error}"></pre>
-                    <pre th:utext="${'Timestamp: ' + #dates.formatISO(#dates.createNow())}"></pre>
-                    <pre th:text="${'Message: ' + message}"></pre>
-                    <pre style="white-space: pre-wrap;" th:utext="${#strings.escapeXml(trace)}"></pre>
-                </div>
-            </div>
-
-            <script th:inline="javascript">
-                /*<![CDATA[*/
-                function showErrorDetails() {
-                    $("#buttonViewErrorDetails").hide()
-                    $("#buttonHideErrorDetails").show()
-                    $("#errorDetails").show()
-                }
-                function hideErrorDetails() {
-                    $("#buttonViewErrorDetails").show()
-                    $("#buttonHideErrorDetails").hide()
-                    $("#errorDetails").hide()
-                }
-                /*]]>*/
-            </script>
-
+                </section>
+                <hr class="my-4" />
+                <section class="text-with-mdi">
+                    <i class="mdi mdi-logout mdi-before-text"></i>
+                    <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.authnerror.button.backtoosf}"></a></span>
+                </section>
+                <section>
+                <!-- <section th:if="${devMode}"> -->
+                    <hr class="my-4" />
+                    <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
+                        <span th:utext="#{screen.authnerror.tips.devmode}"></span>
+                    </section>
+                    <section class="pre-formatted-small word-break-all">
+                        <pre th:utext="${'Error: ' + status + ' - ' + error}"></pre>
+                        <pre th:utext="${'Timestamp: ' + #dates.formatISO(#dates.createNow())}"></pre>
+                        <pre th:text="${'Message: ' + message}"></pre>
+                    </section>
+                    <section class="form-button">
+                        <button id="buttonViewErrorDetails" type="button"
+                                class="mdc-button mdc-button--raised button-osf-navbar"
+                                onclick="showErrorDetails();">
+                            <span class="mdc-button__label" th:utext="#{screen.unavailable.button.viewdetails}"></span>
+                        </button>
+                        <button id="buttonHideErrorDetails" type="button"
+                                class="mdc-button mdc-button--raised button-osf-navbar hidden-button"
+                                onclick="hideErrorDetails();">
+                            <span class="mdc-button__label" th:utext="#{screen.unavailable.button.hidedetails}"></span>
+                        </button>
+                    </section>
+                    <section id="errorDetails" class="pre-formatted-small word-break-all hidden-details">
+                        <hr class="hr-text" data-content="DETAILS" />
+                        <pre th:utext="${#strings.escapeXml(trace)}"></pre>
+                    </section>
+                </section>
+            </section>
         </div>
-    </main>
+
+        <script type="text/javascript">
+            disableSignUpButton();
+        </script>
+
+        <script type="text/javascript">
+        <!-- <script type="text/javascript" th:if="${devMode}"> -->
+            function showErrorDetails() {
+                $("#buttonViewErrorDetails").hide()
+                $("#buttonHideErrorDetails").show()
+                $("#errorDetails").show()
+            }
+            function hideErrorDetails() {
+                $("#buttonViewErrorDetails").show()
+                $("#buttonHideErrorDetails").hide()
+                $("#errorDetails").hide()
+            }
+        </script>
+
+    </div>
 </body>
 
 </html>
