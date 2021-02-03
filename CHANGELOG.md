@@ -2,6 +2,21 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.0.0 (02-03-2020)
+===================
+
+OSF CAS third release with web flow updates, institution SSO, and FE rework
+
+* Login and logout web flow fixes and improvements
+* Fully functional institution SSO, BE and FE
+* FE rework and UI / UX improvements
+
+Extra features
+
+* Institution SSO migration
+* TOS consent check
+* SonarQube integraiton
+
 20.1.0 (11-05-2020)
 ===================
 
