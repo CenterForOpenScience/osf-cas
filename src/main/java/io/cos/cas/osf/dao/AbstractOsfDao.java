@@ -2,8 +2,11 @@ package io.cos.cas.osf.dao;
 
 import io.cos.cas.osf.model.OsfEmail;
 import io.cos.cas.osf.model.OsfGuid;
+import io.cos.cas.osf.model.OsfInstitution;
 import io.cos.cas.osf.model.OsfTotp;
 import io.cos.cas.osf.model.OsfUser;
+
+import java.util.List;
 
 /**
  * This is {@link AbstractOsfDao}.
@@ -31,4 +34,8 @@ public abstract class AbstractOsfDao {
     protected abstract OsfEmail findOneEmailByAddress(String emailAddress);
 
     protected abstract OsfTotp findOneTotpByOwnerId(final Integer ownerId);
+
+    protected abstract OsfInstitution findOneInstitutionById(final String id);
+
+    protected abstract List<OsfInstitution> findAllInstitutions();
 }

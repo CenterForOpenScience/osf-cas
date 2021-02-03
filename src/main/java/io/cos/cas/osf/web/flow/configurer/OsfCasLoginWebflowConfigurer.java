@@ -3,11 +3,12 @@ package io.cos.cas.osf.web.flow.configurer;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedIdpException;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedOsfException;
-import io.cos.cas.osf.authentication.exception.InstitutionSsoNotImplementedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
 import io.cos.cas.osf.authentication.exception.InvalidVerificationKeyException;
 import io.cos.cas.osf.authentication.exception.OneTimePasswordRequiredException;
+import io.cos.cas.osf.authentication.exception.TermsOfServiceConsentRequiredException;
 import io.cos.cas.osf.web.flow.support.OsfCasWebflowConstants;
 
 import org.apereo.cas.authentication.PrincipalException;
@@ -26,6 +27,7 @@ import org.apereo.cas.web.flow.configurer.DefaultLoginWebflowConfigurer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
+import org.springframework.webflow.engine.ActionList;
 import org.springframework.webflow.engine.ActionState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.History;
@@ -67,11 +69,22 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
     }
 
     @Override
+    protected void createInitialFlowActions(final Flow flow) {
+        final ActionList startActionList = flow.getStartActionList();
+        startActionList.add(createEvaluateAction(OsfCasWebflowConstants.ACTION_ID_OSF_PRE_INITIAL_FLOW_SETUP));
+        super.createInitialFlowActions(flow);
+    }
+
+    @Override
     protected void createDefaultViewStates(final Flow flow) {
         super.createDefaultViewStates(flow);
         // Create OSF customized view states
         createTwoFactorLoginFormView(flow);
+        createTermsOfServiceConsentLoginFormView(flow);
+        createInstitutionLoginView(flow);
+        createUnsupportedInstitutionLoginView(flow);
         createOrcidLoginAutoRedirectView(flow);
+        createDefaultServiceLoginAutoRedirectView(flow);
         createOsfCasAuthenticationExceptionViewStates(flow);
     }
 
@@ -238,8 +251,13 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createTransitionForState(
                 handler,
-                InstitutionSsoNotImplementedException.class.getSimpleName(),
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED
+                TermsOfServiceConsentRequiredException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_TERMS_OF_SERVICE_CONSENT_REQUIRED
+        );
+        createTransitionForState(
+                handler,
+                InstitutionSsoFailedException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
         );
 
         // The default transition
@@ -312,8 +330,18 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createTransitionForState(
                 action,
+                OsfCasWebflowConstants.TRANSITION_ID_UNSUPPORTED_INSTITUTION_LOGIN,
+                OsfCasWebflowConstants.VIEW_ID_UNSUPPORTED_INSTITUTION_SSO_INIT
+        );
+        createTransitionForState(
+                action,
                 OsfCasWebflowConstants.TRANSITION_ID_ORCID_LOGIN_AUTO_REDIRECT,
                 OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT
+        );
+        createTransitionForState(
+                action,
+                OsfCasWebflowConstants.TRANSITION_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT,
+                OsfCasWebflowConstants.VIEW_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT
         );
         createTransitionForState(
                 action,
@@ -336,7 +364,12 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         createTransitionForState(
                 action,
                 CasWebflowConstants.TRANSITION_ID_ERROR,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
+        );
+        createTransitionForState(
+                action,
+                CasWebflowConstants.TRANSITION_ID_SUCCESS,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT
         );
     }
 
@@ -368,8 +401,8 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createViewState(
                 flow,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_NOT_IMPLEMENTED
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
         );
     }
 
@@ -408,6 +441,40 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
     }
 
     /**
+     * Create the customized terms of service consent form submission view state for OSF CAS.
+     *
+     * @param flow the flow
+     */
+    private void createTermsOfServiceConsentLoginFormView(final Flow flow) {
+        List<String> propertiesToBind = CollectionUtils.wrapList("termsOfServiceChecked", "source");
+        BinderConfiguration binder = createStateBinderConfiguration(propertiesToBind);
+        casProperties.getView().getCustomLoginFormFields()
+                .forEach((field, props) -> {
+                    String fieldName = String.format("customFields[%s]", field);
+                    binder.addBinding(
+                            new BinderConfiguration.Binding(fieldName, props.getConverter(), props.isRequired())
+                    );
+                });
+        ViewState state = createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_TERMS_OF_SERVICE_CONSENT_REQUIRED,
+                OsfCasWebflowConstants.VIEW_ID_TERMS_OF_SERVICE_CONSENT_REQUIRED,
+                binder
+        );
+        state.getRenderActionList().add(createEvaluateAction(CasWebflowConstants.ACTION_ID_RENDER_LOGIN_FORM));
+        createStateModelBinding(state, CasWebflowConstants.VAR_ID_CREDENTIAL, OsfPostgresCredential.class);
+        Transition transition = createTransitionForState(
+                state,
+                CasWebflowConstants.TRANSITION_ID_SUBMIT,
+                CasWebflowConstants.STATE_ID_REAL_SUBMIT
+        );
+        MutableAttributeMap<Object> attributes = transition.getAttributes();
+        attributes.put("bind", Boolean.TRUE);
+        attributes.put("validate", Boolean.TRUE);
+        attributes.put("history", History.INVALIDATE);
+    }
+
+    /**
      * Create the ORCiD login auto-redirect view to support the OSF feature "sign-up via ORCiD".
      *
      * @param flow the flow
@@ -417,6 +484,45 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
             flow,
             OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT,
             OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT
+        );
+    }
+
+    /**
+     * Create the ORCiD login auto-redirect view to support the OSF feature "sign-up via ORCiD".
+     *
+     * @param flow the flow
+     */
+    protected void createDefaultServiceLoginAutoRedirectView(final Flow flow) {
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT,
+                OsfCasWebflowConstants.VIEW_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT
+        );
+    }
+
+    /**
+     * Create the institution SSO init view state to support the OSF feature "sign-in via institutions".
+     *
+     * @param flow the flow
+     */
+    protected void createInstitutionLoginView(final Flow flow) {
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT
+        );
+    }
+
+    /**
+     * Create the unsupported institution view state to support the OSF feature "I can't find my institution".
+     *
+     * @param flow the flow
+     */
+    protected void createUnsupportedInstitutionLoginView(final Flow flow) {
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_UNSUPPORTED_INSTITUTION_SSO_INIT,
+                OsfCasWebflowConstants.VIEW_ID_UNSUPPORTED_INSTITUTION_SSO_INIT
         );
     }
 }

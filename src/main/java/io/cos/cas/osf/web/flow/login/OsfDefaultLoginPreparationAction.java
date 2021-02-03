@@ -1,5 +1,6 @@
 package io.cos.cas.osf.web.flow.login;
 
+import io.cos.cas.osf.configuration.model.OsfUrlProperties;
 import io.cos.cas.osf.web.flow.support.OsfCasWebflowConstants;
 import io.cos.cas.osf.web.support.OsfCasLoginContext;
 
@@ -29,7 +30,7 @@ import java.util.Set;
  * pass, current and potential future states; and finally 3) return respective transition events to the login web flow.
  *
  * @author Longze Chen
- * @since 20.0.0
+ * @since 20.1.0
  */
 @Slf4j
 public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparationAction {
@@ -49,61 +50,89 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
     @Override
     protected Event doExecute(RequestContext context) {
 
-        OsfCasLoginContext loginContext;
-        final String serviceUrl = getEncodedServiceUrlFromRequestContext(context);
         final boolean institutionLogin = isInstitutionLogin(context);
         final String institutionId = getInstitutionIdFromRequestContext(context);
+        final boolean unsupportedInstitutionLogin = isUnsupportedInstitutionLogin(context);
         final boolean orcidRedirect = isOrcidLoginAutoRedirect(context);
         final String orcidLoginUrl = getOrcidLoginUrlFromFlowScope(context);
 
+        final String encodedServiceUrl = getEncodedServiceUrlFromRequestContext(context);
+        final boolean defaultService = isFromFlowlessErrorPage(context);
+        final OsfUrlProperties osfUrl = Optional.of(context).map(
+                requestContext -> (OsfUrlProperties) requestContext.getFlowScope().get(OsfCasWebflowConstants.FLOW_PARAMETER_OSF_URL)
+        ).orElse(null);
+        if (osfUrl == null) {
+            LOGGER.error("The login web flow has not been initialized correctly.");
+            return error();
+        }
+        final String defaultServiceUrl = osfUrl.constructDefaultServiceUrl();
+
+        OsfCasLoginContext loginContext;
         loginContext = Optional.of(context).map(requestContext
                 -> (OsfCasLoginContext) requestContext.getFlowScope().get(PARAMETER_LOGIN_CONTEXT)).orElse(null);
         if (loginContext == null) {
             loginContext = new OsfCasLoginContext(
-                    serviceUrl,
+                    encodedServiceUrl,
                     institutionLogin,
                     institutionId,
+                    unsupportedInstitutionLogin,
                     orcidRedirect,
-                    orcidLoginUrl
+                    orcidLoginUrl,
+                    defaultService,
+                    defaultServiceUrl
             );
         } else {
-            loginContext.setServiceUrl(serviceUrl);
+            loginContext.setEncodedServiceUrl(encodedServiceUrl);
             loginContext.setInstitutionLogin(institutionLogin);
             loginContext.setInstitutionId(institutionId);
+            loginContext.setUnsupportedInstitutionLogin(unsupportedInstitutionLogin);
             loginContext.setOrcidLoginUrl(orcidLoginUrl);
             loginContext.setOrcidRedirect(false);
+            loginContext.setDefaultService(defaultService);
+            loginContext.setDefaultServiceUrl(defaultServiceUrl);
         }
         context.getFlowScope().put(PARAMETER_LOGIN_CONTEXT, loginContext);
 
-        if (loginContext.isInstitutionLogin()) {
+        if (loginContext.isDefaultService()) {
+            if (StringUtils.isNotBlank(defaultServiceUrl)) {
+                return autoRedirectToDefaultServiceLogin();
+            }
+            LOGGER.error("Default service login auto-redirect failed due to URL configurations not found in context.");
+            return error();
+        } else if (loginContext.isInstitutionLogin()) {
             return switchToInstitutionLogin();
-        }
-
-        if (loginContext.isOrcidRedirect()) {
+        } else if (loginContext.isUnsupportedInstitutionLogin()) {
+            return switchToUnsupportedInstitutionLogin();
+        } else if (loginContext.isOrcidRedirect()) {
             if (StringUtils.isNotBlank(orcidLoginUrl)) {
                 return autoRedirectToOrcidLogin();
             }
             LOGGER.error("ORCiD login auto-redirect failed due to delegation configurations not found in context.");
             return error();
+        } else {
+            return continueToUsernamePasswordLogin();
         }
-
-        return continueToUsernamePasswordLogin();
     }
 
     private boolean isInstitutionLogin(final RequestContext context) {
         final String campaign = context.getRequestParameters().get(PARAMETER_CAMPAIGN);
-        return StringUtils.isNotBlank(campaign) && PARAMETER_CAMPAIGN_VALUE.equals(campaign.toLowerCase());
+        return StringUtils.isNotBlank(campaign) && PARAMETER_CAMPAIGN_VALUE.equalsIgnoreCase(campaign);
     }
 
     private String getInstitutionIdFromRequestContext(final RequestContext context) {
         final String institutionId = context.getRequestParameters().get(PARAMETER_INSTITUTION_ID);
-        return StringUtils.isNotBlank(institutionId) ? null : institutionId;
+        return StringUtils.isNotBlank(institutionId) ? institutionId : null;
+    }
+
+    private boolean isUnsupportedInstitutionLogin(final RequestContext context) {
+        final String campaign = context.getRequestParameters().get(PARAMETER_CAMPAIGN);
+        return StringUtils.isNotBlank(campaign) && PARAMETER_CAMPAIGN_UNSUPPORTED_INSTITUTION_VALUE.equalsIgnoreCase(campaign);
     }
 
     private boolean isOrcidLoginAutoRedirect(final RequestContext context) {
         final String orcidRedirect = context.getRequestParameters().get(PARAMETER_ORCID_REDIRECT);
         return StringUtils.isNotBlank(orcidRedirect)
-                && PARAMETER_ORCID_REDIRECT_VALUE.equals(orcidRedirect.toLowerCase());
+                && PARAMETER_ORCID_REDIRECT_VALUE.equalsIgnoreCase(orcidRedirect);
     }
 
     private String getOrcidLoginUrlFromFlowScope(final RequestContext context) {
@@ -127,6 +156,11 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
         return URLEncoder.encode(serviceUrl, StandardCharsets.UTF_8);
     }
 
+    private boolean isFromFlowlessErrorPage(final RequestContext context) {
+        final String errorCode = context.getRequestParameters().get(PARAMETER_REDIRECT_SOURCE);
+        return !StringUtils.isBlank(errorCode) && EXPECTED_REDIRECT_CODES.contains(errorCode);
+    }
+
     private Event continueToUsernamePasswordLogin() {
         return new Event(this, OsfCasWebflowConstants.TRANSITION_ID_USERNAME_PASSWORD_LOGIN);
     }
@@ -135,7 +169,15 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
         return new Event(this, OsfCasWebflowConstants.TRANSITION_ID_INSTITUTION_LOGIN);
     }
 
+    private Event switchToUnsupportedInstitutionLogin() {
+        return new Event(this, OsfCasWebflowConstants.TRANSITION_ID_UNSUPPORTED_INSTITUTION_LOGIN);
+    }
+
     private Event autoRedirectToOrcidLogin() {
         return new Event(this, OsfCasWebflowConstants.TRANSITION_ID_ORCID_LOGIN_AUTO_REDIRECT);
+    }
+
+    private Event autoRedirectToDefaultServiceLogin() {
+        return new Event(this, OsfCasWebflowConstants.TRANSITION_ID_DEFAULT_SERVICE_LOGIN_AUTO_REDIRECT);
     }
 }

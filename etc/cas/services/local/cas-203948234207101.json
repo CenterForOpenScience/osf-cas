@@ -1,11 +1,11 @@
 {
   "@class": "org.apereo.cas.services.RegexRegisteredService",
-  "serviceId": "^https?://(localhost|127\\.0\\.0\\.1|192\\.168\\.168\\.167):5000/fake/.*",
-  "name": "One Special Fake OSF",
-  "description": "This is the One Special Fake OSF for testing hard-to-reach corner cases and errors (local-dev only)",
-  "id": 203948234207210,
-  "evaluationOrder": 25,
-  "logo": "/images/osf-logo.png",
+  "serviceId": "^/(login|logout)\\?.*",
+  "name": "",
+  "description": "",
+  "id": 203948234207101,
+  "evaluationOrder": 10,
+  "logo": "/images/osf-banner.png",
   "attributeReleasePolicy": {
     "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
     "allowedAttributes": [

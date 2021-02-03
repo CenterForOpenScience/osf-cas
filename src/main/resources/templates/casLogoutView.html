@@ -2,40 +2,48 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title th:text="#{screen.generic.logout.header}"></title>
+    <title th:text="#{screen.generic.logoutsuccess.title}"></title>
     <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
 </head>
 
-<body>
-    <main role="main" class="container mt-3 mb-3">
-        <div layout:fragment="content">
-            <div class="banner-generic m-auto mdc-card p-4 w-card-narrow">
-                <div class="login-generic-card">
+<body class="mdc-typography">
+    <div layout:fragment="content" class="d-flex justify-content-center">
+
+        <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
+            <section class="login-error-card">
+                <section>
                     <div th:replace="fragments/osfbannerui :: osfBannerUI">
                         <a href="fragments/osfbannerui.html"></a>
                     </div>
-                    <hr class="my-4" />
-                    <div class="card-message">
-                        <h2 th:utext="#{screen.generic.logout.heading}"></h2>
-                        <p th:utext="#{screen.generic.logout.message}"></p>
-                    </div>
-                    <div class="form-button">
-                        <a class="mdc-button mdc-button--raised button-osf-green" th:href="@{/login}">
-                            <span class="mdc-button__label" th:utext="#{screen.generic.button.backtologin}"></span>
-                        </a>
-                    </div>
-                    <div class="form-button">
-                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
-                            <span class="mdc-button__label" th:utext="#{screen.generic.button.backtoosf}"></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+                </section>
+                <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
+                    <span th:utext="#{screen.generic.loginsuccess.tips}"></span>
+                </section>
+                <hr class="my-4" />
+                <section class="card-message">
+                    <h2 th:utext="#{screen.generic.logoutsuccess.heading}"></h2>
+                    <div th:utext="#{screen.generic.logoutsuccess.message}"></div>
+                </section>
+                <section class="form-button">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${osfUrl.logout})}">
+                        <span class="mdc-button__label" th:utext="#{screen.generic.logoutsuccess.button.continue}"></span>
+                    </a>
+                </section>
+                <hr class="my-4" />
+                <section class="text-with-mdi" th:with="loginUrl=@{/login(casRedirectSource=cas)}">
+                    <i class="mdi mdi-login mdi-before-text"></i>
+                    <span><a th:href="@{/login(casRedirectSource=cas)}" th:utext="#{screen.generic.logoutsuccess.link.login}"></a></span>
+                </section>
+            </section>
         </div>
-    </main>
+
+        <script type="text/javascript">
+            disableSignUpButton();
+        </script>
+    </div>
 </body>
 
 </html>

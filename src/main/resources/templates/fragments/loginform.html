@@ -12,59 +12,43 @@
 
 <body>
     <main role="main" class="container mt-3 mb-3">
+
         <!-- Login form template begins here -->
         <div th:fragment="loginform" class="d-flex flex-column justify-content-between m-auto">
-            <div th:if="${delegatedAuthenticationProviderPrimary == null}">
+
+            <section th:if="${delegatedAuthenticationProviderPrimary == null}">
                 <div class="service-ui" th:replace="fragments/serviceui :: serviceUI">
                     <a href="fragments/serviceui.html"></a>
                 </div>
-            </div>
+            </section>
 
-            <h3 class="text-center text-with-mdi">
-                <i class="mdi mdi-security mdi-before-text"></i>
-                <span th:utext="#{screen.welcome.instructions}"></span>
-            </h3>
+            <section class="text-without-mdi text-center text-bold text-large margin-large-vertical">
+                <span th:utext="#{screen.welcome.tips}"></span>
+            </section>
 
-            <div id="orcidlogin" th:if="${delegatedAuthenticationProviderConfigurations}">
-                <section class="delegation-row"
-                    th:each="entry: ${delegatedAuthenticationProviderConfigurations}"
-                    th:if="${entry.type} == 'orcid'">
-                    <a class="delegation-button" th:href="@{${entry.redirectUrl}}">
-                        <img class="delegation-button-logo" src="/images/orcid-logo.png">
-                        <span class="delegation-button-label" th:utext="#{screen.delegation.button.orcid}"></span>
-                    </a>
-                </section>
-            </div>
+            <section class="form-button-inline" id="orcidlogin" th:if="${osfCasLoginContext.orcidLoginUrl}">
+                <a class="mdc-button mdc-button--raised button-osf-grey" th:href="@{${osfCasLoginContext.orcidLoginUrl}}">
+                    <img class="delegation-button-logo" src="/images/orcid-logo.png">
+                    <span class="delegation-button-label" th:utext="#{screen.welcome.button.orcidlogin}"></span>
+                </a>
+                <a class="mdc-button mdc-button--raised button-osf-grey" th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}">
+                    <img class="delegation-button-logo" src="/images/institution-logo.png">
+                    <span class="delegation-button-label" th:utext="#{screen.welcome.button.institutionlogin}"></span>
+                </a>
+            </section>
 
-            <div id="instnlogin">
-                <section class="delegation-row">
-                    <a class="delegation-button" th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}">
-                        <img class="delegation-button-logo" src="/images/institution-logo.png">
-                        <span class="delegation-button-label" th:utext="#{screen.delegation.button.institution}"></span>
-                    </a>
-                </section>
-            </div>
-
-            <div>
+            <section>
                 <hr class="hr-text" data-content="OR" />
-            </div>
+            </section>
 
             <div class="form-wrapper">
-                <form method="post" id="fm1" th:object="${credential}" action="login">
 
-                    <div id="loginformerrorlist" th:if="${#fields.hasErrors('*')}">
-                        <div th:each="err : ${#fields.errors('*')}" th:if="${not #strings.isEmpty(err)}" th:with="errorDivElementId=${'loginformerror' + #strings.randomAlphanumeric(16)}">
-                            <div th:id="${errorDivElementId}" class="banner banner-danger banner-dismissible" >
-                                <p class="login-error-inline" th:utext="${err + ' '}"></p>
-                                <a th:href="${'javascript:document.getElementById(''' + errorDivElementId + ''').remove();'}" class="close">&times;</a>
-                            </div>
-                        </div>
-                    </div>
+                <form method="post" id="fm1" th:object="${credential}" action="login">
 
                     <section class="cas-field my-2=3">
                         <span th:if="${availableAuthenticationHandlerNames != null}">
                             <span th:if="${availableAuthenticationHandlerNames.size() > 1}">
-                                <label for="source" th:utext="#{screen.welcome.label.source}"></label>
+                                <label for="source" th:utext="#{screen.generic.label.source}"></label>
                                 <div>
                                     <select class="form-control required"
                                             id="source"
@@ -95,7 +79,8 @@
                                 th:field="*{username}"
                                 th:accesskey="#{screen.welcome.label.email.accesskey}"
                                 th:value="${@casThymeleafLoginFormDirector.getLoginFormUsername(#vars)}"
-                                autocomplete="off" />
+                                autocomplete="off"
+                                required />
                             <label for="username" class="mdc-floating-label" th:utext="#{screen.welcome.label.email}"></label>
                         </div>
                     </section>
@@ -109,27 +94,28 @@
                                     size="25"
                                     th:accesskey="#{screen.welcome.label.password.accesskey}"
                                     th:field="*{password}"
-                                    autocomplete="off" />
+                                    autocomplete="off"
+                                    required />
                                 <label for="username" class="mdc-floating-label" th:utext="#{screen.welcome.label.password}"></label>
                             </div>
                             <div class="mdc-text-field-helper-line caps-warn">
-                                <p
-                                    class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg text-danger">
+                                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg text-danger">
                                     <span th:utext="#{screen.capslock.on}" />
                                 </p>
                             </div>
                         </div>
-                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append mdc-icon-button" type="button">
+                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append" type="button">
                             <i class="mdi mdi-eye reveal-password-icon"></i>
                             <span class="sr-only">Toggle Password</span>
                         </button>
                     </section>
 
-                    <section class="cas-field cas-field-primary " th:if="${rememberMeAuthenticationEnabled}">
-                        <p>
-                            <input type="checkbox" name="rememberMe" id="rememberMe" value="true"/>&nbsp;
-                            <label for="rememberMe" th:text="#{screen.rememberme.checkbox.title}"></label>
-                        </p>
+                    <section id="loginformerrorlist" class="login-error-list" th:if="${#fields.hasErrors('*')}">
+                        <div th:each="err : ${#fields.errors('*')}" th:if="${not #strings.isEmpty(err)}">
+                            <div class="banner banner-danger banner-dismissible" >
+                                <p class="login-error-inline" th:utext="${err + ' '}"></p>
+                            </div>
+                        </div>
                     </section>
 
                     <section class="cas-field">
@@ -147,23 +133,33 @@
                         </p>
                     </section>
 
-                    <div th:replace="fragments/submitbutton :: submitButton (buttonCustomization='button-osf-green', messageKey='screen.welcome.button.login')" />
+                    <section>
+                        <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=false, buttonCustomization='button-osf-blue', messageKey='screen.welcome.button.login')" />
+                    </section>
+
+                    <section class="cas-field cas-field-primary cas-field-col-2">
+                        <span class="cas-field-float-left" th:if="${rememberMeAuthenticationEnabled}">
+                            <input type="checkbox" name="rememberMe" id="rememberMe" value="true"/>&nbsp;
+                            <label for="rememberMe" th:text="#{screen.welcome.checkbox.rememberme}"></label>
+                        </span>
+                        <span class="cas-field-float-right">
+                            <a th:href="@{${osfUrl.forgotPassword}}" th:utext="#{screen.welcome.link.resetpassword}"></a>
+                            <br>
+                            <a href="https://help.osf.io/hc/en-us/articles/360019737194-Sign-in-to-OSF" th:utext="#{screen.generic.link.support}"></a>
+                        </span>
+                    </section>
 
                 </form>
 
-                <hr class="my-4" />
-
-                <div th:replace="fragments/pmlinks :: pmlinks" />
-
                 <script type="text/javascript" th:inline="javascript">
                     /*<![CDATA[*/
-                    var i = /*[[@{#{screen.welcome.button.loginwip}}]]*/
-                    var j = /*[[@{#{screen.welcome.button.login}}]]*/
-                        /*]]>*/
-                        $(window).on('pageshow', function () {
-                            $(':submit').prop('disabled', false);
-                            $(':submit').attr('value', j);
-                        });
+                        var i = /*[[@{#{screen.generic.button.wip}}]]*/ 'One moment please...' ;
+                        var j = /*[[@{#{screen.welcome.button.login}}]]*/ 'Sign in' ;
+                    /*]]>*/
+                    $(window).on('pageshow', function () {
+                        $(':submit').prop('disabled', false);
+                        $(':submit').attr('value', j);
+                    });
                     $(document).ready(function () {
                         $("#fm1").submit(function () {
                             $(":submit").attr("disabled", true);
