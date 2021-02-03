@@ -82,6 +82,7 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         createTwoFactorLoginFormView(flow);
         createTermsOfServiceConsentLoginFormView(flow);
         createInstitutionLoginView(flow);
+        createUnsupportedInstitutionLoginView(flow);
         createOrcidLoginAutoRedirectView(flow);
         createDefaultServiceLoginAutoRedirectView(flow);
         createOsfCasAuthenticationExceptionViewStates(flow);
@@ -329,6 +330,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createTransitionForState(
                 action,
+                OsfCasWebflowConstants.TRANSITION_ID_UNSUPPORTED_INSTITUTION_LOGIN,
+                OsfCasWebflowConstants.VIEW_ID_UNSUPPORTED_INSTITUTION_SSO_INIT
+        );
+        createTransitionForState(
+                action,
                 OsfCasWebflowConstants.TRANSITION_ID_ORCID_LOGIN_AUTO_REDIRECT,
                 OsfCasWebflowConstants.VIEW_ID_ORCID_LOGIN_AUTO_REDIRECT
         );
@@ -504,6 +510,19 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 flow,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_INIT
+        );
+    }
+
+    /**
+     * Create the unsupported institution view state to support the OSF feature "I can't find my institution".
+     *
+     * @param flow the flow
+     */
+    protected void createUnsupportedInstitutionLoginView(final Flow flow) {
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_UNSUPPORTED_INSTITUTION_SSO_INIT,
+                OsfCasWebflowConstants.VIEW_ID_UNSUPPORTED_INSTITUTION_SSO_INIT
         );
     }
 }

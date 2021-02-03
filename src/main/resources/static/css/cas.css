@@ -919,6 +919,7 @@ body {
     padding: 1rem 0;
 }
 
+.login-instn-card .card-message,
 .login-error-card .card-message {
     padding: 0;
 }
