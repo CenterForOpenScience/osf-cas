@@ -12,36 +12,28 @@
 
 <body>
     <main role="main" class="container mt-3 mb-3">
+
         <!-- Two-factor authentication login form template begins here -->
         <div th:fragment="totploginform" class="d-flex flex-column justify-content-between m-auto">
 
-            <div>
+            <section>
                 <div class="service-ui" th:replace="fragments/osfbannerui :: osfBannerUI">
                     <a href="fragments/osfbannerui.html"></a>
                 </div>
-            </div>
+            </section>
 
-            <h3 class="text-center text-with-mdi">
-                <i class="mdi mdi-cellphone mdi-before-text"></i>
-                <span th:utext="#{screen.twofactor.instructions.top}"></span>
-            </h3>
+            <section class="text-without-mdi text-center text-bold text-large margin-large-vertical">
+                <span th:utext="#{screen.twofactor.tips.top}"></span>
+            </section>
 
             <div class="form-wrapper">
-                <form method="post" id="fm1" th:object="${credential}" action="login">
 
-                    <div id="loginformerrorlist" th:if="${#fields.hasErrors('*')}">
-                        <div th:each="err : ${#fields.errors('*')}" th:if="${not #strings.isEmpty(err)}" th:with="errorDivElementId=${'' + #strings.randomAlphanumeric(16)}">
-                            <div th:id="${errorDivElementId}" class="banner banner-danger banner-dismissible" >
-                                <p class="login-error-inline" th:utext="${err + ' '}"></p>
-                                <a th:href="${'javascript:document.getElementById(''' + errorDivElementId + ''').remove();'}" class="close">&times;</a>
-                            </div>
-                        </div>
-                    </div>
+                <form method="post" id="fm1" th:object="${credential}" action="login">
 
                     <section class="cas-field my-2=3">
                         <span th:if="${availableAuthenticationHandlerNames != null}">
                             <span th:if="${availableAuthenticationHandlerNames.size() > 1}">
-                                <label for="source" th:utext="#{screen.welcome.label.source}"></label>
+                                <label for="source" th:utext="#{screen.generic.label.source}"></label>
                                 <div>
                                     <select class="form-control required"
                                             id="source"
@@ -62,7 +54,7 @@
                     </section>
 
                     <section class="cas-field my-3">
-                        <div class="mdc-text-field  d-flex">
+                        <div class="mdc-text-field d-flex background-disabled">
                             <input class="mdc-text-field__input"
                                 id="username"
                                 size="25"
@@ -70,10 +62,10 @@
                                 readonly
                                 th:disabled="${@casThymeleafLoginFormDirector.isLoginFormUsernameInputDisabled(#vars)}"
                                 th:field="*{username}"
-                                th:accesskey="#{screen.welcome.label.email.accesskey}"
+                                th:accesskey="#{screen.twofactor.label.email.accesskey}"
                                 th:value="${@casThymeleafLoginFormDirector.getLoginFormUsername(#vars)}"
                                 autocomplete="off" />
-                            <label for="username" class="mdc-floating-label" th:utext="#{screen.welcome.label.email}"></label>
+                            <label for="username" class="mdc-floating-label" th:utext="#{screen.twofactor.label.email}"></label>
                         </div>
                     </section>
 
@@ -92,10 +84,18 @@
                                 <label for="username" class="mdc-floating-label" th:utext="#{screen.twofactor.label.onetimepassword}"></label>
                             </div>
                         </div>
-                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append mdc-icon-button" type="button">
+                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append" type="button">
                             <i class="mdi mdi-eye reveal-password-icon"></i>
                             <span class="sr-only">Toggle One-time Password</span>
                         </button>
+                    </section>
+
+                    <section id="loginformerrorlist" class="login-error-list" th:if="${#fields.hasErrors('*')}">
+                        <div th:each="err : ${#fields.errors('*')}" th:if="${not #strings.isEmpty(err)}">
+                            <div class="banner banner-danger banner-dismissible" >
+                                <p class="login-error-inline" th:utext="${err + ' '}"></p>
+                            </div>
+                        </div>
                     </section>
 
                     <section class="cas-field">
@@ -111,31 +111,37 @@
                         </p>
                     </section>
 
-                    <div th:replace="fragments/submitbutton :: submitButton (buttonCustomization='button-osf-green', messageKey='screen.twofactor.button.verify')" />
-
-                    <div class="form-button">
-                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
-                            <span class="mdc-button__label" th:utext="#{screen.twofactor.button.cancel}"></span>
-                        </a>
-                    </div>
+                    <section>
+                        <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=false, buttonCustomization='button-osf-blue', messageKey='screen.twofactor.button.verify')" />
+                    </section>
 
                 </form>
 
                 <hr class="my-4" />
 
-                <div class="text-without-mdi">
-                    <p th:utext="#{screen.twofactor.instructions.bottom}"></p>
-                </div>
+                <section class="text-without-mdi">
+                    <p th:utext="#{screen.twofactor.tips.bottom}"></p>
+                </section>
+
+                <section class="cas-field-col-2">
+                    <span class="text-with-mdi cas-field-float-left">
+                        <i class="mdi mdi-before-text mdi-keyboard-backspace"></i>
+                        <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.twofactor.link.cancel}"></a></span>
+                    </span>
+                    <span class="text-without-mdi cas-field-float-right">
+                        <a href="https://help.osf.io/hc/en-us/articles/360019738054-Enable-or-Disable-Two-Factor-Authentication" th:utext="#{screen.generic.link.support}"></a>
+                    </span>
+                </section>
 
                 <script type="text/javascript" th:inline="javascript">
                     /*<![CDATA[*/
-                    var i = /*[[@{#{screen.twofactor.button.loginwip}}]]*/
-                    var j = /*[[@{#{screen.twofactor.button.login}}]]*/
-                        /*]]>*/
-                        $(window).on('pageshow', function () {
-                            $(':submit').prop('disabled', false);
-                            $(':submit').attr('value', j);
-                        });
+                        var i = /*[[@{#{screen.generic.button.wip}}]]*/ 'One moment please ...' ;
+                        var j = /*[[@{#{screen.twofactor.button.verify}}]]*/ 'Verify' ;
+                    /*]]>*/
+                    $(window).on('pageshow', function () {
+                        $(':submit').prop('disabled', false);
+                        $(':submit').attr('value', j);
+                    });
                     $(document).ready(function () {
                         $("#fm1").submit(function () {
                             $(":submit").attr("disabled", true);

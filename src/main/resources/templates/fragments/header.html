@@ -14,93 +14,48 @@
 
         <header id="app-bar" class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z4">
             <nav class="mdc-top-app-bar__row">
-                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-                    <button class="mdc-icon-button mdc-top-app-bar__navigation-icon">
-                        <span class="mdi mdi-menu"></span>
-                        <span class="sr-only">menu</span>
-                    </button>
-                </section>
+
                 <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
-                    <span class="cas-brand mx-auto">
-                        <img class="cas-logo" src="/images/osf-cas-banner-white.png">
-                        <span class="sr-only">OSF CAS</span>
+                    <span class="cas-brand mx-auto" >
+                        <img class="cas-logo" src="/images/osf-logo-white.png">
                     </span>
+                    <div class="cas-brand-text">
+                        <a class="navbar-link" th:href="@{${osfUrl.home}}">
+                            <span class="cas-brand-name hidden-narrow" >OSF </span>
+                            <span class="cas-brand-name" >HOME</span>
+                        </a>
+                    </div>
                 </section>
-                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
+                    <div class="form-button form-button-navbar">
+                        <a id="osfRegister" class="mdc-button mdc-button--raised button-osf-green" th:href="@{${osfUrl.register}}">
+                            <span class="mdc-button__label">Sign up</span>
+                        </a>
+                    </div>
                 </section>
+
             </nav>
         </header>
 
-        <aside id="app-drawer" class="mdc-drawer mdc-drawer--dismissible mdc-drawer--modal">
-            <div class="mdc-drawer__header">
-                <img class="cas-brand cas-brand-drawer" src="/images/osf-cas-banner.png">
-                <h6 class="mdc-drawer__subtitle">[[#{cas.drawer.subtitle}]]</h6>
-            </div>
-            <div class="mdc-drawer__content">
-                <nav class="mdc-list">
-                    <a class="mdc-list-item" th:href="#{osf.home.url}">
-                        <i class="mdi mdi-home"></i>&nbsp;
-                        <span class="mdc-list-item__text">[[#{cas.login.resources.osf.home}]]</span>
-                    </a>
-                    <hr class="mdc-list-divider"/>
-                    <a class="mdc-list-item" th:href="#{osf.preprints.home.url}">
-                        <i class="mdi mdi-star"></i>&nbsp;
-                        <span class="mdc-list-item__text">[[#{cas.login.resources.osf.preprints}]]</span>
-                    </a>
-                    <a class="mdc-list-item" th:href="#{osf.registries.home.url}">
-                        <i class="mdi mdi-star"></i>&nbsp;
-                        <span class="mdc-list-item__text">[[#{cas.login.resources.osf.registries}]]</span>
-                    </a>
-                    <a class="mdc-list-item" th:href="#{osf.institutions.home.url}">
-                        <i class="mdi mdi-bank"></i>&nbsp;
-                        <span class="mdc-list-item__text">[[#{cas.login.resources.osf.institutions}]]</span>
-                    </a>
-                    <a class="mdc-list-item" th:href="#{osf.meetings.home.url}">
-                        <i class="mdi mdi-account-group"></i>&nbsp;
-                        <span class="mdc-list-item__text">[[#{cas.login.resources.osf.meetings}]]</span>
-                    </a>
-                    <a class="mdc-list-item" th:href="#{osf.support.url}">
-                        <i class="mdi mdi-help-circle"></i>&nbsp;
-                        <span class="mdc-list-item__text">[[#{cas.login.resources.osf.support}]]</span>
-                    </a>
-                    <a class="mdc-list-item" th:href="#{osf.cos.donation.url}">
-                        <i class="mdi mdi-heart"></i>&nbsp;
-                        <span class="mdc-list-item__text">[[#{cas.login.resources.cos.donate}]]</span>
-                    </a>
-                    <a class="mdc-list-item" th:href="#{osf.cos.home.url}">
-                        <i class="mdi mdi-lightbulb-on"></i>&nbsp;
-                        <span class="mdc-list-item__text">[[#{cas.login.resources.cos.home}]]</span>
-                    </a>
-                </nav>
-            </div>
-        </aside>
+        <script type="text/javascript">
+            function disableSignUpButton() {
+                let signUpButton = document.getElementById("osfRegister");
+                if (signUpButton != null) {
+                    signUpButton.removeAttribute("href");
+                    signUpButton.style.opacity = "0.8";
+                    signUpButton.style.cursor = "not-allowed";
+                    signUpButton.style.backgroundColor = "#efefef";
+                    signUpButton.style.color = "#cccccc";
+                }
+            }
+        </script>
 
         <script type="text/javascript">
             (function (material) {
                 var header = {
                     init: function () {
-                        header.attachTopbar();
                         material.autoInit();
-                    },
-                    attachDrawer: function () {
-                        var elm = document.getElementById('app-drawer');
-                        var drawer = material.drawer.MDCDrawer.attachTo(elm);
-                        var closeDrawer = function (evt) {
-                            drawer.open = false;
-                        };
-                        drawer.foundation_.handleScrimClick = closeDrawer;
-                        document.onkeydown = function (evt) {
-                            evt = evt || window.event;
-                            if (evt.keyCode == 27) {
-                                closeDrawer();
-                            }
-                        };
-                        header.drawer = drawer;
-                        return drawer;
-                    },
-                    attachTopbar: function (drawer) {
-                        var drawer = header.attachDrawer();
-                        header.attachDrawerToggle(drawer);
                     },
                     checkCaps: function (ev) {
                         var s = String.fromCharCode(ev.which);
@@ -110,14 +65,6 @@
                             ev.target.parentElement.classList.remove('caps-on');
                         }
                     },
-                    attachDrawerToggle: function (drawer) {
-                        var topAppBar = material.topAppBar.MDCTopAppBar.attachTo(document.getElementById('app-bar'));
-                        topAppBar.setScrollTarget(document.getElementById('main-content'));
-                        topAppBar.listen('MDCTopAppBar:nav', function () {
-                            drawer.open = !drawer.open;
-                        });
-                        return topAppBar;
-                    }
                 }
                 document.addEventListener('DOMContentLoaded', function () {
                     header.init();

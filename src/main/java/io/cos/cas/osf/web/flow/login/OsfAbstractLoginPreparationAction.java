@@ -8,6 +8,10 @@ import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * This is {@link OsfAbstractLoginPreparationAction}.
  *
@@ -17,7 +21,7 @@ import org.springframework.webflow.execution.RequestContext;
  * are NOOP.
  *
  * @author Longze Chen
- * @since 20.0.0
+ * @since 20.1.0
  */
 public abstract class OsfAbstractLoginPreparationAction extends AbstractAuthenticationAction {
 
@@ -29,13 +33,21 @@ public abstract class OsfAbstractLoginPreparationAction extends AbstractAuthenti
 
     protected static final String PARAMETER_CAMPAIGN_VALUE = "institution";
 
+    protected static final String PARAMETER_CAMPAIGN_UNSUPPORTED_INSTITUTION_VALUE = "unsupportedinstitution";
+
     protected static final String PARAMETER_INSTITUTION_ID = "institutionId";
 
     protected static final String PARAMETER_ORCID_CLIENT_TYPE = "orcid";
 
+    protected static final String PARAMETER_CAS_CLIENT_TYPE = "cas";
+
     protected static final String PARAMETER_ORCID_REDIRECT = "redirectOrcid";
 
     protected static final String PARAMETER_ORCID_REDIRECT_VALUE = "true";
+
+    protected static final String PARAMETER_REDIRECT_SOURCE = "casRedirectSource";
+
+    protected static final List<String> EXPECTED_REDIRECT_CODES = new LinkedList<>(Arrays.asList("tomcat", "cas"));
 
     public OsfAbstractLoginPreparationAction(
             final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver,

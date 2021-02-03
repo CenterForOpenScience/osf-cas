@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title></title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag"/>
+</head>
+
+<body>
+    <div th:fragment="headerflowless">
+
+        <header id="app-bar" class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z4">
+            <nav class="mdc-top-app-bar__row">
+
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
+                    <span class="cas-brand mx-auto" >
+                        <img class="cas-logo" src="/images/osf-logo-white.png">
+                    </span>
+                    <div class="cas-brand-text">
+                        <a class="navbar-link" th:href="@{/login(casRedirectSource=tomcat)}">
+                            <span class="cas-brand-name hidden-narrow" >OSF </span>
+                            <span class="cas-brand-name" >CAS</span>
+                        </a>
+                    </div>
+                </section>
+
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
+                    <div class="form-button form-button-navbar">
+                        <a class="mdc-button mdc-button--raised button-osf-disabled">
+                            <span class="mdc-button__label">Sign up</span>
+                        </a>
+                    </div>
+                </section>
+
+            </nav>
+        </header>
+
+        <script type="text/javascript">
+            (function (material) {
+                var header = {
+                    init: function () {
+                        material.autoInit();
+                    },
+                    checkCaps: function (ev) {
+                        var s = String.fromCharCode(ev.which);
+                        if (s.toUpperCase() === s && s.toLowerCase() !== s && !ev.shiftKey) {
+                            ev.target.parentElement.classList.add('caps-on');
+                        } else {
+                            ev.target.parentElement.classList.remove('caps-on');
+                        }
+                    },
+                }
+                document.addEventListener('DOMContentLoaded', function () {
+                    header.init();
+                });
+            })(mdc);
+        </script>
+    </div>
+</body>
+
+</html>

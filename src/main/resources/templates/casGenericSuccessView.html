@@ -2,96 +2,112 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title th:text="#{screen.generic.login.header}"></title>
-    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag"/>
+    <title th:text="#{screen.generic.loginsuccess.title}"></title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
 </head>
 
-<body>
-    <main role="main" class="container mt-3 mb-3">
-        <div layout:fragment="content" class="row">
-            <div class="banner-generic m-auto mdc-card p-4 w-card-wide">
-                <div class="login-generic-card">
+<body class="mdc-typography">
+    <div layout:fragment="content" class="d-flex justify-content-center">
+
+        <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
+            <section class="login-error-card">
+                <section>
                     <div th:replace="fragments/osfbannerui :: osfBannerUI">
                         <a href="fragments/osfbannerui.html"></a>
                     </div>
+                </section>
+                <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
+                    <span th:utext="#{screen.generic.loginsuccess.tips}"></span>
+                </section>
+                <hr class="my-4" />
+                <section class="card-message">
+                    <h2 th:utext="#{screen.generic.loginsuccess.heading}"></h2>
+                    <div th:utext="#{screen.generic.loginsuccess.message}"></div>
+                </section>
+                <section class="form-button">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{${osfUrl.dashboard}}">
+                        <span class="mdc-button__label" th:utext="#{screen.generic.loginsuccess.button.continue}"></span>
+                    </a>
+                </section>
+                <hr class="my-4" />
+                <section class="text-with-mdi">
+                    <i class="mdi mdi-logout mdi-before-text"></i>
+                    <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.generic.loginsuccess.link.cancel}"></a></span>
+                </section>
+                <section>
+                <!-- <section th:if="${osfCasLoginContext.devMode}"> -->
                     <hr class="my-4" />
-                    <div class="card-message">
-                        <h2 th:utext="#{screen.generic.login.heading}"></h2>
-                        <p th:utext="#{screen.generic.login.message}"></p>
-                    </div>
-                    <div class="form-button-inline">
-                        <a class="mdc-button mdc-button--raised button-osf-green" th:href="@{#{osf.home.url}}">
-                            <span class="mdc-button__label" th:utext="#{screen.generic.button.backtoosf}"></span>
-                        </a>
-                        <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=#{osf.logout.url})}">
-                            <span class="mdc-button__label" th:utext="#{screen.generic.button.logout}"></span>
-                        </a>
-                    </div>
-                    <hr class="hr-text" data-content="DEVELOPING MODE ONLY" />
-                    <div class="form-button">
+                    <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
+                        <span th:utext="#{screen.authnerror.tips.devmode}"></span>
+                    </section>
+                    <section class="form-button">
                         <button id="buttonViewAuthenticationDetails" type="button"
-                            class="mdc-button mdc-button--raised button-osf-red"
-                            onclick="showAuthenticationDetails();">
-                            <span class="mdc-button__label" th:utext="#{screen.generic.button.viewdetails}"></span>
+                                class="mdc-button mdc-button--raised button-osf-navbar"
+                                onclick="showAuthenticationDetails();">
+                            <span class="mdc-button__label" th:utext="#{screen.generic.loginsuccess.button.show}"></span>
                         </button>
-                        <button id="buttonHideAuthenticationDetails" type="button" style="display: none;"
-                            class="mdc-button mdc-button--raised button-osf-red"
-                            onclick="hideAuthenticationrDetails();">
-                            <span class="mdc-button__label" th:utext="#{screen.generic.button.hidedetails}"></span>
+                        <button id="buttonHideAuthenticationDetails" type="button"
+                                class="mdc-button mdc-button--raised button-osf-navbar hidden-button"
+                                onclick="hideAuthenticationDetails();">
+                            <span class="mdc-button__label" th:utext="#{screen.generic.loginsuccess.button.hide}"></span>
                         </button>
-                    </div>
-                    <div id="authenticationDetails" class="pre-formatted-small word-break-all" style="display: none;">
+                    </section>
+                    <section id="authenticationDetails" class="pre-formatted-small word-break-all hidden-details">
                         <p th:unless="${#maps.isEmpty(authentication.principal.attributes)}">
                             The following attributes are resolved for <strong th:utext="${authentication.principal.id}"></strong>:
-                            <div class="w-100 mdc-data-table mx-auto my-4" id="divPrincipalAttributes">
-                                <table id="attributesTable" class="mdc-data-table__table" style="white-space: unset">
-                                    <thead>
-                                    <tr class="mdc-data-table__header-row">
-                                        <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Attribute</th>
-                                        <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Value(s)</th>
-                                        <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Type</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="mdc-data-table__content">
-                                    <tr th:each="attribute : ${authentication.principal.attributes}" class="mdc-data-table__row">
-                                        <td class="mdc-data-table__cell"><code><span th:utext="${attribute.key}"></span></code></td>
-                                        <td class="mdc-data-table__cell"><code><span th:utext="${attribute.value}"></span></code></td>
-                                        <td class="mdc-data-table__cell"><code>Principal</code></td>
-                                    </tr>
-                                    <tr th:each="attribute : ${authentication.attributes}" class="mdc-data-table__row">
-                                        <td class="mdc-data-table__cell"><code><span th:utext="${attribute.key}"></span></code></td>
-                                        <td class="mdc-data-table__cell"><code><span th:utext="${attribute.value}"></span></code></td>
-                                        <td class="mdc-data-table__cell"><code>Authentication</code></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                         </p>
-                    </div>
-                </div>
-            </div>
-            <script type="text/javascript" th:inline="javascript">
-                let div = document.querySelector('#divPrincipalAttributes');
-                new mdc.dataTable.MDCDataTable(div);
-
-                /*<![CDATA[*/
-                function showAuthenticationDetails() {
-                    $("#buttonViewAuthenticationDetails").hide()
-                    $("#buttonHideAuthenticationDetails").show()
-                    $("#authenticationDetails").show()
-                }
-                function hideAuthenticationrDetails() {
-                    $("#buttonViewAuthenticationDetails").show()
-                    $("#buttonHideAuthenticationDetails").hide()
-                    $("#authenticationDetails").hide()
-                }
-                /*]]>*/
-            </script>
+                        <div class="w-100 mdc-data-table mx-auto my-4" id="divPrincipalAttributes">
+                            <table id="attributesTable" class="mdc-data-table__table" style="white-space: unset">
+                                <thead>
+                                <tr class="mdc-data-table__header-row">
+                                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Attribute</th>
+                                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Value(s)</th>
+                                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Type</th>
+                                </tr>
+                                </thead>
+                                <tbody class="mdc-data-table__content">
+                                <tr th:each="attribute : ${authentication.principal.attributes}" class="mdc-data-table__row">
+                                    <td class="mdc-data-table__cell"><code><span th:utext="${attribute.key}"></span></code></td>
+                                    <td class="mdc-data-table__cell"><code><span th:utext="${attribute.value}"></span></code></td>
+                                    <td class="mdc-data-table__cell"><code>Principal</code></td>
+                                </tr>
+                                <tr th:each="attribute : ${authentication.attributes}" class="mdc-data-table__row">
+                                    <td class="mdc-data-table__cell"><code><span th:utext="${attribute.key}"></span></code></td>
+                                    <td class="mdc-data-table__cell"><code><span th:utext="${attribute.value}"></span></code></td>
+                                    <td class="mdc-data-table__cell"><code>Authentication</code></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </section>
+            </section>
         </div>
-    </main>
+
+        <script type="text/javascript">
+            disableSignUpButton();
+        </script>
+
+        <script type="text/javascript">
+        <!-- <script type="text/javascript" th:if="${devMode}"> -->
+            let div = document.querySelector('#divPrincipalAttributes');
+            new mdc.dataTable.MDCDataTable(div);
+            function showAuthenticationDetails() {
+                $("#buttonViewAuthenticationDetails").hide()
+                $("#buttonHideAuthenticationDetails").show()
+                $("#authenticationDetails").show()
+            }
+            function hideAuthenticationDetails() {
+                $("#buttonViewAuthenticationDetails").show()
+                $("#buttonHideAuthenticationDetails").hide()
+                $("#authenticationDetails").hide()
+            }
+        </script>
+
+    </div>
 </body>
 
 </html>

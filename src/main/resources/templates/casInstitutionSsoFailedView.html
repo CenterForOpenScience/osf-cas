@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title th:text="#{screen.institutionssofailed.title}"></title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
+</head>
+
+<body class="mdc-typography">
+    <div layout:fragment="content" class="d-flex justify-content-center">
+
+        <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
+            <section class="login-error-card">
+                <section>
+                    <div th:replace="fragments/osfbannerui :: osfBannerUI">
+                        <a href="fragments/osfbannerui.html"></a>
+                    </div>
+                </section>
+                <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
+                    <span th:utext="#{screen.authnerror.tips}"></span>
+                </section>
+                <hr class="my-4" />
+                <section class="card-message">
+                    <h2 th:utext="#{screen.institutionssofailed.heading}"></h2>
+                    <p th:utext="#{screen.institutionssofailed.message}"></p>
+                </section>
+                <section class="form-button" th:with="loginUrl=@{/login(casRedirectSource=cas)}">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${loginUrl})}">
+                        <span class="mdc-button__label" th:utext="#{screen.error.page.loginagain}"></span>
+                    </a>
+                </section>
+                <hr class="my-4" />
+                <section class="text-with-mdi">
+                    <i class="mdi mdi-logout mdi-before-text"></i>
+                    <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.authnerror.button.backtoosf}"></a></span>
+                </section>
+            </section>
+        </div>
+
+        <script type="text/javascript">
+            disableSignUpButton();
+        </script>
+
+    </div>
+</body>
+
+</html>

@@ -1,7 +1,9 @@
 package io.cos.cas.osf.web.config;
 
+import io.cos.cas.osf.dao.JpaOsfDao;
 import io.cos.cas.osf.web.flow.login.OsfDefaultLoginPreparationAction;
 import io.cos.cas.osf.web.flow.login.OsfInstitutionLoginPreparationAction;
+import io.cos.cas.osf.web.flow.login.OsfCasPreInitialFlowSetupAction;
 import io.cos.cas.osf.web.flow.login.OsfPrincipalFromNonInteractiveCredentialsAction;
 
 import org.apereo.cas.CentralAuthenticationService;
@@ -46,7 +48,6 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
     @Qualifier("initialAuthenticationAttemptWebflowEventResolver")
     private ObjectProvider<CasDelegatingWebflowEventResolver> initialAuthenticationAttemptWebflowEventResolver;
 
-
     @Autowired
     @Qualifier("adaptiveAuthenticationPolicy")
     private ObjectProvider<AdaptiveAuthenticationPolicy> adaptiveAuthenticationPolicy;
@@ -54,6 +55,19 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
     @Autowired
     @Qualifier("centralAuthenticationService")
     private ObjectProvider<CentralAuthenticationService> centralAuthenticationService;
+
+    @Autowired
+    private ObjectProvider<JpaOsfDao> jpaOsfDao;
+
+    /**
+     * Bean configuration for {@link OsfCasPreInitialFlowSetupAction}.
+     *
+     * @return the initialized action
+     */
+    @Bean
+    public Action osfCasPreInitialFlowSetupAction() {
+        return new OsfCasPreInitialFlowSetupAction(casProperties.getAuthn().getOsfUrl());
+    }
 
     /**
      * Bean configuration for {@link OsfPrincipalFromNonInteractiveCredentialsAction}.
@@ -76,6 +90,8 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
                 serviceTicketRequestWebflowEventResolver.getObject(),
                 adaptiveAuthenticationPolicy.getObject(),
                 centralAuthenticationService.getObject(),
+                casProperties.getAuthn().getOsfUrl(),
+                casProperties.getAuthn().getOsfApi(),
                 authnDelegationClients
         );
     }
@@ -104,7 +120,9 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
         return new OsfInstitutionLoginPreparationAction(
                 initialAuthenticationAttemptWebflowEventResolver.getObject(),
                 serviceTicketRequestWebflowEventResolver.getObject(),
-                adaptiveAuthenticationPolicy.getObject()
+                adaptiveAuthenticationPolicy.getObject(),
+                jpaOsfDao.getObject(),
+                casProperties.getAuthn().getOsfPostgres().getInstitutionClients()
         );
     }
 }

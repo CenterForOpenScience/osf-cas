@@ -1,0 +1,222 @@
+{
+	"info": {
+		"_postman_id": "91347496-1c7f-4584-a7b0-739afc51cf6a",
+		"name": "OSF Institution Shib-SAML SSO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Brown University User",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "AUTH-mail",
+						"value": "chen@brown.edu",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-displayName",
+						"value": "Longzebrown Chenbrown",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-givenName",
+						"value": "Longzebrown",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-sn",
+						"value": "Chenbrown",
+						"type": "text"
+					},
+					{
+						"key": "REMOTE_USER",
+						"value": "chenbrown123",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-Shib-Session-ID",
+						"value": "1234567812345678",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-Shib-Identity-Provider",
+						"value": "https://sso.brown.edu/idp/shibboleth",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://192.168.168.167:8080/login",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"168",
+						"167"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "The Policy Lab User",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "AUTH-mail",
+						"value": "chen@policylab.io",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-displayName",
+						"value": "Longzepolicylab Chenpolicylab",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-givenName",
+						"value": "Longzepolicylab",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-sn",
+						"value": "Chenpolicylab",
+						"type": "text"
+					},
+					{
+						"key": "REMOTE_USER",
+						"value": "chenpolicylab123",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-Shib-Session-ID",
+						"value": "1234567812345678",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-Shib-Identity-Provider",
+						"value": "https://sso.brown.edu/idp/shibboleth",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-isMemberOf",
+						"value": "thepolicylab",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://192.168.168.167:8080/login",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"168",
+						"167"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "University of Arizona User",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "AUTH-mail",
+						"type": "text",
+						"value": "chen@ua.edu"
+					},
+					{
+						"key": "AUTH-displayName",
+						"type": "text",
+						"value": "Longzeua Chenua"
+					},
+					{
+						"key": "AUTH-givenName",
+						"type": "text",
+						"value": "Longzeua"
+					},
+					{
+						"key": "AUTH-sn",
+						"type": "text",
+						"value": "Chenua"
+					},
+					{
+						"key": "REMOTE_USER",
+						"type": "text",
+						"value": "chenua12"
+					},
+					{
+						"key": "AUTH-Shib-Session-ID",
+						"type": "text",
+						"value": "1234567812345678"
+					},
+					{
+						"key": "AUTH-Shib-Identity-Provider",
+						"type": "text",
+						"value": "urn:mace:incommon:arizona.edu"
+					},
+					{
+						"key": "AUTH-departmentRaw",
+						"value": "Department of Computer Science",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://192.168.168.167:8080/login",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"168",
+						"167"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Clear CAS Session",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.168.167:8080/logout?service=http%3A%2F%2Flocalhost%3A5000%2Flogin%2F%3Fnext%3Dhttp%253A%252F%252Flocalhost%253A5000%252F",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"168",
+						"167"
+					],
+					"port": "8080",
+					"path": [
+						"logout"
+					],
+					"query": [
+						{
+							"key": "service",
+							"value": "http%3A%2F%2Flocalhost%3A5000%2Flogin%2F%3Fnext%3Dhttp%253A%252F%252Flocalhost%253A5000%252F"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

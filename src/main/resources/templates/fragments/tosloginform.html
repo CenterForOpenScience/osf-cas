@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title></title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
+</head>
+
+<body>
+    <main role="main" class="container mt-3 mb-3">
+
+        <!-- Terms of service consent check login form template begins here -->
+        <div th:fragment="tosloginform" class="d-flex flex-column justify-content-between m-auto">
+
+            <section>
+                <div class="service-ui" th:replace="fragments/osfbannerui :: osfBannerUI">
+                    <a href="fragments/osfbannerui.html"></a>
+                </div>
+            </section>
+
+            <section class="text-without-mdi text-center text-bold text-large margin-large-vertical">
+                <span th:utext="#{screen.tosconsent.tips}"></span>
+            </section>
+
+            <section class="card-message">
+                <p th:utext="#{screen.tosconsent.message.p1}"></p>
+                <p th:utext="#{screen.tosconsent.message.p2}"></p>
+                <p th:utext="#{screen.tosconsent.message.p3}"></p>
+            </section>
+
+            <div class="form-wrapper">
+
+                <form method="post" id="fm1" th:object="${credential}" action="login">
+
+                    <section class="cas-field my-2=3">
+                        <span th:if="${availableAuthenticationHandlerNames != null}">
+                            <span th:if="${availableAuthenticationHandlerNames.size() > 1}">
+                                <label for="source" th:utext="#{screen.generic.label.source}"></label>
+                                <div>
+                                    <select class="form-control required"
+                                            id="source"
+                                            name="source"
+                                            th:field="*{source}">
+                                        <option th:each="handler : ${availableAuthenticationHandlerNames}"
+                                                th:value="${handler}" th:text="${handler}"></option>
+                                    </select>
+                                </div>
+                            </span>
+                            <span th:if="${availableAuthenticationHandlerNames.size() == 1}">
+                                <input type="hidden"
+                                        id="source"
+                                        name="source"
+                                        th:value="${availableAuthenticationHandlerNames.get(0)}"/>
+                            </span>
+                        </span>
+                    </section>
+
+                    <section class="cas-field cas-field-primary">
+                        <div class="instn-consent">
+                            <input type="checkbox" name="termsOfServiceChecked" id="termsOfServiceChecked" value="true" onchange="checkTosConsent(this)" />&nbsp;
+                            <label for="termsOfServiceChecked" th:utext="#{screen.tosconsent.checkbox.title}"></label>
+                        </div>
+                    </section>
+
+                    <section class="cas-field">
+                        <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
+                        <input type="hidden" name="_eventId" value="submit"/>
+                        <input type="hidden" name="geolocation"/>
+                        <p th:if="${#request.getMethod().equalsIgnoreCase('POST')}">
+                            <span th:each="entry : ${httpRequestInitialPostParameters}" th:remove="tag">
+                                <span th:each="entryValue : ${entry.value}" th:remove="tag">
+                                    <input type="hidden" th:name="${entry.key}" th:value="${entryValue}"/>
+                                </span>
+                            </span>
+                        </p>
+                    </section>
+
+                    <section>
+                        <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=true, buttonCustomization='button-osf-disabled', messageKey='screen.tosconsent.button.agree')" />
+                    </section>
+
+                </form>
+
+                <hr class="my-4" />
+
+                <section class="text-with-mdi">
+                    <i class="mdi mdi-keyboard-backspace mdi-before-text"></i>
+                    <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.tosconsent.link.cancel}"></a></span>
+                </section>
+
+                <script type="text/javascript">
+                    function checkTosConsent(checkbox) {
+                        let submitButton = document.getElementById("primarySubmitButton");
+                        submitButton.disabled = !checkbox.checked;
+                        submitButton.style.backgroundColor = checkbox.checked ? "#1b6d85": "#efefef";
+                    }
+                </script>
+
+                <script type="text/javascript" th:inline="javascript">
+                    /*<![CDATA[*/
+                        var i = /*[[@{#{screen.generic.button.wip}}]]*/ 'One moment please...';
+                        var j = /*[[@{#{screen.tosconsent.button.agree}}]]*/ 'Continue';
+                    /*]]>*/
+                    $(window).on('pageshow', function () {
+                        $(':submit').attr('value', j);
+                    });
+                    $(document).ready(function () {
+                        $("#fm1").submit(function () {
+                            $(":submit").attr("disabled", true);
+                            $(":submit").attr("value", i);
+                            return true;
+                        });
+                    });
+                </script>
+
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

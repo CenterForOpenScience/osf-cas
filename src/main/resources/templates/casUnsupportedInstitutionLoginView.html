@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <title th:text="#{screen.institutionlogin.title}"></title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag"/>
+</head>
+
+<body class="login mdc-typography">
+    <div layout:fragment="content" class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
+            <section class="login-section login-form login-instn-card">
+
+                <section class="mb-4 service-ui text-center">
+                    <table class="osf-shield-with-name">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <img class="service-ui-logo" src="/images/osf-logo.png">
+                            </td>
+                            <td>
+                                <span class="service-ui-name hidden-narrow">OSF </span>
+                                <span class="service-ui-name">INSTITUTIONS</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="card-message">
+                    <h2 th:utext="#{screen.unsupp-instn.heading}"></h2>
+                    <p th:utext="#{screen.unsupp-instn.message(${osfUrl.institutionsHome})}"></p>
+                </section>
+
+                <section class="card-message">
+                    <h3 th:utext="#{screen.unsupp-instn.existing.heading}"></h3>
+                    <p th:utext="#{screen.unsupp-instn.existing.message}"></p>
+                </section>
+
+                <section class="form-button">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/login(service=${service?.originalUrl ?: ''})}">
+                        <span class="mdc-button__label" th:utext="#{screen.unsupp-instn.existing.button}"></span>
+                    </a>
+                </section>
+
+                <section id="osfUnsupportedInstitutionLogin">
+                    <div class="card-message">
+                        <p th:utext="#{screen.unsupp-instn.existing.setpw.message}"></p>
+                    </div>
+                </section>
+
+                <div class="form-wrapper">
+                    <form method="post" id="fm1" th:object="${credential}" th:action="@{${osfUrl.forgotPasswordInstitution}}">
+                        <section class="cas-field cas-field-primary my-3">
+                            <div class="mdc-text-field  d-flex">
+                                <input class="mdc-text-field__input"
+                                       id="username"
+                                       size="256"
+                                       type="email"
+                                       name="forgot_password-email"
+                                       th:accesskey="#{screen.unsupp-instn.existing.setpw.label.email.accesskey}"
+                                       autocomplete="off" />
+                                <label for="username" class="mdc-floating-label" th:utext="#{screen.unsupp-instn.existing.setpw.label.email}"></label>
+                            </div>
+                        </section>
+                        <section>
+                            <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=false, buttonCustomization='button-osf-blue', messageKey='screen.unsupp-instn.existing.setpw.button')" />
+                        </section>
+                    </form>
+                </div>
+
+                <hr class="my-4" />
+                <section class="text-with-mdi">
+                    <i class="mdi mdi-account-question-outline mdi-before-text"></i>
+                    <span>
+                            <a href="https://help.osf.io/hc/en-us/articles/360019737194-Sign-in-to-OSF" th:utext="#{screen.generic.link.support}"></a>
+                        </span>
+                </section>
+
+            </section>
+        </div>
+
+        <script type="text/javascript" th:inline="javascript">
+            /*<![CDATA[*/
+                var i = /*[[@{#{screen.generic.button.wip}}]]*/ 'One moment please...' ;
+                var j = /*[[@{#{screen.unsupp-instn.existing.setpw.button}}]]*/ 'Set a password' ;
+            /*]]>*/
+            $(window).on('pageshow', function () {
+                $(':submit').prop('disabled', false);
+                $(':submit').attr('value', j);
+            });
+            $(document).ready(function () {
+                $("#fm1").submit(function () {
+                    $(":submit").attr("disabled", true);
+                    $(":submit").attr("value", i);
+                    return true;
+                });
+            });
+        </script>
+
+    </div>
+</body>
+
+</html>

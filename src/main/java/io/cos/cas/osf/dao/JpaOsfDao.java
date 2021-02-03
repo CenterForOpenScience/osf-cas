@@ -2,6 +2,7 @@ package io.cos.cas.osf.dao;
 
 import io.cos.cas.osf.model.OsfEmail;
 import io.cos.cas.osf.model.OsfGuid;
+import io.cos.cas.osf.model.OsfInstitution;
 import io.cos.cas.osf.model.OsfTotp;
 import io.cos.cas.osf.model.OsfUser;
 
@@ -14,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * This is {@link JpaOsfDao}.
@@ -85,6 +87,35 @@ public class JpaOsfDao extends AbstractOsfDao {
             );
             query.setParameter("ownerId", ownerId);
             return query.getSingleResult();
+        } catch (final PersistenceException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public OsfInstitution findOneInstitutionById(final String id) {
+        try {
+            final TypedQuery<OsfInstitution> query = entityManager.createQuery(
+                    "select i from OsfInstitution i where i.institutionId = :id",
+                    OsfInstitution.class
+            );
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        } catch (final PersistenceException e) {
+            return null;
+        }
+
+    }
+
+    @Override
+    public List<OsfInstitution> findAllInstitutions() {
+        try {
+            final TypedQuery<OsfInstitution> query = entityManager.createQuery(
+                    "select i from OsfInstitution i "
+                            + "where (not i.delegationProtocol = '') and i.deleted = false",
+                    OsfInstitution.class
+            );
+            return query.getResultList();
         } catch (final PersistenceException e) {
             return null;
         }
