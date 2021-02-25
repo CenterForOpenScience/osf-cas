@@ -130,6 +130,33 @@ dependencies {
     // JPA Ticket Registry
     implementation "org.apereo.cas:cas-server-support-jpa-ticket-registry:${project.'cas.version'}"
 
+    // OAuth 2.0 Server
+    implementation "org.apereo.cas:cas-server-support-oauth-webflow:${project.'cas.version'}"
+
+    // Extra first-party dependencies for OAuth 2.0 Support Modules
+    // TODO: please clean up and remove unnecessary ones after initial implementation
+    implementation "org.apereo.cas:cas-server-core-audit:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-audit-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-authentication-attributes:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-authentication-mfa:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-authentication-throttle:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-configuration-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-cookie-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-services:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-services-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-services-registry:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-tickets-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-validation-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-webflow-mfa:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-oauth:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-oauth-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-oauth-core:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-oauth-core-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-oauth-services:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-pac4j-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-throttle:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-token-core-api:${project.'cas.version'}"
+
     // Tomcat Catalina
     implementation "org.apache.tomcat:tomcat-catalina:${springBootTomcatVersion}"
 
@@ -144,6 +171,12 @@ dependencies {
 
     // Apache HttpComponents Client fluent API
     implementation "org.apache.httpcomponents:fluent-hc:${fluentHcVersion}"
+
+    // Extra third-party dependencies for OAuth 2.0 Support Modules
+    // TODO: please clean up and remove unnecessary ones after initial implementation
+    implementation "org.bitbucket.b_c:jose4j:${jose4jVersion}"
+    implementation "org.aspectj:aspectjrt:${aspectjVersion}"
+    implementation "org.jasig.cas.client:cas-client-core:${casClientVersion}"
 }
 
 tasks.findByName("jibDockerBuild")
