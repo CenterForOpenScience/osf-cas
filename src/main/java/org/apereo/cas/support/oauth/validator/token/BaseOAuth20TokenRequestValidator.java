@@ -21,6 +21,7 @@ import org.springframework.core.Ordered;
  * This is {@link BaseOAuth20TokenRequestValidator}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.3.0
  */
 @Slf4j
@@ -87,7 +88,12 @@ public abstract class BaseOAuth20TokenRequestValidator implements OAuth20TokenRe
         val manager = new ProfileManager<>(context, context.getSessionStore());
         val profile = manager.get(true);
         if (profile.isEmpty()) {
-            LOGGER.warn("Could not locate authenticated profile for this request. Request is not authenticated");
+            LOGGER.warn("Could not locate authenticated profile for this request. Request is not authenticated.");
+            val clientId = request.getParameter(OAuth20Constants.CLIENT_ID);
+            if (StringUtils.isNotBlank(clientId)) {
+                return validateInternal(context, grantType, manager, null, clientId);
+            }
+            LOGGER.error("No client ID is found and no authenticated profile can be located.");
             return false;
         }
 
@@ -108,6 +114,24 @@ public abstract class BaseOAuth20TokenRequestValidator implements OAuth20TokenRe
                                        final String grantType,
                                        final ProfileManager manager,
                                        final UserProfile userProfile) {
+        return validateInternal(context, grantType, manager, userProfile, "");
+    }
+
+    /**
+     * Validate internal.
+     *
+     * @param context           the context
+     * @param grantType         the grant type
+     * @param manager           the manager
+     * @param userProfile       the profile
+     * @param clientIdAnonymous the client ID
+     * @return {@code true} or {@code false}
+     */
+    protected boolean validateInternal(final JEEContext context,
+                                       final String grantType,
+                                       final ProfileManager manager,
+                                       final UserProfile userProfile,
+                                       final String clientIdAnonymous) {
         return false;
     }
 

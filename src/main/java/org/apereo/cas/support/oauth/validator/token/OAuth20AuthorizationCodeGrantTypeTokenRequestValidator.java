@@ -20,6 +20,7 @@ import org.pac4j.core.profile.UserProfile;
  * This is {@link OAuth20AuthorizationCodeGrantTypeTokenRequestValidator}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.3.0
  */
 @Slf4j
@@ -35,11 +36,16 @@ public class OAuth20AuthorizationCodeGrantTypeTokenRequestValidator extends Base
 
     @Override
     protected boolean validateInternal(final JEEContext context, final String grantType,
-                                       final ProfileManager manager, final UserProfile uProfile) {
+                                       final ProfileManager manager, final UserProfile uProfile,
+                                       final String clientIdAnonymous) {
+
         val request = context.getNativeRequest();
-        val clientId = uProfile.getId();
+        String clientId = OAuth20Utils.getClientIdAndClientSecret(context).getLeft();
+        if (StringUtils.isBlank(clientId)) {
+            clientId = StringUtils.isBlank(clientIdAnonymous) && uProfile != null ? uProfile.getId() : clientIdAnonymous;
+        }
         val redirectUri = request.getParameter(OAuth20Constants.REDIRECT_URI);
-        
+
         LOGGER.debug("Locating registered service for client id [{}]", clientId);
         val registeredService = OAuth20Utils.getRegisteredOAuthServiceByClientId(
             getConfigurationContext().getServicesManager(), clientId);

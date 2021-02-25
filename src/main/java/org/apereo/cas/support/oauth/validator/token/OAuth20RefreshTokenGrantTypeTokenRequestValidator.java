@@ -1,5 +1,6 @@
 package org.apereo.cas.support.oauth.validator.token;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.audit.AuditableContext;
 import org.apereo.cas.support.oauth.OAuth20Constants;
 import org.apereo.cas.support.oauth.OAuth20GrantTypes;
@@ -18,6 +19,7 @@ import org.pac4j.core.profile.UserProfile;
  * This is {@link OAuth20RefreshTokenGrantTypeTokenRequestValidator}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.3.0
  */
 @Slf4j
@@ -32,10 +34,16 @@ public class OAuth20RefreshTokenGrantTypeTokenRequestValidator extends BaseOAuth
     }
 
     @Override
-    protected boolean validateInternal(final JEEContext context, final String grantType,
-                                       final ProfileManager manager, final UserProfile uProfile) {
+    protected boolean validateInternal(final JEEContext context,
+                                       final String grantType,
+                                       final ProfileManager manager,
+                                       final UserProfile uProfile,
+                                       final String clientIdAnonymous) {
         val request = context.getNativeRequest();
-        val clientId = OAuth20Utils.getClientIdAndClientSecret(context).getLeft();
+        String clientId = OAuth20Utils.getClientIdAndClientSecret(context).getLeft();
+        if (StringUtils.isBlank(clientId)) {
+            clientId = StringUtils.isBlank(clientIdAnonymous) && uProfile != null ? uProfile.getId() : clientIdAnonymous;
+        }
         if (!HttpRequestUtils.doesParameterExist(request, OAuth20Constants.REFRESH_TOKEN)
             || clientId.isEmpty()) {
             return false;
