@@ -8,9 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
+
 import org.pac4j.core.context.JEEContext;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
@@ -20,6 +23,7 @@ import java.util.Map;
  * This is {@link OAuth20ConsentApprovalViewResolver}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.0.0
  */
 @Slf4j
@@ -33,12 +37,34 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
 
     @Override
     public ModelAndView resolve(final JEEContext context, final OAuthRegisteredService service) {
-        var bypassApprovalParameter = context.getRequestParameter(OAuth20Constants.BYPASS_APPROVAL_PROMPT)
-            .map(String::valueOf).orElse(StringUtils.EMPTY);
+
+        // Note: Changing the conditions in this method may lead to users being stuck on the approval page. Please get familiar with how
+        //       APPROVAL_PROMPT (oldCAS, request param only), BYPASS_APPROVAL_PROMPT (newCAS, both request param and session store),
+        //       isConsentApprovalBypassed() and redirectToApproveView() works before making changes.
+        var bypassApprovalParameter = context
+                .getRequestParameter(OAuth20Constants.BYPASS_APPROVAL_PROMPT)
+                .map(String::valueOf)
+                .orElse(StringUtils.EMPTY);
+        LOGGER.trace("bypassApprovalParameter in request params: {}", bypassApprovalParameter);
         if (StringUtils.isBlank(bypassApprovalParameter)) {
-            bypassApprovalParameter = (String) context.getSessionStore()
-                .get(context, OAuth20Constants.BYPASS_APPROVAL_PROMPT)
-                .map(String::valueOf).orElse(StringUtils.EMPTY);
+            // "osfApprovalPrompt" is effective only if "bypassApprovalParameter" is not present
+            var osfApprovalPrompt = context
+                    .getRequestParameter(OAuth20Constants.APPROVAL_PROMPT)
+                    .map(String::valueOf)
+                    .orElse(StringUtils.EMPTY);
+            LOGGER.trace("osfApprovalPrompt in request params: {}", osfApprovalPrompt);
+            // Default is "auto", thus anything else other than "force" is considered as "auto"
+            if (osfApprovalPrompt.equalsIgnoreCase(OAuth20Constants.APPROVAL_PROMPT_FORCE)) {
+                bypassApprovalParameter = Boolean.FALSE.toString();
+                LOGGER.trace("bypassApprovalParameter from osfApprovalPrompt: {} <<-- {}", bypassApprovalParameter, osfApprovalPrompt);
+            } else {
+                bypassApprovalParameter = (String) context
+                        .getSessionStore()
+                        .get(context, OAuth20Constants.BYPASS_APPROVAL_PROMPT)
+                        .map(String::valueOf)
+                        .orElse(StringUtils.EMPTY);
+                LOGGER.trace("bypassApprovalParameter in session store: {}", bypassApprovalParameter);
+            }
         }
         LOGGER.trace("Bypassing approval prompt for service [{}]: [{}]", service, bypassApprovalParameter);
         if (Boolean.TRUE.toString().equalsIgnoreCase(bypassApprovalParameter) || isConsentApprovalBypassed(context, service)) {
@@ -72,7 +98,10 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
         LOGGER.trace("callbackUrl: [{}]", callbackUrl);
 
         val url = new URIBuilder(callbackUrl);
-        url.addParameter(OAuth20Constants.BYPASS_APPROVAL_PROMPT, Boolean.TRUE.toString());
+        // APPROVAL_PROMPT can be set to any value. It does not have any effect since BYPASS_APPROVAL_PROMPT is present.
+        // However, setting it to EMPTY is preferred so that it is different from its original values "auto" or "force".
+        url.setParameter(OAuth20Constants.APPROVAL_PROMPT, StringUtils.EMPTY);
+        url.setParameter(OAuth20Constants.BYPASS_APPROVAL_PROMPT, Boolean.TRUE.toString());
         val model = new HashMap<String, Object>();
         model.put("service", svc);
         model.put("callbackUrl", url.toString());

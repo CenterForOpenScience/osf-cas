@@ -105,6 +105,21 @@ public interface OAuth20Constants {
     String BYPASS_APPROVAL_PROMPT = "bypass_approval_prompt";
 
     /**
+     * The oldCAS approval prompt param.
+     */
+    String APPROVAL_PROMPT = "approval_prompt";
+
+    /**
+     * The oldCAS approval prompt value "auto".
+     */
+    String APPROVAL_PROMPT_AUTO = "auto";
+
+    /**
+     * The oldCAS approval prompt value "force".
+     */
+    String APPROVAL_PROMPT_FORCE= "force";
+
+    /**
      * The scope request.
      */
     String SCOPE = "scope";
