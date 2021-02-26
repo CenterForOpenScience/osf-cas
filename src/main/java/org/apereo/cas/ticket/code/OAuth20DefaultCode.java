@@ -9,9 +9,14 @@ import org.apereo.cas.ticket.TicketGrantingTicketImpl;
 import org.apereo.cas.ticket.proxy.ProxyGrantingTicket;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
+
 import org.apache.commons.lang3.ObjectUtils;
 
 import javax.persistence.Column;
@@ -40,6 +45,7 @@ import java.util.Set;
 @DiscriminatorValue(OAuth20Code.PREFIX)
 @NoArgsConstructor
 @Getter
+@Setter
 public class OAuth20DefaultCode extends AbstractTicket implements OAuth20Code {
 
     private static final long serialVersionUID = -8072724186202305800L;
@@ -82,6 +88,9 @@ public class OAuth20DefaultCode extends AbstractTicket implements OAuth20Code {
     @Column
     private String clientId;
 
+    @Column
+    private int osfType;
+
     public OAuth20DefaultCode(final String id,
                               final @NonNull Service service,
                               final @NonNull Authentication authentication,
@@ -101,13 +110,30 @@ public class OAuth20DefaultCode extends AbstractTicket implements OAuth20Code {
         this.clientId = clientId;
         this.scopes.addAll(scopes);
         this.claims.putAll(requestClaims);
+        this.osfType = OsfOAuth20CodeType.ONLINE.getValue();
+    }
+
+    public OAuth20DefaultCode(final String id,
+                              final @NonNull Service service,
+                              final @NonNull Authentication authentication,
+                              final @NonNull ExpirationPolicy expirationPolicy,
+                              final TicketGrantingTicket ticketGrantingTicket,
+                              final @NonNull Collection<String> scopes,
+                              final String codeChallenge,
+                              final String codeChallengeMethod,
+                              final String clientId,
+                              final Map<String, Map<String, Object>> requestClaims,
+                              final int osfType) {
+        this(id, service, authentication, expirationPolicy, ticketGrantingTicket,
+                scopes, codeChallenge, codeChallengeMethod, clientId, requestClaims);
+        this.osfType = osfType;
     }
 
     @Override
     public boolean isFromNewLogin() {
         return true;
     }
-    
+
     @Override
     public ProxyGrantingTicket grantProxyGrantingTicket(final String id,
                                                         final Authentication authentication,

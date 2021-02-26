@@ -13,13 +13,18 @@ import org.apereo.cas.support.oauth.util.OAuth20Utils;
 import org.apereo.cas.support.oauth.web.response.accesstoken.ext.AccessTokenRequestDataHolder;
 import org.apereo.cas.web.support.CookieUtils;
 
+import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.apache.commons.lang3.StringUtils;
+
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
  * This url is protected by a CAS authentication. It returns an OAuth code or directly an access token.
  *
  * @author Jerome Leleu
+ * @author Longze Chen
  * @since 3.5.0
  */
 @Slf4j
@@ -210,6 +216,11 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
             .orElseGet(OAuth20GrantTypes.AUTHORIZATION_CODE::getType)
             .toUpperCase();
 
+        val accessType = context.getRequestParameter(OAuth20Constants.ACCESS_TYPE)
+                .map(String::valueOf)
+                .orElse(OsfOAuth20CodeType.ONLINE.name())
+                .toUpperCase();
+
         val scopes = OAuth20Utils.parseRequestScopes(context);
         val codeChallenge = context.getRequestParameter(OAuth20Constants.CODE_CHALLENGE)
             .map(String::valueOf).orElse(StringUtils.EMPTY);
@@ -225,6 +236,7 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
             .registeredService(registeredService)
             .ticketGrantingTicket(ticketGrantingTicket)
             .grantType(OAuth20GrantTypes.valueOf(grantType))
+            .osfType(OsfOAuth20CodeType.valueOf(accessType).getValue())
             .codeChallenge(codeChallenge)
             .codeChallengeMethod(codeChallengeMethod)
             .scopes(scopes)
@@ -255,5 +267,3 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
         return validator.validate(context);
     }
 }
-
-

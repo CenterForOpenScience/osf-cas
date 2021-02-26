@@ -10,6 +10,8 @@ import org.apereo.cas.ticket.TicketGrantingTicket;
 import org.apereo.cas.ticket.code.OAuth20Code;
 import org.apereo.cas.ticket.refreshtoken.OAuth20RefreshToken;
 
+import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -23,6 +25,7 @@ import java.util.Set;
  * This is {@link AccessTokenRequestDataHolder}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.1.0
  */
 @ToString
@@ -46,6 +49,9 @@ public class AccessTokenRequestDataHolder {
 
     @Builder.Default
     private final OAuth20GrantTypes grantType = OAuth20GrantTypes.NONE;
+
+    @Builder.Default
+    private final int osfType = OsfOAuth20CodeType.VANILLA.getValue();
 
     @Builder.Default
     private final Set<String> scopes = new LinkedHashSet<>(0);

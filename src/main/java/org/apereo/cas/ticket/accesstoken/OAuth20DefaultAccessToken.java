@@ -6,6 +6,8 @@ import org.apereo.cas.ticket.ExpirationPolicy;
 import org.apereo.cas.ticket.TicketGrantingTicket;
 import org.apereo.cas.ticket.code.OAuth20DefaultCode;
 
+import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +15,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -47,6 +50,7 @@ public class OAuth20DefaultAccessToken extends OAuth20DefaultCode implements OAu
             ticketGrantingTicket, scopes,
             codeChallenge, codeChallengeMethod,
             clientId, requestClaims);
+        this.setOsfType(OsfOAuth20CodeType.VANILLA.getValue());
     }
 
     public OAuth20DefaultAccessToken(final String id, final Service service,

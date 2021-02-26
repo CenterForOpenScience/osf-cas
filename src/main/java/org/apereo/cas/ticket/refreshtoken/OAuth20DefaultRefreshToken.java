@@ -6,6 +6,8 @@ import org.apereo.cas.ticket.ExpirationPolicy;
 import org.apereo.cas.ticket.TicketGrantingTicket;
 import org.apereo.cas.ticket.code.OAuth20DefaultCode;
 
+import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -52,6 +54,7 @@ public class OAuth20DefaultRefreshToken extends OAuth20DefaultCode implements OA
         super(id, service, authentication, expirationPolicy,
             ticketGrantingTicket, scopes,
             codeChallenge, codeChallengeMethod, clientId, requestClaims);
+        this.setOsfType(OsfOAuth20CodeType.VANILLA.getValue());
         this.accessTokens.add(accessToken);
     }
 

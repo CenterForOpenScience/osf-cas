@@ -7,12 +7,17 @@ import org.apereo.cas.support.oauth.OAuth20ResponseTypes;
 import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
 import org.apereo.cas.support.oauth.util.OAuth20Utils;
 import org.apereo.cas.support.oauth.web.endpoints.OAuth20ConfigurationContext;
+import org.apereo.cas.ticket.code.OAuth20DefaultCode;
 import org.apereo.cas.ticket.InvalidTicketException;
 import org.apereo.cas.ticket.OAuth20Token;
 
+import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.apache.commons.lang3.StringUtils;
+
 import org.pac4j.core.context.JEEContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +30,7 @@ import java.util.TreeSet;
  * This is {@link AccessTokenAuthorizationCodeGrantRequestExtractor}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.1.0
  */
 @Slf4j
@@ -54,7 +60,9 @@ public class AccessTokenAuthorizationCodeGrantRequestExtractor extends BaseAcces
         val scopes = extractRequestedScopesByToken(requestedScopes, token, request);
         val service = getOAuthConfigurationContext().getWebApplicationServiceServiceFactory().createService(redirectUri);
 
-        val generateRefreshToken = isAllowedToGenerateRefreshToken() && registeredService.isGenerateRefreshToken();
+        // The `osfType` of the authorization code (along with a per-service flag) together determine whether to generate a refresh token
+        val osfType = ((OAuth20DefaultCode) token).getOsfType();
+        val generateRefreshToken = osfType == OsfOAuth20CodeType.OFFLINE.getValue();
         val builder = AccessTokenRequestDataHolder.builder()
             .scopes(scopes)
             .service(service)

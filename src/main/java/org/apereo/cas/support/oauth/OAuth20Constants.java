@@ -4,6 +4,7 @@ package org.apereo.cas.support.oauth;
  * This class has the main constants for the OAuth implementation.
  *
  * @author Jerome Leleu
+ * @author Longze Chen
  * @since 3.5.0
  */
 public interface OAuth20Constants {
@@ -67,6 +68,11 @@ public interface OAuth20Constants {
      * The grant type.
      */
     String GRANT_TYPE = "grant_type";
+
+    /**
+     * The access type.
+     */
+    String ACCESS_TYPE = "access_type";
 
     /**
      * The client id.

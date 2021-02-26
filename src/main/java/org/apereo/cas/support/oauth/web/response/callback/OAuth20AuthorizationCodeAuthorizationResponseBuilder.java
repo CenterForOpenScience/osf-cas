@@ -7,14 +7,18 @@ import org.apereo.cas.support.oauth.OAuth20ResponseTypes;
 import org.apereo.cas.support.oauth.web.response.accesstoken.ext.AccessTokenRequestDataHolder;
 import org.apereo.cas.ticket.code.OAuth20Code;
 import org.apereo.cas.ticket.code.OAuth20CodeFactory;
+import org.apereo.cas.ticket.code.OAuth20DefaultCode;
 import org.apereo.cas.ticket.registry.TicketRegistry;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.apache.commons.lang3.StringUtils;
+
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.util.CommonHelper;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.LinkedHashMap;
@@ -23,6 +27,7 @@ import java.util.LinkedHashMap;
  * This is {@link OAuth20AuthorizationCodeAuthorizationResponseBuilder}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.2.0
  */
 @Slf4j
@@ -45,7 +50,7 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder implements OAu
             holder.getTicketGrantingTicket(), holder.getScopes(),
             holder.getCodeChallenge(), holder.getCodeChallengeMethod(),
             holder.getClientId(), holder.getClaims());
-        LOGGER.debug("Generated OAuth code: [{}]", code);
+        ((OAuth20DefaultCode) code).setOsfType(holder.getOsfType());
         this.ticketRegistry.addTicket(code);
 
         return buildCallbackViewViaRedirectUri(context, clientId, authentication, code);
