@@ -197,6 +197,11 @@ public interface OAuth20Constants {
     String ACCESS_DENIED = "access_denied";
 
     /**
+     * Not implemented.
+     */
+    String NOT_IMPLEMENTED = "not_implemented";
+
+    /**
      * Authz pending error.
      */
     String AUTHORIZATION_PENDING = "authorization_pending";

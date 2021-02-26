@@ -67,13 +67,29 @@ public class OAuth20Utils {
      *
      * @param response the response
      * @param error    error message
-     * @return json -backed view.
+     * @return json-backed view.
      */
     public static ModelAndView writeError(final HttpServletResponse response, final String error) {
         val model = CollectionUtils.wrap(OAuth20Constants.ERROR, error);
         val mv = new ModelAndView(new MappingJackson2JsonView(MAPPER), (Map) model);
         mv.setStatus(HttpStatus.BAD_REQUEST);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
+        return mv;
+    }
+
+    /**
+     * Write to the output this error with customized status.
+     *
+     * @param response the response
+     * @param error    the error message
+     * @param status   an {@link HttpStatus} object
+     * @return json-backed view.
+     */
+    public static ModelAndView writeError(final HttpServletResponse response, final String error, final HttpStatus status) {
+        val model = CollectionUtils.wrap(OAuth20Constants.ERROR, error);
+        val mv = new ModelAndView(new MappingJackson2JsonView(MAPPER), (Map) model);
+        mv.setStatus(status);
+        response.setStatus(status.value());
         return mv;
     }
 

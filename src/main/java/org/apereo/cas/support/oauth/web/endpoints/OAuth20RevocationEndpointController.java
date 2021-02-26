@@ -10,10 +10,11 @@ import org.apereo.cas.ticket.refreshtoken.OAuth20RefreshToken;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.apache.commons.lang3.StringUtils;
+
 import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.profile.CommonProfile;
-import org.pac4j.core.profile.ProfileManager;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  * This is {@link OAuth20RevocationEndpointController}.
  *
  * @author Julien Huon
+ * @author Longze Chen
  * @since 6.2.0
  */
 @Slf4j
@@ -53,32 +55,44 @@ public class OAuth20RevocationEndpointController extends BaseOAuth20Controller {
             return OAuth20Utils.writeError(response, OAuth20Constants.INVALID_REQUEST);
         }
 
-        val manager = new ProfileManager<CommonProfile>(context, context.getSessionStore());
-        val clientId = OAuth20Utils.getClientIdAndClientSecret(context).getLeft();
-        val registeredService = getRegisteredServiceByClientId(clientId);
+        val tokenId = context.getRequestParameter(OAuth20Constants.TOKEN).map(String::valueOf).orElse(StringUtils.EMPTY);
+        String clientId = OAuth20Utils.getClientIdAndClientSecret(context).getLeft();
+        val clientSecret = OAuth20Utils.getClientIdAndClientSecret(context).getRight();
+        OAuthRegisteredService registeredService;
 
-        if (OAuth20Utils.doesServiceNeedAuthentication(registeredService)) {
-            if (manager.get(true).isEmpty()) {
-                LOGGER.warn("Service [{}] requests authentication", clientId);
+        if (StringUtils.isNotBlank(tokenId) && StringUtils.isBlank(clientId) && StringUtils.isBlank(clientSecret)) {
+            val token = getOAuthConfigurationContext().getTicketRegistry().getTicket(tokenId, OAuth20Token.class);
+            if (token == null) {
+                LOGGER.error("expired or invalid token");
+                return OAuth20Utils.writeError(response, OAuth20Constants.EXPIRED_ACCESS_TOKEN);
+            }
+            clientId = token.getClientId();
+            registeredService = getRegisteredServiceByClientId(clientId);
+            LOGGER.debug("token verified for service [{}]", clientId);
+        } else if (StringUtils.isBlank(tokenId) && StringUtils.isNotBlank(clientId) && StringUtils.isNotBlank(clientSecret)) {
+            registeredService = getRegisteredServiceByClientId(clientId);
+            if (!OAuth20Utils.checkClientSecret(registeredService, clientSecret, getOAuthConfigurationContext().getRegisteredServiceCipherExecutor())) {
+                LOGGER.error("client secret check failed for service [{}]", clientId);
                 return OAuth20Utils.writeError(response, OAuth20Constants.ACCESS_DENIED);
             }
+            return OAuth20Utils.writeError(response, OAuth20Constants.NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
         } else {
-            val service = getOAuthConfigurationContext().getWebApplicationServiceServiceFactory().createService(registeredService.getServiceId());
-
-            val audit = AuditableContext.builder()
-                .service(service)
-                .registeredService(registeredService)
-                .build();
-
-            val accessResult = getOAuthConfigurationContext().getRegisteredServiceAccessStrategyEnforcer().execute(audit);
-            if (accessResult.isExecutionFailure()) {
-                return OAuth20Utils.writeError(response, OAuth20Constants.INVALID_REQUEST);
-            }
+            LOGGER.error("Revocation request verification failed. Request has unexpected parameters.");
+            return OAuth20Utils.writeError(response, OAuth20Constants.INVALID_REQUEST);
         }
-        val token = context.getRequestParameter(OAuth20Constants.TOKEN)
-            .map(String::valueOf).orElse(StringUtils.EMPTY);
+        val service = getOAuthConfigurationContext().getWebApplicationServiceServiceFactory().createService(registeredService.getServiceId());
 
-        return generateRevocationResponse(token, clientId, response);
+        val audit = AuditableContext.builder()
+            .service(service)
+            .registeredService(registeredService)
+            .build();
+
+        val accessResult = getOAuthConfigurationContext().getRegisteredServiceAccessStrategyEnforcer().execute(audit);
+        if (accessResult.isExecutionFailure()) {
+            return OAuth20Utils.writeError(response, OAuth20Constants.INVALID_REQUEST);
+        }
+
+        return generateRevocationResponse(tokenId, clientId, response);
     }
 
     /**
@@ -114,7 +128,7 @@ public class OAuth20RevocationEndpointController extends BaseOAuth20Controller {
         }
 
         val mv = new ModelAndView(new MappingJackson2JsonView());
-        mv.setStatus(HttpStatus.OK);
+        mv.setStatus(HttpStatus.NO_CONTENT);
         return mv;
     }
 

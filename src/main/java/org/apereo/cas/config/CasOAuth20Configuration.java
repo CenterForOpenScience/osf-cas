@@ -40,6 +40,7 @@ import org.apereo.cas.support.oauth.validator.token.OAuth20AuthorizationCodeGran
 import org.apereo.cas.support.oauth.validator.token.OAuth20AuthorizationCodeGrantTypeTokenRequestValidator;
 import org.apereo.cas.support.oauth.validator.token.OAuth20ClientCredentialsGrantTypeTokenRequestValidator;
 import org.apereo.cas.support.oauth.validator.token.OAuth20DeviceCodeResponseTypeRequestValidator;
+import org.apereo.cas.support.oauth.validator.token.OAuth20OneTokenRevocationRequestValidator;
 import org.apereo.cas.support.oauth.validator.token.OAuth20PasswordGrantTypeTokenRequestValidator;
 import org.apereo.cas.support.oauth.validator.token.OAuth20RefreshTokenGrantTypeTokenRequestValidator;
 import org.apereo.cas.support.oauth.validator.token.OAuth20RevocationRequestValidator;
@@ -152,6 +153,7 @@ import java.util.Set;
  *
  * @author Misagh Moayyed
  * @author Dmitriy Kopylenko
+ * @author Longze Chen
  * @since 5.0.0
  */
 @Configuration("casOAuth20Configuration")
@@ -574,6 +576,14 @@ public class CasOAuth20Configuration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "oauthOneTokenRevocationRequestValidator")
+    @RefreshScope
+    public OAuth20TokenRequestValidator oauthOneTokenRevocationRequestValidator() {
+        val svcManager = servicesManager.getObject();
+        return new OAuth20OneTokenRevocationRequestValidator(svcManager);
+    }
+
+    @Bean
     @ConditionalOnMissingBean(name = "oauthRefreshTokenGrantTypeTokenRequestValidator")
     @RefreshScope
     public OAuth20TokenRequestValidator oauthRefreshTokenGrantTypeTokenRequestValidator() {
@@ -610,6 +620,7 @@ public class CasOAuth20Configuration {
         validators.add(oauthPasswordGrantTypeTokenRequestValidator());
         validators.add(oauthClientCredentialsGrantTypeTokenRequestValidator());
         validators.add(oauthRevocationRequestValidator());
+        validators.add(oauthOneTokenRevocationRequestValidator());
 
         return validators;
     }

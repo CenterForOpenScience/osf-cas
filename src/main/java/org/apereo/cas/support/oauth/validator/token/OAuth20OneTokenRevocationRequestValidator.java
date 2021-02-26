@@ -17,30 +17,22 @@ import org.pac4j.core.context.JEEContext;
 import org.springframework.core.Ordered;
 
 /**
- * This is {@link OAuth20RevocationRequestValidator}.
+ * This is {@link OAuth20OneTokenRevocationRequestValidator}.
  *
- * @author Julien Huon
  * @author Longze Chen
- * @since 6.2.0
+ * @since 6.2.8
  */
 @RequiredArgsConstructor
 @Slf4j
 @Getter
 @Setter
-public class OAuth20RevocationRequestValidator implements OAuth20TokenRequestValidator {
+public class OAuth20OneTokenRevocationRequestValidator implements OAuth20TokenRequestValidator {
     private final ServicesManager servicesManager;
 
     private int order = Ordered.LOWEST_PRECEDENCE;
 
     @Override
     public boolean validate(final JEEContext context) {
-        val clientId = OAuth20Utils.getClientIdAndClientSecret(context).getLeft();
-        val registeredService = OAuth20Utils.getRegisteredOAuthServiceByClientId(this.servicesManager, clientId);
-
-        if (registeredService == null) {
-            LOGGER.warn("Provided client id [{}] cannot be matched against a service definition", clientId);
-            return false;
-        }
         return true;
     }
 
@@ -49,6 +41,6 @@ public class OAuth20RevocationRequestValidator implements OAuth20TokenRequestVal
         val token = context.getRequestParameter(OAuth20Constants.TOKEN).map(String::valueOf).orElse(StringUtils.EMPTY);
         val clientId = OAuth20Utils.getClientIdAndClientSecret(context).getLeft();
         val clientSecret = OAuth20Utils.getClientIdAndClientSecret(context).getRight();
-        return StringUtils.isBlank(token) && StringUtils.isNotBlank(clientId) && StringUtils.isNotBlank(clientSecret);
+        return StringUtils.isNotBlank(token) && StringUtils.isBlank(clientId) && StringUtils.isBlank(clientSecret);
     }
 }
