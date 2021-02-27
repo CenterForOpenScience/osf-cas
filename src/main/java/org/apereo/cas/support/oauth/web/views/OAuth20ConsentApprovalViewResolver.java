@@ -4,6 +4,8 @@ import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.support.oauth.OAuth20Constants;
 import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
 
+import io.cos.cas.oauth.support.OsfCasOAuth20Constants;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -49,12 +51,12 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
         if (StringUtils.isBlank(bypassApprovalParameter)) {
             // "osfApprovalPrompt" is effective only if "bypassApprovalParameter" is not present
             var osfApprovalPrompt = context
-                    .getRequestParameter(OAuth20Constants.APPROVAL_PROMPT)
+                    .getRequestParameter(OsfCasOAuth20Constants.APPROVAL_PROMPT)
                     .map(String::valueOf)
                     .orElse(StringUtils.EMPTY);
             LOGGER.trace("osfApprovalPrompt in request params: {}", osfApprovalPrompt);
             // Default is "auto", thus anything else other than "force" is considered as "auto"
-            if (osfApprovalPrompt.equalsIgnoreCase(OAuth20Constants.APPROVAL_PROMPT_FORCE)) {
+            if (osfApprovalPrompt.equalsIgnoreCase(OsfCasOAuth20Constants.APPROVAL_PROMPT_FORCE)) {
                 bypassApprovalParameter = Boolean.FALSE.toString();
                 LOGGER.trace("bypassApprovalParameter from osfApprovalPrompt: {} <<-- {}", bypassApprovalParameter, osfApprovalPrompt);
             } else {
@@ -100,7 +102,7 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
         val url = new URIBuilder(callbackUrl);
         // APPROVAL_PROMPT can be set to any value. It does not have any effect since BYPASS_APPROVAL_PROMPT is present.
         // However, setting it to EMPTY is preferred so that it is different from its original values "auto" or "force".
-        url.setParameter(OAuth20Constants.APPROVAL_PROMPT, StringUtils.EMPTY);
+        url.setParameter(OsfCasOAuth20Constants.APPROVAL_PROMPT, StringUtils.EMPTY);
         url.setParameter(OAuth20Constants.BYPASS_APPROVAL_PROMPT, Boolean.TRUE.toString());
         val model = new HashMap<String, Object>();
         model.put("service", svc);

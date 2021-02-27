@@ -4,7 +4,6 @@ package org.apereo.cas.support.oauth;
  * This class has the main constants for the OAuth implementation.
  *
  * @author Jerome Leleu
- * @author Longze Chen
  * @since 3.5.0
  */
 public interface OAuth20Constants {
@@ -70,11 +69,6 @@ public interface OAuth20Constants {
     String GRANT_TYPE = "grant_type";
 
     /**
-     * The access type.
-     */
-    String ACCESS_TYPE = "access_type";
-
-    /**
      * The client id.
      */
     String CLIENT_ID = "client_id";
@@ -103,21 +97,6 @@ public interface OAuth20Constants {
      * The approval prompt.
      */
     String BYPASS_APPROVAL_PROMPT = "bypass_approval_prompt";
-
-    /**
-     * The oldCAS approval prompt param.
-     */
-    String APPROVAL_PROMPT = "approval_prompt";
-
-    /**
-     * The oldCAS approval prompt value "auto".
-     */
-    String APPROVAL_PROMPT_AUTO = "auto";
-
-    /**
-     * The oldCAS approval prompt value "force".
-     */
-    String APPROVAL_PROMPT_FORCE= "force";
 
     /**
      * The scope request.
@@ -216,11 +195,6 @@ public interface OAuth20Constants {
      * Access denied error.
      */
     String ACCESS_DENIED = "access_denied";
-
-    /**
-     * Not implemented.
-     */
-    String NOT_IMPLEMENTED = "not_implemented";
 
     /**
      * Authz pending error.

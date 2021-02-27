@@ -78,22 +78,6 @@ public class OAuth20Utils {
     }
 
     /**
-     * Write to the output this error with customized status.
-     *
-     * @param response the response
-     * @param error    the error message
-     * @param status   an {@link HttpStatus} object
-     * @return json-backed view.
-     */
-    public static ModelAndView writeError(final HttpServletResponse response, final String error, final HttpStatus status) {
-        val model = CollectionUtils.wrap(OAuth20Constants.ERROR, error);
-        val mv = new ModelAndView(new MappingJackson2JsonView(MAPPER), (Map) model);
-        mv.setStatus(status);
-        response.setStatus(status.value());
-        return mv;
-    }
-
-    /**
      * Locate the requested instance of {@link OAuthRegisteredService} by the given clientId.
      *
      * @param servicesManager the service registry DAO instance.

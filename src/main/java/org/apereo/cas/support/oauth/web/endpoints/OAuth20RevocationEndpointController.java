@@ -8,6 +8,9 @@ import org.apereo.cas.ticket.OAuth20Token;
 import org.apereo.cas.ticket.accesstoken.OAuth20AccessToken;
 import org.apereo.cas.ticket.refreshtoken.OAuth20RefreshToken;
 
+import io.cos.cas.oauth.support.OsfCasOAuth20Constants;
+import io.cos.cas.oauth.support.OsfCasOAuth20Utils;
+
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -75,7 +78,7 @@ public class OAuth20RevocationEndpointController extends BaseOAuth20Controller {
                 LOGGER.error("client secret check failed for service [{}]", clientId);
                 return OAuth20Utils.writeError(response, OAuth20Constants.ACCESS_DENIED);
             }
-            return OAuth20Utils.writeError(response, OAuth20Constants.NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+            return OsfCasOAuth20Utils.writeError(response, OsfCasOAuth20Constants.NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
         } else {
             LOGGER.error("Revocation request verification failed. Request has unexpected parameters.");
             return OAuth20Utils.writeError(response, OAuth20Constants.INVALID_REQUEST);

@@ -14,6 +14,7 @@ import org.apereo.cas.support.oauth.web.response.accesstoken.ext.AccessTokenRequ
 import org.apereo.cas.web.support.CookieUtils;
 
 import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+import io.cos.cas.oauth.support.OsfCasOAuth20Constants;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -216,7 +217,7 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
             .orElseGet(OAuth20GrantTypes.AUTHORIZATION_CODE::getType)
             .toUpperCase();
 
-        val accessType = context.getRequestParameter(OAuth20Constants.ACCESS_TYPE)
+        val accessType = context.getRequestParameter(OsfCasOAuth20Constants.ACCESS_TYPE)
                 .map(String::valueOf)
                 .orElse(OsfOAuth20CodeType.ONLINE.name())
                 .toUpperCase();
