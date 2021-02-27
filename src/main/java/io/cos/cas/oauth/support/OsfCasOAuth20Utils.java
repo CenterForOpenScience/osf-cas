@@ -8,6 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import org.apereo.cas.support.oauth.OAuth20Constants;
+import org.apereo.cas.ticket.OAuth20Token;
+import org.apereo.cas.ticket.accesstoken.OAuth20AccessToken;
+import org.apereo.cas.ticket.refreshtoken.OAuth20RefreshToken;
+import org.apereo.cas.ticket.registry.TicketRegistry;
 import org.apereo.cas.util.CollectionUtils;
 
 import org.springframework.http.HttpStatus;
@@ -16,6 +20,9 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,5 +54,38 @@ public class OsfCasOAuth20Utils {
         mv.setStatus(status);
         response.setStatus(status.value());
         return mv;
+    }
+
+    /**
+     * Retrieve all tokens that belongs to a given client from the ticket registry.
+     *
+     * @param clientId the client ID
+     * @return a list of tokens
+     */
+    public List<OAuth20Token> getOAuth20ClientTokens(final TicketRegistry ticketRegistry, final String clientId) {
+        return ticketRegistry == null ? null : ticketRegistry.getOAuth20ClientTokens(clientId);
+    }
+
+    public Map<String, List<? extends OAuth20Token>> getOAuth20ClientAccessAndRefreshTokens(final TicketRegistry ticketRegistry, final String clientId) {
+        if (ticketRegistry == null) {
+            LOGGER.error("ticket registry is null");
+            return null;
+        }
+        val tokenMap = new HashMap<String, List<? extends OAuth20Token>>();
+        val accessTokens = new ArrayList<OAuth20AccessToken>();
+        val refreshTokens = new ArrayList<OAuth20RefreshToken>();
+        val tokens = getOAuth20ClientTokens(ticketRegistry, clientId);
+        for (val token: tokens) {
+            if (token instanceof OAuth20RefreshToken) {
+                refreshTokens.add((OAuth20RefreshToken) token);
+            } else if (token instanceof OAuth20AccessToken) {
+                accessTokens.add((OAuth20AccessToken) token);
+            } else {
+                LOGGER.warn("token [id={}] of unexpected type [class={}] detected", token.getId(), token.getClass());
+            }
+        }
+        tokenMap.put(OAuth20AccessToken.PREFIX, accessTokens);
+        tokenMap.put(OAuth20RefreshToken.PREFIX, refreshTokens);
+        return tokenMap;
     }
 }

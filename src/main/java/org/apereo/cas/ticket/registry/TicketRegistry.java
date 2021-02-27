@@ -1,8 +1,10 @@
 package org.apereo.cas.ticket.registry;
 
+import org.apereo.cas.ticket.OAuth20Token;
 import org.apereo.cas.ticket.Ticket;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -97,6 +99,14 @@ public interface TicketRegistry {
     default Stream<? extends Ticket> getTickets(final Predicate<Ticket> predicate) {
         return getTicketsStream().filter(predicate);
     }
+
+    /**
+     * Retrieve all OAuth 2.0 tokens that belong to a given client from the ticket registry.
+     *
+     * @param clientId the client ID
+     * @return a list of tokens
+     */
+    List<OAuth20Token> getOAuth20ClientTokens(String clientId);
 
     /**
      * Update the received ticket.

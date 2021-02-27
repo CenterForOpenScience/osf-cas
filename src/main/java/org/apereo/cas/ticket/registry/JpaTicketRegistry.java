@@ -1,5 +1,6 @@
 package org.apereo.cas.ticket.registry;
 
+import org.apereo.cas.ticket.OAuth20Token;
 import org.apereo.cas.ticket.ServiceTicket;
 import org.apereo.cas.ticket.Ticket;
 import org.apereo.cas.ticket.TicketCatalog;
@@ -121,6 +122,22 @@ public class JpaTicketRegistry extends AbstractTicketRegistry {
                 .flatMap(List::stream)
                 .map(this::decodeTicket)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OAuth20Token> getOAuth20ClientTokens(final String clientId) {
+        if (StringUtils.isBlank(clientId)) {
+            LOGGER.error("Client ID is null or blank");
+            return null;
+        }
+        final String query = "select t from OAuth20DefaultCode t where t.clientId = :clientId";
+        try {
+            return entityManager.createQuery(query, OAuth20Token.class).setParameter("clientId", clientId).getResultList();
+        } catch (Exception e) {
+            LOGGER.error("Query [{}] has failed", query);
+            LOGGER.error(e.getMessage());
+            return null;
+        }
     }
 
     @Override

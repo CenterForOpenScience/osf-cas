@@ -33,4 +33,9 @@ public interface OsfCasOAuth20Constants {
      * Not implemented.
      */
     String NOT_IMPLEMENTED = "not_implemented";
+
+    /**
+     * Internal Server Error.
+     */
+    String INTERNAL_SERVER_ERROR = "internal_server_error";
 }
