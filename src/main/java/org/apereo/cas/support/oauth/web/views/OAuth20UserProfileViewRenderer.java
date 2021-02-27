@@ -12,6 +12,7 @@ import java.util.Map;
  * This is {@link OAuth20UserProfileViewRenderer}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.2.0
  */
 @FunctionalInterface
@@ -31,6 +32,11 @@ public interface OAuth20UserProfileViewRenderer {
      * Attribute in the model that represents collection of attributes.
      */
     String MODEL_ATTRIBUTE_ATTRIBUTES = "attributes";
+
+    /**
+     * Attribute in the model that represents the scope set.
+     */
+    String MODEL_ATTRIBUTE_SCOPE = OAuth20Constants.SCOPE;
 
     /**
      * Render.

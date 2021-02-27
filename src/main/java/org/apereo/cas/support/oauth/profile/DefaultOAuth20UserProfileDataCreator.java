@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.apereo.inspektr.audit.annotation.Audit;
 import org.pac4j.core.context.JEEContext;
 
@@ -23,6 +24,7 @@ import java.util.Map;
  * Default implementation of {@link OAuth20UserProfileDataCreator}.
  *
  * @author Dmitriy Kopylenko
+ * @author Longze Chen
  * @since 5.3.0
  */
 @Slf4j
@@ -53,6 +55,16 @@ public class DefaultOAuth20UserProfileDataCreator implements OAuth20UserProfileD
         map.put(OAuth20UserProfileViewRenderer.MODEL_ATTRIBUTE_CLIENT_ID, accessToken.getClientId());
         val attributes = principal.getAttributes();
         map.put(OAuth20UserProfileViewRenderer.MODEL_ATTRIBUTE_ATTRIBUTES, attributes);
+        val scopeSet = accessToken.getScopes();
+        // There is currently a mysterious bug in ObjectMapper.writeValueAsString() called by OAuth20Utils.toJson() in the renderer class
+        // OAuth20DefaultUserProfileViewRenderer.renderProfileForModel(). Map entries whose value is an one-element set or list is converted
+        // to a string. e.g. the user profile set {scope=[osf.full_read], id=btmfg} becomes {"scope":"osf.full_read", "id":"btmfg"} in the
+        // response json while OSF API expects {"scope": ["osf.full_read"], "id":"btmfg"}. The fix here is to add an empty string to the
+        // scope set if there is only one. This works since OSF API checks if the required the scope is in the scope set.
+        if (scopeSet.size() == 1) {
+            scopeSet.add("");
+        }
+        map.put(OAuth20UserProfileViewRenderer.MODEL_ATTRIBUTE_SCOPE, scopeSet);
         finalizeProfileResponse(accessToken, map, principal, registeredService);
         return map;
     }
