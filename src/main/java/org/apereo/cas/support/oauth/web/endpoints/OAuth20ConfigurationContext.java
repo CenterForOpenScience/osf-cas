@@ -33,13 +33,17 @@ import org.apereo.cas.util.gen.RandomStringGenerator;
 import org.apereo.cas.util.serialization.StringSerializer;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
 
+import io.cos.cas.osf.dao.JpaOsfDao;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
+
 import org.springframework.core.io.ResourceLoader;
 
 import java.io.Serializable;
@@ -50,6 +54,7 @@ import java.util.Set;
  * This is {@link OAuth20ConfigurationContext}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 6.1.0
  */
 @ToString
@@ -57,6 +62,11 @@ import java.util.Set;
 @Setter
 @Builder
 public class OAuth20ConfigurationContext {
+
+    // OSF CAS customizations: make JPA OSF data access object available to be used in OAuth 2.0 Controllers so that they can access OSF
+    //                         required OSF models such as OsfOAuth20Pat, OsfOAuth20App, OsfOAuth20Scope, etc.
+    private final JpaOsfDao jpaOsfDao;
+
     private final ServicesManager servicesManager;
 
     private final TicketRegistry ticketRegistry;

@@ -101,12 +101,16 @@ import org.apereo.cas.util.crypto.CipherExecutor;
 import org.apereo.cas.util.function.FunctionUtils;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
 import org.apereo.cas.web.support.CookieUtils;
+import org.apereo.inspektr.audit.spi.support.DefaultAuditActionResolver;
+
+import io.cos.cas.osf.dao.JpaOsfDao;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.apache.commons.lang3.StringUtils;
-import org.apereo.inspektr.audit.spi.support.DefaultAuditActionResolver;
+
 import org.pac4j.cas.client.CasClient;
 import org.pac4j.cas.config.CasConfiguration;
 import org.pac4j.cas.credentials.authenticator.CasAuthenticator;
@@ -126,6 +130,7 @@ import org.pac4j.core.profile.converter.Converters;
 import org.pac4j.http.client.direct.DirectBasicAuthClient;
 import org.pac4j.http.client.direct.DirectFormClient;
 import org.pac4j.http.client.direct.HeaderClient;
+
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -160,6 +165,12 @@ import java.util.Set;
 @EnableConfigurationProperties(CasConfigurationProperties.class)
 @Slf4j
 public class CasOAuth20Configuration {
+
+    // OSF CAS customizations: make JPA OSF data access object available to be used in OAuth 2.0 Controllers so that they can access OSF
+    //                         required OSF models such as OsfOAuth20Pat, OsfOAuth20App, OsfOAuth20Scope, etc.
+    @Autowired
+    private ObjectProvider<JpaOsfDao> jpaOsfDao;
+
     @Autowired
     private ResourceLoader resourceLoader;
 
@@ -837,6 +848,7 @@ public class CasOAuth20Configuration {
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public OAuth20ConfigurationContext oauth20ConfigurationContext() {
         return OAuth20ConfigurationContext.builder()
+            .jpaOsfDao(jpaOsfDao.getObject())
             .registeredServiceCipherExecutor(oauthRegisteredServiceCipherExecutor())
             .sessionStore(oauthDistributedSessionStore())
             .servicesManager(servicesManager.getObject())
