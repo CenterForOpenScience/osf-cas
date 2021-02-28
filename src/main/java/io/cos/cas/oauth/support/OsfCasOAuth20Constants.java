@@ -31,6 +31,46 @@ public interface OsfCasOAuth20Constants {
     String DEFAULT_ERROR_MSG = "The authorization request has failed due to invalid request parameters.";
 
     /**
+     * Request not authenticated.
+     */
+    String NOT_AUTHENTICATED = "not_authenticated";
+
+    /**
+     * Missing request parameter.
+     */
+    String MISSING_PARAM = "missing_request_param";
+
+    /**
+     * Invalid or not-allowed request parameter.
+     */
+    String PARAM_NOT_ALLOWED = "request_param_not_allowed";
+
+    /**
+     * Invalid response type.
+     */
+    String INVALID_RESP_TYPE = "invalid_or_empty_resp_type";
+
+    /**
+     * Response type is not allowed for a given registered service.
+     */
+    String RESP_TYPE_NOT_ALLOWED = "resp_type_not_allowed";
+
+    /**
+     * The registered service is not allowed.
+     */
+    String SERVICE_NOT_ALLOWED = "service_not_allowed";
+
+    /**
+     * Invalid redirect / callback URI.
+     */
+    String INVALID_REDIRECT_URI = "invalid_redirect_url";
+
+    /**
+     * Validator not found.
+     */
+    String VALIDATOR_NOT_FOUND = "validator_not_found";
+
+    /**
      * OSF URL.
      */
     String OSF_URL = "osfUrl";

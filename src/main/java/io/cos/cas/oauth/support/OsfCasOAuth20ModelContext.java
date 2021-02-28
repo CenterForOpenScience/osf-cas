@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.val;
 
+import org.apache.commons.lang3.StringUtils;
+
+import org.apereo.cas.support.oauth.OAuth20Constants;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,18 +30,18 @@ import java.util.Map;
 @val
 public class OsfCasOAuth20ModelContext {
 
-    private String errorCode = "";
+    private String errorCode = OAuth20Constants.INVALID_REQUEST;
 
-    private String errorMsg = "";
+    private String errorMsg = OsfCasOAuth20Constants.DEFAULT_ERROR_MSG;
 
-    private String errorParam = "";
+    private String errorParam = StringUtils.EMPTY;
 
     private OsfUrlProperties osfUrl = new OsfUrlProperties();
 
     /**
      * Retrieve the model map that can be passed to {@link org.springframework.web.servlet.ModelAndView#ModelAndView(String, Map)}.
      *
-     * @return a model map
+     * @return a model map to be sent to the view
      */
     public Map<String, ?> getModelContextMap() {
         val modelMap = new HashMap<String, Object>();
@@ -46,5 +50,12 @@ public class OsfCasOAuth20ModelContext {
         modelMap.put(OsfCasOAuth20Constants.ERROR_PARAM, this.errorParam);
         modelMap.put(OsfCasOAuth20Constants.OSF_URL, this.osfUrl);
         return modelMap;
+    }
+
+    /**
+     * Return the full message for logging purposes.
+     */
+    public String getErrorLoggingMessage() {
+        return String.format("[errorCode=%s, errorParam=%s] %s", getErrorCode(), getErrorParam(), getErrorMsg());
     }
 }
