@@ -4,7 +4,6 @@ import org.apereo.cas.configuration.model.core.util.EncryptionOptionalSigningOpt
 import org.apereo.cas.configuration.support.RequiresModule;
 
 import io.cos.cas.oauth.configuration.model.OsfCasOAuth20PersonalAccessTokenProperties;
-import io.cos.cas.oauth.model.OsfOAuth20CodeType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -57,12 +56,12 @@ public class OAuthProperties implements Serializable {
     private OAuthCodeProperties code = new OAuthCodeProperties();
 
     /**
-     * Settings related to oauth access tokens of type {@link OsfOAuth20CodeType#VANILLA}.
+     * Settings related to oauth access tokens of type {@link io.cos.cas.oauth.model.OsfCasOAuth20CodeType#VANILLA}.
      */
     private OAuthAccessTokenProperties accessToken = new OAuthAccessTokenProperties();
 
     /**
-     * OSF CAS customization: settings related to oauth access tokens of type {@link OsfOAuth20CodeType#PERSONAL}.
+     * OSF CAS customization: settings related to oauth access tokens of type {@link io.cos.cas.oauth.model.OsfCasOAuth20CodeType#PERSONAL}.
      */
     private OsfCasOAuth20PersonalAccessTokenProperties personalAccessToken = new OsfCasOAuth20PersonalAccessTokenProperties();
 

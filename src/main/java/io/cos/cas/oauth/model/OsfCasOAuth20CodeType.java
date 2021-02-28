@@ -1,12 +1,12 @@
 package io.cos.cas.oauth.model;
 
 /**
- * This is {@link OsfOAuth20CodeType}.
+ * This is {@link OsfCasOAuth20CodeType}.
  *
  * @author Longze Chen
  * @since 21.x.0
  */
-public enum OsfOAuth20CodeType {
+public enum OsfCasOAuth20CodeType {
 
     /** Authorization code that allows generating a refresh token along with the access token. */
     OFFLINE(0),
@@ -24,11 +24,11 @@ public enum OsfOAuth20CodeType {
     private final int value;
 
     /**
-     * Constructs a new {@link OsfOAuth20CodeType}.
+     * Constructs a new {@link OsfCasOAuth20CodeType}.
      *
      * @param newValue the value representing the code / token type.
      */
-    OsfOAuth20CodeType(final int newValue) {
+    OsfCasOAuth20CodeType(final int newValue) {
         value = newValue;
     }
 

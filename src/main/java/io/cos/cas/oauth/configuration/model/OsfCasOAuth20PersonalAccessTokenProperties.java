@@ -12,7 +12,7 @@ import java.io.Serializable;
  * This is {@link OsfCasOAuth20PersonalAccessTokenProperties}.
  *
  * This class is used to initialize the {@link io.cos.cas.oauth.ticket.support.OsfCasOAuth20PersonalAccessTokenExpirationPolicy} during
- * the creation of an (person) access token of type {@link io.cos.cas.oauth.model.OsfOAuth20CodeType#PERSONAL}.
+ * the creation of an (person) access token of type {@link io.cos.cas.oauth.model.OsfCasOAuth20CodeType#PERSONAL}.
  *
  * @author Longze Chen
  * @since 21.x.0

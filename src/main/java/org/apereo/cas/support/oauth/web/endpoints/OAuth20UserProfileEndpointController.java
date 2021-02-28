@@ -10,7 +10,7 @@ import org.apereo.cas.ticket.accesstoken.OAuth20DefaultAccessToken;
 import org.apereo.cas.ticket.TicketState;
 import org.apereo.cas.ticket.UniqueTicketIdGenerator;
 
-import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+import io.cos.cas.oauth.model.OsfCasOAuth20CodeType;
 import io.cos.cas.oauth.ticket.accesstoken.OsfCasOAuth20PersonalAccessToken;
 import io.cos.cas.oauth.ticket.support.OsfCasOAuth20PersonalAccessTokenExpirationPolicy;
 
@@ -178,7 +178,7 @@ public class OAuth20UserProfileEndpointController extends BaseOAuth20Controller 
     /**
      * Check if an OSF personal access token {@link io.cos.cas.osf.model.OsfOAuth20Pat} exists in the OSF database.
      *
-     * If so, create an access token {@link OAuth20DefaultAccessToken} of type {@link OsfOAuth20CodeType#PERSONAL} with
+     * If so, create an access token {@link OAuth20DefaultAccessToken} of type {@link OsfCasOAuth20CodeType#PERSONAL} with
      * this expiration policy {@link OsfCasOAuth20PersonalAccessTokenExpirationPolicy}; otherwise, return {@code null}
      * to indicate a failed attempt.
      *
@@ -239,7 +239,7 @@ public class OAuth20UserProfileEndpointController extends BaseOAuth20Controller 
                 null,
                 new HashMap<>()
         );
-        accessToken.setOsfType(OsfOAuth20CodeType.PERSONAL.getValue());
+        accessToken.setOsfType(OsfCasOAuth20CodeType.PERSONAL.getValue());
         getOAuthConfigurationContext().getTicketRegistry().addTicket(accessToken);
 
         return accessToken;

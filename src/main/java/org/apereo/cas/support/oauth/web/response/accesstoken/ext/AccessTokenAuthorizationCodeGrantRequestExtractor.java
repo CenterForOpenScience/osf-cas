@@ -11,7 +11,7 @@ import org.apereo.cas.ticket.code.OAuth20DefaultCode;
 import org.apereo.cas.ticket.InvalidTicketException;
 import org.apereo.cas.ticket.OAuth20Token;
 
-import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+import io.cos.cas.oauth.model.OsfCasOAuth20CodeType;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -62,7 +62,7 @@ public class AccessTokenAuthorizationCodeGrantRequestExtractor extends BaseAcces
 
         // The `osfType` of the authorization code (along with a per-service flag) together determine whether to generate a refresh token
         val osfType = ((OAuth20DefaultCode) token).getOsfType();
-        val generateRefreshToken = osfType == OsfOAuth20CodeType.OFFLINE.getValue();
+        val generateRefreshToken = osfType == OsfCasOAuth20CodeType.OFFLINE.getValue();
         val builder = AccessTokenRequestDataHolder.builder()
             .scopes(scopes)
             .service(service)

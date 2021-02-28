@@ -13,7 +13,7 @@ import org.apereo.cas.support.oauth.util.OAuth20Utils;
 import org.apereo.cas.support.oauth.web.response.accesstoken.ext.AccessTokenRequestDataHolder;
 import org.apereo.cas.web.support.CookieUtils;
 
-import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+import io.cos.cas.oauth.model.OsfCasOAuth20CodeType;
 import io.cos.cas.oauth.support.OsfCasOAuth20Constants;
 import io.cos.cas.oauth.support.OsfCasOAuth20ModelContext;
 import io.cos.cas.oauth.support.OsfCasOAuth20Utils;
@@ -228,7 +228,7 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
 
         val accessType = context.getRequestParameter(OsfCasOAuth20Constants.ACCESS_TYPE)
                 .map(String::valueOf)
-                .orElse(OsfOAuth20CodeType.ONLINE.name())
+                .orElse(OsfCasOAuth20CodeType.ONLINE.name())
                 .toUpperCase();
 
         val scopes = OAuth20Utils.parseRequestScopes(context);
@@ -246,7 +246,7 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
             .registeredService(registeredService)
             .ticketGrantingTicket(ticketGrantingTicket)
             .grantType(OAuth20GrantTypes.valueOf(grantType))
-            .osfType(OsfOAuth20CodeType.valueOf(accessType).getValue())
+            .osfType(OsfCasOAuth20CodeType.valueOf(accessType).getValue())
             .codeChallenge(codeChallenge)
             .codeChallengeMethod(codeChallengeMethod)
             .scopes(scopes)

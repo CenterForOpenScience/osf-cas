@@ -10,7 +10,7 @@ import org.apereo.cas.ticket.proxy.ProxyGrantingTicket;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+import io.cos.cas.oauth.model.OsfCasOAuth20CodeType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -110,7 +110,7 @@ public class OAuth20DefaultCode extends AbstractTicket implements OAuth20Code {
         this.clientId = clientId;
         this.scopes.addAll(scopes);
         this.claims.putAll(requestClaims);
-        this.osfType = OsfOAuth20CodeType.ONLINE.getValue();
+        this.osfType = OsfCasOAuth20CodeType.ONLINE.getValue();
     }
 
     public OAuth20DefaultCode(final String id,

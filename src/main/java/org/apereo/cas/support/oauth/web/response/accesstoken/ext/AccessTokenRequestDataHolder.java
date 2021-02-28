@@ -10,7 +10,7 @@ import org.apereo.cas.ticket.TicketGrantingTicket;
 import org.apereo.cas.ticket.code.OAuth20Code;
 import org.apereo.cas.ticket.refreshtoken.OAuth20RefreshToken;
 
-import io.cos.cas.oauth.model.OsfOAuth20CodeType;
+import io.cos.cas.oauth.model.OsfCasOAuth20CodeType;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -51,7 +51,7 @@ public class AccessTokenRequestDataHolder {
     private final OAuth20GrantTypes grantType = OAuth20GrantTypes.NONE;
 
     @Builder.Default
-    private final int osfType = OsfOAuth20CodeType.VANILLA.getValue();
+    private final int osfType = OsfCasOAuth20CodeType.VANILLA.getValue();
 
     @Builder.Default
     private final Set<String> scopes = new LinkedHashSet<>(0);
