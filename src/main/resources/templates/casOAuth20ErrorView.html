@@ -27,7 +27,7 @@
                 <h2 th:utext="#{screen.oauth.error.heading}"></h2>
                 <p th:utext="#{${errorMsg}}"></p>
                 <p class="pre-formatted-small word-break-all">
-                    <pre th:utext="#{${errorCode + ': ' + errorParam}}"></pre>
+                    <pre class="wrap" th:utext="#{${errorCode + ': ' + errorParam}}"></pre>
                 </p>
             </section>
             <hr class="my-4" />
