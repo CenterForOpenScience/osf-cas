@@ -15,6 +15,8 @@ import org.apereo.cas.web.support.CookieUtils;
 
 import io.cos.cas.oauth.model.OsfOAuth20CodeType;
 import io.cos.cas.oauth.support.OsfCasOAuth20Constants;
+import io.cos.cas.oauth.support.OsfCasOAuth20ModelContext;
+import io.cos.cas.oauth.support.OsfCasOAuth20Utils;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +75,13 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
             LOGGER.error("Authorize request verification failed. Authorization request is missing required parameters, "
                 + "or the request is not authenticated and contains no authenticated profile/principal.");
             return OAuth20Utils.produceUnauthorizedErrorView();
+        }
+
+        val modelContext = new OsfCasOAuth20ModelContext();
+        modelContext.setOsfUrl(getOsfUrl());
+        if (!verifyOsfScopes(context, modelContext)) {
+            LOGGER.error("{} [errorCode={}, errorParam={}]", modelContext.getErrorMsg(), modelContext.getErrorCode(), modelContext.getErrorParam());
+            return OsfCasOAuth20Utils.produceOAuth20ErrorView(modelContext);
         }
 
         val clientId = context.getRequestParameter(OAuth20Constants.CLIENT_ID)
@@ -266,5 +275,25 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
             return false;
         }
         return validator.validate(context);
+    }
+
+    /**
+     * Verify the scopes in the request.
+     *
+     * @param context the context
+     * @return whether all the scopes are valid
+     */
+    private boolean verifyOsfScopes(final JEEContext context, final OsfCasOAuth20ModelContext modelContext) {
+        val scopeSet = OAuth20Utils.parseRequestScopes(context);
+        for (val scope: scopeSet) {
+            if (getJpaOsfDao().findOneScopeByScopeName(scope) == null) {
+                LOGGER.error("Invalid scope [{}]", scope);
+                modelContext.setErrorCode(OAuth20Constants.INVALID_SCOPE);
+                modelContext.setErrorParam(scope);
+                modelContext.setErrorMsg(OsfCasOAuth20Constants.DEFAULT_ERROR_MSG);
+                return false;
+            }
+        }
+        return true;
     }
 }

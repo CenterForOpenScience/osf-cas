@@ -3,6 +3,9 @@ package io.cos.cas.oauth.support;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import io.cos.cas.osf.configuration.model.OsfUrlProperties;
+import io.cos.cas.osf.web.flow.support.OsfCasWebflowConstants;
+
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -41,6 +44,34 @@ public class OsfCasOAuth20Utils {
             = new ObjectMapper().findAndRegisterModules().configure(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, true);
 
     /**
+     * Produce Oauth 2.0 error view.
+     *
+     * @param errorCode the error code / short name
+     * @param errorMsg the error message / long name
+     * @param errorParam the param name that caused the error
+     * @param osfUrl the OSF URLs
+     * @return ModelAndView
+     */
+    public static ModelAndView produceOAuth20ErrorView(
+            final String errorCode,
+            final String errorMsg,
+            final String errorParam,
+            final OsfUrlProperties osfUrl) {
+        val modelContext = new OsfCasOAuth20ModelContext(errorCode, errorMsg, errorParam, osfUrl);
+        return new ModelAndView(OsfCasWebflowConstants.VIEW_ID_OAUTH_20_ERROR_VIEW, modelContext.getModelContextMap());
+    }
+
+    /**
+     * Produce Oauth 2.0 error view.
+     *
+     * @param modelContext the OSF CAS OAuth 2.0 model and view context
+     * @return ModelAndView
+     */
+    public static ModelAndView produceOAuth20ErrorView(final OsfCasOAuth20ModelContext modelContext) {
+        return new ModelAndView(OsfCasWebflowConstants.VIEW_ID_OAUTH_20_ERROR_VIEW, modelContext.getModelContextMap());
+    }
+
+    /**
      * Write to the output this error with customized status.
      *
      * @param response the response
@@ -49,8 +80,9 @@ public class OsfCasOAuth20Utils {
      * @return json-backed view.
      */
     public static ModelAndView writeError(final HttpServletResponse response, final String error, final HttpStatus status) {
-        val model = CollectionUtils.wrap(OAuth20Constants.ERROR, error);
-        val mv = new ModelAndView(new MappingJackson2JsonView(MAPPER), (Map) model);
+        val model = new HashMap<String, Object>();
+        model.put(OAuth20Constants.ERROR, error);
+        val mv = new ModelAndView(new MappingJackson2JsonView(MAPPER), model);
         mv.setStatus(status);
         response.setStatus(status.value());
         return mv;
