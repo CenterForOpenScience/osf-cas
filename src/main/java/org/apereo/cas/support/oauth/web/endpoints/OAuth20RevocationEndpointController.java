@@ -1,16 +1,17 @@
 package org.apereo.cas.support.oauth.web.endpoints;
-
 import org.apereo.cas.audit.AuditableContext;
 import org.apereo.cas.audit.AuditableExecutionResult;
 import org.apereo.cas.support.oauth.OAuth20Constants;
 import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
 import org.apereo.cas.support.oauth.util.OAuth20Utils;
 import org.apereo.cas.ticket.OAuth20Token;
+import org.apereo.cas.ticket.UniqueTicketIdGenerator;
 import org.apereo.cas.ticket.accesstoken.OAuth20AccessToken;
 import org.apereo.cas.ticket.refreshtoken.OAuth20RefreshToken;
 
 import io.cos.cas.oauth.support.OsfCasOAuth20Utils;
 import io.cos.cas.oauth.support.OsfCasOAuth20Constants;
+import io.cos.cas.oauth.ticket.accesstoken.OsfCasOAuth20PersonalAccessToken;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -60,24 +61,33 @@ public class OAuth20RevocationEndpointController extends BaseOAuth20Controller {
         }
 
         val tokenId = context.getRequestParameter(OAuth20Constants.TOKEN).map(String::valueOf).orElse(StringUtils.EMPTY);
+        String personalAccessTokenId = null;
         String clientId = OAuth20Utils.getClientIdAndClientSecret(context).getLeft();
         val clientSecret = OAuth20Utils.getClientIdAndClientSecret(context).getRight();
         OAuthRegisteredService registeredService;
 
         if (StringUtils.isNotBlank(tokenId) && StringUtils.isBlank(clientId) && StringUtils.isBlank(clientSecret)) {
             // Remove one token
-            val token = getOAuthConfigurationContext().getTicketRegistry().getTicket(tokenId, OAuth20Token.class);
+            OAuth20Token token = null;
+            if (tokenId.startsWith(OAuth20AccessToken.PREFIX) || tokenId.startsWith(OAuth20RefreshToken.PREFIX)) {
+                token = getOAuthConfigurationContext().getTicketRegistry().getTicket(tokenId, OAuth20Token.class);
+            } else {
+                personalAccessTokenId = OsfCasOAuth20PersonalAccessToken.PREFIX + UniqueTicketIdGenerator.SEPARATOR + tokenId;
+                token = getOAuthConfigurationContext().getTicketRegistry().getTicket(personalAccessTokenId, OAuth20Token.class);
+            }
             if (token == null) {
-                LOGGER.error("expired or invalid token");
+                LOGGER.error("expired or invalid token [{}]", tokenId);
                 return OAuth20Utils.writeError(response, OAuth20Constants.EXPIRED_ACCESS_TOKEN);
             }
-            clientId = token.getClientId();
-            registeredService = getRegisteredServiceByClientId(clientId);
-            LOGGER.debug("token verified for service [{}]", clientId);
-            if (accessResult(registeredService).isExecutionFailure()) {
-                return OAuth20Utils.writeError(response, OAuth20Constants.INVALID_REQUEST);
+            if (personalAccessTokenId == null) {
+                clientId = token.getClientId();
+                registeredService = getRegisteredServiceByClientId(clientId);
+                LOGGER.debug("token verified for service [{}]", clientId);
+                if (accessResult(registeredService).isExecutionFailure()) {
+                    return OAuth20Utils.writeError(response, OAuth20Constants.INVALID_REQUEST);
+                }
             }
-            return generateOneTokenRevocationResponse(tokenId, response);
+            return generateOneTokenRevocationResponse(token, response);
         } else if (StringUtils.isBlank(tokenId) && StringUtils.isNotBlank(clientId) && StringUtils.isNotBlank(clientSecret)) {
             // Remove all tokens that belong to a client / service
             registeredService = getRegisteredServiceByClientId(clientId);
@@ -113,20 +123,19 @@ public class OAuth20RevocationEndpointController extends BaseOAuth20Controller {
     /**
      * Attempt to revoke one token and generate the revocation response.
      *
-     * @param token the token to revoke
+     * @param registryToken the token to revoke
      * @param response the response
      * @return the model and view
      */
-    protected ModelAndView generateOneTokenRevocationResponse(final String token, final HttpServletResponse response) {
-        val registryToken = getOAuthConfigurationContext().getTicketRegistry().getTicket(token, OAuth20Token.class);
+    protected ModelAndView generateOneTokenRevocationResponse(final OAuth20Token registryToken, final HttpServletResponse response) {
         if (registryToken == null) {
-            LOGGER.error("Provided token [{}] has not been found in the ticket registry", token);
+            LOGGER.error("The token is null");
         } else if (isRefreshToken(registryToken)) {
                 revokeToken((OAuth20RefreshToken) registryToken);
         } else if (isAccessToken(registryToken)) {
             revokeToken(registryToken.getId());
         } else {
-            LOGGER.error("Provided token [{}] is either not a refresh token or not an access token", token);
+            LOGGER.error("Provided token [{}] is either not a refresh token or not an access token", registryToken.getId());
             return OAuth20Utils.writeError(response, OAuth20Constants.INVALID_REQUEST);
         }
         val mv = new ModelAndView(new MappingJackson2JsonView());
