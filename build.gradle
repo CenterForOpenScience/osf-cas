@@ -127,6 +127,11 @@ dependencies {
     // JPA OSF PostgreSQL
     implementation "org.apereo.cas:cas-server-support-jpa-util:${project.'cas.version'}"
 
+    // JPA OSF PostgresQL Service Registry
+    implementation "org.apereo.cas:cas-server-core-services:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-services-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-services-registry:${project.'cas.version'}"
+
     // JPA Ticket Registry
     implementation "org.apereo.cas:cas-server-support-jpa-ticket-registry:${project.'cas.version'}"
 
@@ -142,9 +147,6 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-authentication-throttle:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-core-configuration-api:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-core-cookie-api:${project.'cas.version'}"
-    implementation "org.apereo.cas:cas-server-core-services:${project.'cas.version'}"
-    implementation "org.apereo.cas:cas-server-core-services-api:${project.'cas.version'}"
-    implementation "org.apereo.cas:cas-server-core-services-registry:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-core-tickets-api:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-core-validation-api:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-core-webflow-mfa:${project.'cas.version'}"
