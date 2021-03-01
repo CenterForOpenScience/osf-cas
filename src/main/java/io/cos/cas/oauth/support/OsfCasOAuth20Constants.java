@@ -104,4 +104,9 @@ public interface OsfCasOAuth20Constants {
      * Internal Server Error.
      */
     String INTERNAL_SERVER_ERROR = "internal_server_error";
+
+    /**
+     * OAuth 2.0 internal server error message.
+     */
+    String SERVER_ERROR_MSG = "The authorization request has failed due to an unexpected server error.";
 }

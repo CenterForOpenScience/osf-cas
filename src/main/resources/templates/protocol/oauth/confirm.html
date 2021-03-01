@@ -1,19 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layoutFlowless}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 
 <head>
-    <title th:text="#{cas.oauth.confirm.pagetitle}"></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title th:text="#{screen.oauth.confirm.title}"></title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
 </head>
 
-<body id="cas">
-    <div layout:fragment="content" class="banner banner-success mdc-card p-4 m-auto w-lg-66">
-        <h2 th:text="#{screen.oauth.confirm.header}" />
-        <p th:text="#{screen.oauth.confirm.message(${serviceName})}" />
-        <p>
-            <a class="mdc-button mdc-button--raised" id="allow" name="allow" th:href="@{${callbackUrl}}">
-                <span class="mdc-button__label" th:text="#{screen.oauth.confirm.allow}">Allow</span>
-            </a>
-        </p>
+<body class="mdc-typography" id="cas">
+    <div layout:fragment="content" class="d-flex justify-content-center">
+
+        <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
+            <section class="login-section">
+                <section>
+                    <div th:replace="fragments/osfbannerui :: osfBannerUI">
+                        <a href="fragments/osfbannerui.html"></a>
+                    </div>
+                </section>
+                <hr class="my-4" />
+                <section class="card-message">
+                    <h2 th:text="#{screen.oauth.confirm.header}" />
+                    <h4 th:text="#{screen.oauth.confirm.message}" />
+                    <p th:text="#{screen.oauth.confirm.service(${serviceName})}" />
+                    <p th:text="#{screen.oauth.confirm.description(${serviceDescription})}" />
+                    <p th:text="#{screen.oauth.confirm.scopes(${scope})}" />
+                </section>
+                <section class="form-button-inline">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" id="allow" name="allow"  th:href="@{${callbackUrl}}">
+                        <span class="mdc-button__label" th:utext="#{screen.oauth.confirm.allow}"></span>
+                    </a>
+                </section>
+                <hr class="my-4" />
+                <section class="text-with-mdi">
+                    <i class="mdi mdi-login mdi-before-text"></i>
+                    <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.oauth.confirm.backtoosf}"></a></span>
+                </section>
+            </section>
+        </div>
+
+        <script type="text/javascript">
+            disableSignUpButton();
+        </script>
+
     </div>
 </body>
 

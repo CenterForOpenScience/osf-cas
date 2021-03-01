@@ -1,10 +1,12 @@
 package org.apereo.cas.support.oauth.web.views;
 
+import io.cos.cas.oauth.support.OsfCasOAuth20Utils;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.support.oauth.OAuth20Constants;
 import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
 
 import io.cos.cas.oauth.support.OsfCasOAuth20Constants;
+import io.cos.cas.oauth.support.OsfCasOAuth20ModelContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -18,7 +20,7 @@ import org.pac4j.core.context.JEEContext;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -39,6 +41,24 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
 
     @Override
     public ModelAndView resolve(final JEEContext context, final OAuthRegisteredService service) {
+        return this.resolve(context, null, service);
+    }
+
+    @Override
+    public ModelAndView resolve(
+            final JEEContext context,
+            final OsfCasOAuth20ModelContext modelContext,
+            final OAuthRegisteredService service
+    ) {
+        if (modelContext == null) {
+            return OsfCasOAuth20Utils.produceOAuth20ErrorView(new OsfCasOAuth20ModelContext(
+                    OsfCasOAuth20Constants.INTERNAL_SERVER_ERROR,
+                    this.getClass().getName(),
+                    OsfCasOAuth20Constants.SERVER_ERROR_MSG,
+                    new HashSet<>(),
+                    casProperties.getAuthn().getOsfUrl()
+            ));
+        }
 
         // Note: Changing the conditions in this method may lead to users being stuck on the approval page. Please get familiar with how
         //       APPROVAL_PROMPT (oldCAS, request param only), BYPASS_APPROVAL_PROMPT (newCAS, both request param and session store),
@@ -73,7 +93,7 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
             context.getSessionStore().set(context, OAuth20Constants.BYPASS_APPROVAL_PROMPT, Boolean.TRUE.toString());
             return new ModelAndView();
         }
-        return redirectToApproveView(context, service);
+        return redirectToApproveView(context, modelContext, service);
     }
 
     /**
@@ -90,13 +110,14 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
     /**
      * Redirect to approve view model and view.
      *
-     * @param ctx the ctx
-     * @param svc the svc
+     * @param context       the context
+     * @param modelContext  the model context
+     * @param service       the service
      * @return the model and view
      */
     @SneakyThrows
-    protected ModelAndView redirectToApproveView(final JEEContext ctx, final OAuthRegisteredService svc) {
-        val callbackUrl = ctx.getFullRequestURL();
+    protected ModelAndView redirectToApproveView(final JEEContext context, final OsfCasOAuth20ModelContext modelContext, final OAuthRegisteredService service) {
+        val callbackUrl = context.getFullRequestURL();
         LOGGER.trace("callbackUrl: [{}]", callbackUrl);
 
         val url = new URIBuilder(callbackUrl);
@@ -104,13 +125,9 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
         // However, setting it to EMPTY is preferred so that it is different from its original values "auto" or "force".
         url.setParameter(OsfCasOAuth20Constants.APPROVAL_PROMPT, StringUtils.EMPTY);
         url.setParameter(OAuth20Constants.BYPASS_APPROVAL_PROMPT, Boolean.TRUE.toString());
-        val model = new HashMap<String, Object>();
-        model.put("service", svc);
+        val model = modelContext.getModelContextMap();
         model.put("callbackUrl", url.toString());
-        model.put("serviceName", svc.getName());
-        model.put("deniedApprovalUrl", svc.getAccessStrategy().getUnauthorizedRedirectUrl());
-
-        prepareApprovalViewModel(model, ctx, svc);
+        prepareApprovalViewModel(model, service);
         return getApprovalModelAndView(model);
     }
 
@@ -136,12 +153,13 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
     /**
      * Prepare approval view model.
      *
-     * @param model the model
-     * @param ctx   the ctx
-     * @param svc   the svc
-     * @throws Exception the exception
+     * @param model     the model
+     * @param service   the svc
      */
-    protected void prepareApprovalViewModel(final Map<String, Object> model, final JEEContext ctx,
-                                            final OAuthRegisteredService svc) throws Exception {
+    protected void prepareApprovalViewModel(final Map<String, Object> model, final OAuthRegisteredService service) {
+        model.put("service", service);
+        model.put("serviceName", service.getName());
+        model.put("serviceDescription", service.getDescription());
+        model.put("deniedApprovalUrl", service.getAccessStrategy().getUnauthorizedRedirectUrl());
     }
 }

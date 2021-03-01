@@ -107,7 +107,9 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
             return OsfCasOAuth20Utils.produceOAuth20ErrorView(modelContext);
         }
 
-        val mv = getOAuthConfigurationContext().getConsentApprovalViewResolver().resolve(context, registeredService);
+        val mv = getOAuthConfigurationContext()
+                .getConsentApprovalViewResolver()
+                .resolve(context, modelContext, registeredService);
         if (!mv.isEmpty() && mv.hasView()) {
             LOGGER.debug("Redirecting to consent-approval view with model [{}]", mv.getModel());
             return mv;
@@ -339,6 +341,7 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
                 return false;
             }
         }
+        modelContext.setScopeSet(scopeSet);
         return true;
     }
 }

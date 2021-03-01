@@ -15,7 +15,6 @@ import org.apereo.cas.ticket.OAuth20Token;
 import org.apereo.cas.ticket.accesstoken.OAuth20AccessToken;
 import org.apereo.cas.ticket.refreshtoken.OAuth20RefreshToken;
 import org.apereo.cas.ticket.registry.TicketRegistry;
-import org.apereo.cas.util.CollectionUtils;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class adds customized features to support OAuth 2.0 for OSF CAS that are not provided by its vanilla Apereo CAS counterpart.
@@ -40,8 +40,9 @@ import java.util.Map;
 @UtilityClass
 public class OsfCasOAuth20Utils {
 
-    private static final ObjectMapper MAPPER
-            = new ObjectMapper().findAndRegisterModules().configure(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, true);
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .findAndRegisterModules()
+            .configure(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, true);
 
     /**
      * Produce Oauth 2.0 error view.
@@ -49,6 +50,7 @@ public class OsfCasOAuth20Utils {
      * @param errorCode the error code / short name
      * @param errorMsg the error message / long name
      * @param errorParam the param name that caused the error
+     * @param scopeSet the scope set
      * @param osfUrl the OSF URLs
      * @return ModelAndView
      */
@@ -56,8 +58,9 @@ public class OsfCasOAuth20Utils {
             final String errorCode,
             final String errorMsg,
             final String errorParam,
+            final Set<String> scopeSet,
             final OsfUrlProperties osfUrl) {
-        val modelContext = new OsfCasOAuth20ModelContext(errorCode, errorMsg, errorParam, osfUrl);
+        val modelContext = new OsfCasOAuth20ModelContext(errorCode, errorMsg, errorParam, scopeSet, osfUrl);
         return new ModelAndView(OsfCasWebflowConstants.VIEW_ID_OAUTH_20_ERROR_VIEW, modelContext.getModelContextMap());
     }
 
