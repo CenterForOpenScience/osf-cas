@@ -4,6 +4,7 @@ package org.apereo.cas.support.oauth;
  * This class has the main constants for the OAuth implementation.
  *
  * @author Jerome Leleu
+ * @author Longze Chen
  * @since 3.5.0
  */
 public interface OAuth20Constants {
@@ -34,9 +35,11 @@ public interface OAuth20Constants {
     String ACR_VALUES = "acr_values";
 
     /**
-     * Base OAuth 2.0 url.
+     * Customized base OAuth 2.0 url.
+     *
+     * Vanilla value is "/oauth2.0", which has been changed to "/oauth2" for oldCAS / OSF compatibility.
      */
-    String BASE_OAUTH20_URL = "/oauth2.0";
+    String BASE_OAUTH20_URL = "/oauth2";
 
     /**
      * The redirect uri.
