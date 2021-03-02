@@ -893,6 +893,21 @@ body {
     padding-left: 28px;
 }
 
+.form-button .delegation-button-logo {
+    position: absolute;
+    left: 20px;
+    top: 11px;
+    padding: 2px;
+    height: 36px;
+}
+
+.form-button .delegation-button-label {
+    font-size: 1rem;
+    color: black;
+    white-space: nowrap;
+    padding-left: 28px;
+}
+
 .login-error-card .form-button {
     padding-top: 1rem;
 }
