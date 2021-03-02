@@ -144,9 +144,9 @@ public class OsfPostgresServiceRegistry extends AbstractServiceRegistry {
     private DefaultRegisteredServiceAccessStrategy getAccessStrategy() {
         final DefaultRegisteredServiceAccessStrategy accessStrategy = new DefaultRegisteredServiceAccessStrategy();
         final DefaultRegisteredServiceDelegatedAuthenticationPolicy delegatedAuthenticationPolicy = new DefaultRegisteredServiceDelegatedAuthenticationPolicy();
-        final List<String> allowedProviders = new ArrayList<>();
-        allowedProviders.addAll(casProperties.getAuthn().getOsfPostgres().getInstitutionClients());
-        allowedProviders.addAll(casProperties.getAuthn().getOsfPostgres().getNonInstitutionClients());
+        // TODO: Currently, "login to authorize" is not supported for ORCiD, thus only add institution clients. Fortunately, unlike
+        //       oldCAS, newCAS supports this feature to be implemented using JPA OSF data access model without OSF side changes.
+        final List<String> allowedProviders = new ArrayList<>(casProperties.getAuthn().getOsfPostgres().getInstitutionClients());
         delegatedAuthenticationPolicy.setAllowedProviders(allowedProviders);
         delegatedAuthenticationPolicy.setPermitUndefined(false);
         accessStrategy.setDelegatedAuthenticationPolicy(delegatedAuthenticationPolicy);
