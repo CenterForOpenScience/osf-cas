@@ -31,6 +31,9 @@
                     <a class="mdc-button mdc-button--raised button-osf-blue" id="allow" name="allow"  th:href="@{${callbackUrl}}">
                         <span class="mdc-button__label" th:utext="#{screen.oauth.confirm.allow}"></span>
                     </a>
+                    <a class="mdc-button mdc-button--raised button-osf-red" id="deny" name="deny"  th:href="@{${deniedApprovalUrl}}">
+                        <span class="mdc-button__label" th:utext="#{screen.oauth.confirm.deny}"></span>
+                    </a>
                 </section>
                 <hr class="my-4" />
                 <section class="text-with-mdi">

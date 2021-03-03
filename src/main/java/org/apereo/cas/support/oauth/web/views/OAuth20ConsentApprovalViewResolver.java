@@ -1,15 +1,14 @@
 package org.apereo.cas.support.oauth.web.views;
 
-import io.cos.cas.oauth.support.OsfCasOAuth20Utils;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.support.oauth.OAuth20Constants;
 import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
 
 import io.cos.cas.oauth.support.OsfCasOAuth20Constants;
 import io.cos.cas.oauth.support.OsfCasOAuth20ModelContext;
+import io.cos.cas.oauth.support.OsfCasOAuth20Utils;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -17,9 +16,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.util.CommonHelper;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -115,20 +116,53 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
      * @param service       the service
      * @return the model and view
      */
-    @SneakyThrows
     protected ModelAndView redirectToApproveView(final JEEContext context, final OsfCasOAuth20ModelContext modelContext, final OAuthRegisteredService service) {
-        val callbackUrl = context.getFullRequestURL();
-        LOGGER.trace("callbackUrl: [{}]", callbackUrl);
+        try {
+            val model = modelContext.getModelContextMap();
+            model.put("callbackUrl", getCallbackUrl(context));
+            model.put("deniedApprovalUrl", getDeniedApprovalUrl(context, service));
+            prepareApprovalViewModel(model, service);
+            return getApprovalModelAndView(model);
+        } catch (URISyntaxException e) {
+            modelContext.setErrorCode(OAuth20Constants.INVALID_REQUEST);
+            modelContext.setErrorParam(e.getMessage());
+            return OsfCasOAuth20Utils.produceOAuth20ErrorView(modelContext);
+        }
+    }
 
+    /**
+     * Build the callback URL for the form submission action when the "Allow" button is clicked.
+     *
+     * @param context the context
+     * @return the callback URL
+     * @throws URISyntaxException if the original request URL has bad syntax
+     */
+    protected String getCallbackUrl(final JEEContext context) throws URISyntaxException {
+        val callbackUrl = context.getFullRequestURL();
         val url = new URIBuilder(callbackUrl);
         // APPROVAL_PROMPT can be set to any value. It does not have any effect since BYPASS_APPROVAL_PROMPT is present.
         // However, setting it to EMPTY is preferred so that it is different from its original values "auto" or "force".
         url.setParameter(OsfCasOAuth20Constants.APPROVAL_PROMPT, StringUtils.EMPTY);
         url.setParameter(OAuth20Constants.BYPASS_APPROVAL_PROMPT, Boolean.TRUE.toString());
-        val model = modelContext.getModelContextMap();
-        model.put("callbackUrl", url.toString());
-        prepareApprovalViewModel(model, service);
-        return getApprovalModelAndView(model);
+        LOGGER.debug("Callback URL for approval submit action: [{}]", callbackUrl);
+        return url.toString();
+
+    }
+
+    /**
+     * Build the denied approval URL for the form submission action when the "Deny" button is clicked.
+     *
+     * @param context the context
+     * @return the denied approval URL
+     */
+    protected String getDeniedApprovalUrl(final JEEContext context, OAuthRegisteredService service) {
+        var deniedApprovalUrl = context
+                .getRequestParameter(OAuth20Constants.REDIRECT_URI)
+                .map(String::valueOf)
+                .orElse(service.getRedirectUrl());
+        deniedApprovalUrl = CommonHelper.addParameter(deniedApprovalUrl, OAuth20Constants.ERROR, OAuth20Constants.ACCESS_DENIED);
+        LOGGER.debug("Denied approval URL for denial submit action [{}]", deniedApprovalUrl);
+        return deniedApprovalUrl;
     }
 
     /**
@@ -160,6 +194,5 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
         model.put("service", service);
         model.put("serviceName", service.getName());
         model.put("serviceDescription", service.getDescription());
-        model.put("deniedApprovalUrl", service.getAccessStrategy().getUnauthorizedRedirectUrl());
     }
 }
