@@ -1,4 +1,5 @@
 package org.apereo.cas.support.oauth.web.endpoints;
+
 import org.apereo.cas.audit.AuditableContext;
 import org.apereo.cas.audit.AuditableExecutionResult;
 import org.apereo.cas.support.oauth.OAuth20Constants;
@@ -38,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 public class OAuth20RevocationEndpointController extends BaseOAuth20Controller {
+
     public OAuth20RevocationEndpointController(final OAuth20ConfigurationContext oAuthConfigurationContext) {
         super(oAuthConfigurationContext);
     }
@@ -49,10 +51,17 @@ public class OAuth20RevocationEndpointController extends BaseOAuth20Controller {
      * @param response the response
      * @return the response entity
      */
-    @PostMapping(path = '/' + OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.REVOCATION_URL,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    public ModelAndView handleRequest(final HttpServletRequest request,
-                                      final HttpServletResponse response) {
+    @PostMapping(
+            path = {
+                    OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.REVOCATION_URL,
+                    OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.REVOCATION_URL + '/'
+            },
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ModelAndView handleRequest(
+            final HttpServletRequest request,
+            final HttpServletResponse response
+    ) {
         val context = new JEEContext(request, response, getOAuthConfigurationContext().getSessionStore());
 
         if (!verifyRevocationRequest(context)) {

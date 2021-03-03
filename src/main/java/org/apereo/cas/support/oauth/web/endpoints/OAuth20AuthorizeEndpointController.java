@@ -29,7 +29,6 @@ import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,7 +62,10 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
      * @return the model and view
      * @throws Exception the exception
      */
-    @GetMapping(path = OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.AUTHORIZE_URL)
+    @GetMapping(path = {
+            OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.AUTHORIZE_URL,
+            OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.AUTHORIZE_URL + '/'
+    })
     public ModelAndView handleRequest(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
         ensureSessionReplicationIsAutoconfiguredIfNeedBe(request);
@@ -135,19 +137,6 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
                 );
             }
         }
-    }
-
-    /**
-     * Handle request post.
-     *
-     * @param request  the request
-     * @param response the response
-     * @return the model and view
-     * @throws Exception the exception
-     */
-    @PostMapping(path = OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.AUTHORIZE_URL)
-    public ModelAndView handleRequestPost(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-        return handleRequest(request, response);
     }
 
     /**

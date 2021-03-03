@@ -15,12 +15,14 @@ import org.apereo.cas.support.oauth.web.response.accesstoken.response.OAuth20Acc
 import org.apereo.cas.ticket.OAuth20UnauthorizedScopeRequestException;
 
 import com.google.common.base.Supplier;
+
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.pac4j.core.context.JEEContext;
+
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
  * (resource owner password grant type).
  *
  * @author Jerome Leleu
+ * @author Longze Chen
  * @since 3.5.0
  */
 @Slf4j
@@ -55,10 +58,15 @@ public class OAuth20AccessTokenEndpointController extends BaseOAuth20Controller 
      * @return the model and view
      * @throws Exception the exception
      */
-    @PostMapping(path = {
-        OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.ACCESS_TOKEN_URL,
-        OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.TOKEN_URL},
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(
+            path = {
+                    OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.ACCESS_TOKEN_URL,
+                    OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.ACCESS_TOKEN_URL + '/',
+                    OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.TOKEN_URL,
+                    OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.TOKEN_URL + '/',
+            },
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @SneakyThrows
     public ModelAndView handleRequest(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         try {
@@ -98,22 +106,10 @@ public class OAuth20AccessTokenEndpointController extends BaseOAuth20Controller 
         }
     }
 
-    /**
-     * Handle request internal model and view.
-     *
-     * @param request  the request
-     * @param response the response
-     * @return the model and view
-     * @throws Exception the exception
-     */
-    @GetMapping(path = {OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.ACCESS_TOKEN_URL,
-        OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.TOKEN_URL})
-    public ModelAndView handleGetRequest(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-        return handleRequest(request, response);
-    }
-
-    private AccessTokenRequestDataHolder examineAndExtractAccessTokenGrantRequest(final HttpServletRequest request,
-                                                                                  final HttpServletResponse response) {
+    private AccessTokenRequestDataHolder examineAndExtractAccessTokenGrantRequest(
+            final HttpServletRequest request,
+            final HttpServletResponse response
+    ) {
         val audit = AuditableContext.builder()
             .httpRequest(request)
             .httpResponse(response)
@@ -157,11 +153,13 @@ public class OAuth20AccessTokenEndpointController extends BaseOAuth20Controller 
      * @param result        the result
      * @return the model and view
      */
-    protected ModelAndView generateAccessTokenResponse(final HttpServletRequest request,
-                                                       final HttpServletResponse response,
-                                                       final AccessTokenRequestDataHolder requestHolder,
-                                                       final JEEContext context,
-                                                       final OAuth20TokenGeneratedResult result) {
+    protected ModelAndView generateAccessTokenResponse(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final AccessTokenRequestDataHolder requestHolder,
+            final JEEContext context,
+            final OAuth20TokenGeneratedResult result
+    ){
         LOGGER.debug("Generating access token response for [{}]", result);
         val deviceRefreshInterval = Beans.newDuration(getOAuthConfigurationContext().getCasProperties()
             .getAuthn().getOauth().getDeviceToken().getRefreshInterval()).getSeconds();
