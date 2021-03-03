@@ -37,6 +37,7 @@ import java.util.Set;
  * An OAuth code implementation.
  *
  * @author Jerome Leleu
+ * @author Longze Chen
  * @since 5.0.0
  */
 @Entity

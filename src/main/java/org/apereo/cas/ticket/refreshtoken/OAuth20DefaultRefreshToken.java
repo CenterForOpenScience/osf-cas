@@ -24,6 +24,7 @@ import java.util.Map;
  * An OAuth refresh token implementation.
  *
  * @author Jerome Leleu
+ * @author Longze Chen
  * @since 5.0.0
  */
 @Entity

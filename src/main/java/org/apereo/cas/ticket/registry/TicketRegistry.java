@@ -16,6 +16,7 @@ import java.util.stream.Stream;
  * more sophisticated strategy such as LRU.
  *
  * @author Scott Battaglia
+ * @author Longze Chen
  * @since 3.0.0
  */
 public interface TicketRegistry {

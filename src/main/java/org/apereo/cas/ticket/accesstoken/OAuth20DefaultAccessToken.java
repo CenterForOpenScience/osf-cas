@@ -23,6 +23,7 @@ import java.util.Map;
  * An OAuth access token implementation.
  *
  * @author Jerome Leleu
+ * @author Longze Chen
  * @since 5.0.0
  */
 @Entity
