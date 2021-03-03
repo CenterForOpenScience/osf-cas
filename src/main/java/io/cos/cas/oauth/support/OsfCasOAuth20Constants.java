@@ -109,4 +109,9 @@ public interface OsfCasOAuth20Constants {
      * OAuth 2.0 internal server error message.
      */
     String SERVER_ERROR_MSG = "The authorization request has failed due to an unexpected server error.";
+
+    /**
+     *  Stale or mismatched session request.
+     */
+    String SESSION_STALE_MISMATCH = "session_stale_mismatch";
 }
