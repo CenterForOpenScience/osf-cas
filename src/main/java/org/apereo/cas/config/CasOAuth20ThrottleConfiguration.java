@@ -10,12 +10,14 @@ import org.apereo.cas.throttle.AuthenticationThrottlingExecutionPlan;
 import org.apereo.cas.throttle.AuthenticationThrottlingExecutionPlanConfigurer;
 
 import lombok.val;
+
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.DirectClient;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 import org.pac4j.springframework.web.SecurityInterceptor;
+
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,6 +40,7 @@ import static org.apereo.cas.support.oauth.OAuth20Constants.BASE_OAUTH20_URL;
  * This is {@link CasOAuth20ThrottleConfiguration}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.3.0
  */
 @Configuration("casOAuth20ThrottleConfiguration")
@@ -59,8 +62,11 @@ public class CasOAuth20ThrottleConfiguration {
     @ConditionalOnMissingBean(name = "requiresAuthenticationAuthorizeInterceptor")
     @Bean
     public SecurityInterceptor requiresAuthenticationAuthorizeInterceptor() {
-        val interceptor = new SecurityInterceptor(oauthSecConfig.getObject(),
-            Authenticators.CAS_OAUTH_CLIENT, JEEHttpActionAdapter.INSTANCE);
+        val interceptor = new SecurityInterceptor(
+                oauthSecConfig.getObject(),
+                Authenticators.CAS_OAUTH_CLIENT,
+                JEEHttpActionAdapter.INSTANCE
+        );
         interceptor.setAuthorizers(DefaultAuthorizers.IS_FULLY_AUTHENTICATED);
         return interceptor;
     }
@@ -69,12 +75,13 @@ public class CasOAuth20ThrottleConfiguration {
     @Bean
     public SecurityInterceptor requiresAuthenticationAccessTokenInterceptor() {
         val secConfig = oauthSecConfig.getObject();
-        val clients = Objects.requireNonNull(secConfig).getClients()
-            .findAllClients()
-            .stream()
-            .filter(client -> client instanceof DirectClient)
-            .map(Client::getName)
-            .collect(Collectors.joining(","));
+        val clients = Objects
+                .requireNonNull(secConfig).getClients()
+                .findAllClients()
+                .stream()
+                .filter(client -> client instanceof DirectClient)
+                .map(Client::getName)
+                .collect(Collectors.joining(","));
         val interceptor = new SecurityInterceptor(oauthSecConfig.getObject(), clients, JEEHttpActionAdapter.INSTANCE);
         interceptor.setAuthorizers(DefaultAuthorizers.IS_FULLY_AUTHENTICATED);
         return interceptor;
@@ -89,7 +96,8 @@ public class CasOAuth20ThrottleConfiguration {
             requiresAuthenticationAuthorizeInterceptor(),
             accessTokenGrantRequestExtractors,
             servicesManager.getObject(),
-            oauthSecConfig.getObject().getSessionStore());
+            oauthSecConfig.getObject().getSessionStore()
+        );
     }
 
     @Bean
@@ -110,24 +118,33 @@ public class CasOAuth20ThrottleConfiguration {
                 .forEach(handler -> {
                     val baseUrl = BASE_OAUTH20_URL.concat("/");
                     registry.addInterceptor(handler)
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_AUTHORIZATION_REQUEST_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_CLAIMS_COLLECTION_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_JWKS_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_PERMISSION_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_POLICY_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_REGISTRATION_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_RESOURCE_SET_REGISTRATION_URL).concat("*"))
-
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.AUTHORIZE_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.ACCESS_TOKEN_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.TOKEN_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.INTROSPECTION_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.CALLBACK_AUTHORIZE_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.DEVICE_AUTHZ_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.PROFILE_URL).concat("*"))
-                        .addPathPatterns(baseUrl.concat(OAuth20Constants.REVOCATION_URL).concat("*"));
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_AUTHORIZATION_REQUEST_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_CLAIMS_COLLECTION_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_JWKS_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_PERMISSION_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_POLICY_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_REGISTRATION_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.UMA_RESOURCE_SET_REGISTRATION_URL).concat("*"))
+                            // Spring request mapping allows both path w/ and w/o trailing slashes even if the mapping only defines the
+                            // former. Thus, must add both to the interceptors for security purpose. In addition, this enable CAS login
+                            // redirection for the authorize endpoint when user is logged out.
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.AUTHORIZE_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.AUTHORIZE_URL).concat("/*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.ACCESS_TOKEN_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.ACCESS_TOKEN_URL).concat("/*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.TOKEN_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.TOKEN_URL).concat("/*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.INTROSPECTION_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.INTROSPECTION_URL).concat("/*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.CALLBACK_AUTHORIZE_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.CALLBACK_AUTHORIZE_URL).concat("/*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.DEVICE_AUTHZ_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.DEVICE_AUTHZ_URL).concat("/*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.PROFILE_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.PROFILE_URL).concat("/*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.REVOCATION_URL).concat("*"))
+                            .addPathPatterns(baseUrl.concat(OAuth20Constants.REVOCATION_URL).concat("/*"));
                 });
         }
     }
-
 }
