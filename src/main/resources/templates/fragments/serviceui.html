@@ -13,21 +13,28 @@
 <body>
     <main role="main" class="container mt-3 mb-3">
         <div th:fragment="serviceUI" th:if="${registeredService}" id="serviceui" class="mb-4 service-ui text-center">
-            <div class="osf-banner-without-name" th:if="${#strings.isEmpty(registeredService.name)}">
-                <img id="serviceLogo" class="service-ui-logo" th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-banner.png'}" />
+            <div th:if="${#strings.equalsIgnoreCase(registeredService.class.simpleName, 'OAuthRegisteredService')}">
+                <div class="osf-banner-without-name">
+                    <img id="serviceLogo" class="service-ui-logo" th:src="@{'images/osf-banner.png'}" />
+                </div>
             </div>
-            <table class="osf-shield-with-name osf-shield-with-name-branded" th:unless="${#strings.isEmpty(registeredService.name)}">
-                <tbody>
-                <tr>
-                    <td>
-                        <img id="serviceLogoBranded" class="service-ui-logo service-ui-logo-branded" th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-logo.png'}" />
-                    </td>
-                    <td>
-                        <span id="serviceNameBranded" class="service-ui-name service-ui-name-branded" th:text="${registeredService.name}"></span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div th:unless="${#strings.equalsIgnoreCase(registeredService.class.simpleName, 'OAuthRegisteredService')}">
+                <div class="osf-banner-without-name" th:if="${#strings.isEmpty(registeredService.name)}">
+                    <img id="serviceLogo" class="service-ui-logo" th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-banner.png'}" />
+                </div>
+                <table class="osf-shield-with-name osf-shield-with-name-branded" th:unless="${#strings.isEmpty(registeredService.name)}">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <img id="serviceLogoBranded" class="service-ui-logo service-ui-logo-branded" th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-logo.png'}" />
+                        </td>
+                        <td>
+                            <span id="serviceNameBranded" class="service-ui-name service-ui-name-branded" th:text="${registeredService.name}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 </body>
