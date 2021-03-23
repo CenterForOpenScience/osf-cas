@@ -141,6 +141,8 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow:${project.'cas.version'}"
     // Token
     implementation "org.apereo.cas:cas-server-support-token-core-api:${project.'cas.version'}"
+    // Throttling
+    implementation "org.apereo.cas:cas-server-support-throttle:${project.'cas.version'}"
 
     // Tomcat Catalina
     implementation "org.apache.tomcat:tomcat-catalina:${springBootTomcatVersion}"
