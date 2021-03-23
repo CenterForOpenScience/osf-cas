@@ -195,7 +195,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://192.168.168.167:8080/logout?service=http%3A%2F%2Flocalhost%3A5000%2Flogin%2F%3Fnext%3Dhttp%253A%252F%252Flocalhost%253A5000%252F",
+					"raw": "http://192.168.168.167:8080/logout",
 					"protocol": "http",
 					"host": [
 						"192",
@@ -206,17 +206,74 @@
 					"port": "8080",
 					"path": [
 						"logout"
-					],
-					"query": [
-						{
-							"key": "service",
-							"value": "http%3A%2F%2Flocalhost%3A5000%2Flogin%2F%3Fnext%3Dhttp%253A%252F%252Flocalhost%253A5000%252F"
-						}
 					]
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Princeton User",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "AUTH-mail",
+						"value": "chen@princeton.edu",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-displayName",
+						"value": "Longzepu Chenpu",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-givenName",
+						"value": "Longzepu",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-sn",
+						"value": "Chenpu",
+						"type": "text"
+					},
+					{
+						"key": "REMOTE_USER",
+						"value": "chenpu12",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-Shib-Identity-Provider",
+						"value": "https://idp.princeton.edu/idp/shibboleth",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-department",
+						"value": "ou=Music Department, o=Princton Uiniversity, dc=princeton, dc=edu",
+						"type": "text"
+					},
+					{
+						"key": "AUTH-Shib-Session-Id",
+						"value": "1234567812345678",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://192.168.168.167:8080/login",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"168",
+						"167"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				},
+				"description": "A SAML SSO institution user with the department attribute released using eduPerson of which the syntax is LDAP Distinguished Names."
+			},
+			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

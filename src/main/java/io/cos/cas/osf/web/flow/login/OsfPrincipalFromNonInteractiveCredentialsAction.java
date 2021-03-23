@@ -59,6 +59,8 @@ import org.springframework.webflow.execution.RequestContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
 import javax.security.auth.login.AccountException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -145,6 +147,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     private static final String SHIBBOLETH_SESSION_HEADER = ATTRIBUTE_PREFIX + "shib-session-id";
 
     private static final String SHIBBOLETH_COOKIE_PREFIX = "_shibsession_";
+
+    private static final String LDAP_DN_OU_PREFIX = "ou=";
 
     @NotNull
     private CentralAuthenticationService centralAuthenticationService;
@@ -573,6 +577,21 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 payload
         );
 
+        final String departmentRaw = user.optString("departmentRaw").trim();
+        // Unlike all the above attributes that are released to us from the institutions, the `eduPerson` is a boolean
+        // per-institution flag set by CAS in the "institutions-auth.xsl" file. It determines whether the department
+        // attribute uses the the eduPerson schema (https://wiki.refeds.org/display/STAN/eduPerson).
+        final boolean eduPerson = user.optBoolean("eduPerson");
+
+        String department = "";
+        if (departmentRaw.isEmpty()) {
+            LOGGER.warn("[CAS XSLT] Missing department: fullname={}, username={}, institution={}", fullname, username, institutionId);
+        } else {
+            department = this.retrieveDepartment(departmentRaw, eduPerson);
+        }
+        // Insert the `department` attribute into the payload, which does not overwrite `departmentRaw`.
+        normalizedPayload.getJSONObject("provider").getJSONObject("user").put("department", department);
+
         final String jweString;
         try {
             final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
@@ -627,5 +646,41 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             );
             throw new InstitutionSsoFailedException("Communication Error between OSF CAS and OSF API");
         }
+    }
+
+    /**
+     * Retrieve the department value from the raw department string.
+     *
+     * @param departmentRaw the raw department string
+     * @param eduPerson whether the department attribute uses eduPerson schema
+     * @return the department value
+     */
+    private String retrieveDepartment(final String departmentRaw, final boolean eduPerson) {
+
+        // Return the raw value as it is if institutions do not use eduPerson schema for the department attribute
+        if (!eduPerson) {
+            return departmentRaw;
+        }
+
+        // For institutions that use the eduPerson schema, the department must be retrieved from the raw value. Here is
+        // an example: "ou=Music Department, o=Notre Dame, dc=nd, dc=edu", whose syntax is LDAP Distinguished Names.
+        try {
+            final LdapName dn = new LdapName(departmentRaw);
+            for (int i = dn.size() - 1; i >=0; i--) {
+                final String rdn = dn.get(i);
+                if (rdn.startsWith(LDAP_DN_OU_PREFIX)) {
+                    return rdn.substring(LDAP_DN_OU_PREFIX.length());
+                }
+            }
+        } catch (final InvalidNameException | IndexOutOfBoundsException e) {
+            LOGGER.error(
+                    "[CAS XSLT] Invalid syntax for LDAP Distinguished Names: departmentRaw={}, error={}",
+                    departmentRaw,
+                    e.getMessage()
+            );
+            // Return an empty string if the syntax is wrong
+            return "";
+        }
+        return "";
     }
 }
