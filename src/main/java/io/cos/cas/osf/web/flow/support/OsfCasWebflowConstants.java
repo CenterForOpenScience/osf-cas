@@ -24,6 +24,8 @@ public interface OsfCasWebflowConstants {
 
     String TRANSITION_ID_INSTITUTION_LOGIN = "switchToInstitutionLogin";
 
+    String TRANSITION_ID_INSTITUTION_LOGOUT = "redirectToInstitutionLogout";
+
     String TRANSITION_ID_UNSUPPORTED_INSTITUTION_LOGIN = "switchToUnsupportedInstitutionLogin";
 
     String TRANSITION_ID_ORCID_LOGIN_AUTO_REDIRECT = "autoRedirectToOrcidLogin";
@@ -35,6 +37,8 @@ public interface OsfCasWebflowConstants {
     String STATE_ID_OSF_DEFAULT_LOGIN_CHECK = "osfDefaultLoginCheck";
 
     String STATE_ID_OSF_INSTITUTION_LOGIN_CHECK = "osfInstitutionLoginCheck";
+
+    String STATE_ID_INSTITUTION_LOGOUT_REDIRECT = "osfInstitutionLogoutRedirect";
 
     String VIEW_ID_INSTITUTION_SSO_INIT = "casInstitutionLoginView";
 
