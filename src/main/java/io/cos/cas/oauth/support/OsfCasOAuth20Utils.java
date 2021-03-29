@@ -1,10 +1,10 @@
 package io.cos.cas.oauth.support;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 import io.cos.cas.osf.configuration.model.OsfUrlProperties;
 import io.cos.cas.osf.web.flow.support.OsfCasWebflowConstants;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -122,5 +122,29 @@ public class OsfCasOAuth20Utils {
         tokenMap.put(OAuth20AccessToken.PREFIX, accessTokens);
         tokenMap.put(OAuth20RefreshToken.PREFIX, refreshTokens);
         return tokenMap;
+    }
+
+    /**
+     * Build and return the CAS OAuth 2.0 callback URL.
+     *
+     * This method is an exact copy of {@link org.apereo.cas.support.oauth.util.OAuth20Utils#casOAuthCallbackUrl(String)}. Using this
+     * {@link OsfCasOAuth20Utils} variant during configuration {@link org.apereo.cas.config.CasOAuth20Configuration} solves an overlay
+     * bug where the wrong (i.e. vanilla) value {@link OAuth20Constants#BASE_OAUTH20_URL} is used instead of the overlaid one.
+     *
+     * @param serverPrefixUrl the server prefix url
+     * @return the string
+     */
+    public static String casOAuthCallbackUrl(final String serverPrefixUrl) {
+        return serverPrefixUrl.concat(OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.CALLBACK_AUTHORIZE_URL);
+    }
+
+    /**
+     * Build and return the CAS OAuth 2.0 callback URL definition.
+     *
+     * @param serverPrefixUrl the server prefix url
+     * @return the string
+     */
+    public static String casOAuthCallbackUrlDefinition(final String serverPrefixUrl) {
+        return serverPrefixUrl.concat(OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.CALLBACK_AUTHORIZE_URL_DEFINITION);
     }
 }

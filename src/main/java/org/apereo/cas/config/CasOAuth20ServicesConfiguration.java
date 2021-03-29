@@ -6,11 +6,12 @@ import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.services.DenyAllAttributeReleasePolicy;
 import org.apereo.cas.services.RegexRegisteredService;
 import org.apereo.cas.services.ServiceRegistryExecutionPlanConfigurer;
-import org.apereo.cas.support.oauth.OAuth20Constants;
 import org.apereo.cas.support.oauth.services.OAuth20ServiceRegistry;
 import org.apereo.cas.util.RandomUtils;
 
 import lombok.val;
+
+import io.cos.cas.oauth.support.OsfCasOAuth20Utils;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.core.Ordered;
  * This is {@link CasOAuth20ServicesConfiguration}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 6.1.0
  */
 @Configuration("casOAuth20ServicesConfiguration")
@@ -43,8 +45,11 @@ public class CasOAuth20ServicesConfiguration {
 
     @Bean
     public Service oauthCallbackService() {
-        val oAuthCallbackUrl = casProperties.getServer().getPrefix()
-                + OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.CALLBACK_AUTHORIZE_URL_DEFINITION;
+        // OSF CAS customization: there is no functionality change to this configuration class (as of 6.2.8). However, it must overlaid
+        // so that the Spring configuration process can use the overlaid interface constant `OAuth20Constants.BASE_OAUTH20_URL` correctly.
+        // This is similar to the issue in `CasOAuth20Configuration`, where interface constants must either 1) be directly used instead of
+        // via a built-in helper method or 2) be used via a customized helper method.
+        val oAuthCallbackUrl = OsfCasOAuth20Utils.casOAuthCallbackUrlDefinition(casProperties.getServer().getPrefix());
         return webApplicationServiceFactory.getObject().createService(oAuthCallbackUrl);
     }
 
