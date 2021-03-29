@@ -29,7 +29,6 @@ import org.apereo.cas.support.oauth.profile.DefaultOAuth20UserProfileDataCreator
 import org.apereo.cas.support.oauth.profile.OAuth20ProfileScopeToAttributesFilter;
 import org.apereo.cas.support.oauth.profile.OAuth20UserProfileDataCreator;
 import org.apereo.cas.support.oauth.services.OAuth20RegisteredServiceCipherExecutor;
-import org.apereo.cas.support.oauth.util.OAuth20Utils;
 import org.apereo.cas.support.oauth.validator.authorization.OAuth20AuthorizationCodeResponseTypeAuthorizationRequestValidator;
 import org.apereo.cas.support.oauth.validator.authorization.OAuth20AuthorizationRequestValidator;
 import org.apereo.cas.support.oauth.validator.authorization.OAuth20IdTokenAndTokenResponseTypeAuthorizationRequestValidator;
@@ -103,6 +102,7 @@ import org.apereo.cas.web.cookie.CasCookieBuilder;
 import org.apereo.cas.web.support.CookieUtils;
 import org.apereo.inspektr.audit.spi.support.DefaultAuditActionResolver;
 
+import io.cos.cas.oauth.support.OsfCasOAuth20Utils;
 import io.cos.cas.osf.dao.JpaOsfDao;
 
 import lombok.RequiredArgsConstructor;
@@ -254,7 +254,10 @@ public class CasOAuth20Configuration {
     @Bean
     @RefreshScope
     public UrlResolver casCallbackUrlResolver() {
-        return new OAuth20CasCallbackUrlResolver(OAuth20Utils.casOAuthCallbackUrl(casProperties.getServer().getPrefix()));
+        // OSF CAS customization: use `OsfCasOAuth20Utils.casOAuthCallbackUrl()` instead of `OAuth20Utils.casOAuthCallbackUrl()` to solve
+        // an overlay bug where Spring configuration classes somehow fail to pick up overlaid interface constants. This issue and solution
+        // are similar to the one mentioned in `CasOAuth20ServicesConfiguration.oauthCallbackService()`.
+        return new OAuth20CasCallbackUrlResolver(OsfCasOAuth20Utils.casOAuthCallbackUrl(casProperties.getServer().getPrefix()));
     }
 
     @Bean
@@ -262,7 +265,8 @@ public class CasOAuth20Configuration {
     @RefreshScope
     public Config oauthSecConfig() {
         val clientList = oauthSecConfigClients();
-        val config = new Config(OAuth20Utils.casOAuthCallbackUrl(casProperties.getServer().getPrefix()), clientList);
+        // OSF CAS customization: similar to `CasOAuth20Configuration.casCallbackUrlResolver()`
+        val config = new Config(OsfCasOAuth20Utils.casOAuthCallbackUrl(casProperties.getServer().getPrefix()), clientList);
         config.setSessionStore(oauthDistributedSessionStore());
         Config.setProfileManagerFactory("CASOAuthSecurityProfileManager", webContext ->
             new OAuth20ClientIdAwareProfileManager(webContext, config.getSessionStore(), servicesManager.getObject()));
@@ -283,7 +287,8 @@ public class CasOAuth20Configuration {
             oauthCasClientRedirectActionBuilder().build(oauthCasClient, webContext));
         oauthCasClient.setName(Authenticators.CAS_OAUTH_CLIENT);
         oauthCasClient.setUrlResolver(casCallbackUrlResolver());
-        oauthCasClient.setCallbackUrl(OAuth20Utils.casOAuthCallbackUrl(server.getPrefix()));
+        // OSF CAS customization: similar to `CasOAuth20Configuration.casCallbackUrlResolver()`
+        oauthCasClient.setCallbackUrl(OsfCasOAuth20Utils.casOAuthCallbackUrl(server.getPrefix()));
         oauthCasClient.init();
         val casAuthenticator = (CasAuthenticator) oauthCasClient.getAuthenticator();
         casAuthenticator.setProfileDefinition(new CasProfileDefinition() {
