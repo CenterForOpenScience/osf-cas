@@ -10,6 +10,8 @@ import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.adaptive.AdaptiveAuthenticationPolicy;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.web.config.CasSupportActionsConfiguration;
+import org.apereo.cas.web.cookie.CasCookieBuilder;
+import org.apereo.cas.web.flow.logout.TerminateSessionAction;
 import org.apereo.cas.web.flow.resolver.CasDelegatingWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
 
@@ -55,6 +57,14 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
     @Autowired
     @Qualifier("centralAuthenticationService")
     private ObjectProvider<CentralAuthenticationService> centralAuthenticationService;
+
+    @Autowired
+    @Qualifier("ticketGrantingTicketCookieGenerator")
+    private ObjectProvider<CasCookieBuilder> ticketGrantingTicketCookieGenerator;
+
+    @Autowired
+    @Qualifier("warnCookieGenerator")
+    private ObjectProvider<CasCookieBuilder> warnCookieGenerator;
 
     @Autowired
     private ObjectProvider<JpaOsfDao> jpaOsfDao;
@@ -123,6 +133,23 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
                 adaptiveAuthenticationPolicy.getObject(),
                 jpaOsfDao.getObject(),
                 casProperties.getAuthn().getOsfPostgres().getInstitutionClients()
+        );
+    }
+
+    /**
+     * Bean configuration for OSF CAS customized {@link TerminateSessionAction} that can access OSF models via {@link JpaOsfDao}.
+     *
+     * @return the initialized action
+     */
+    @Bean
+    @Override
+    public Action terminateSessionAction() {
+        return new TerminateSessionAction(
+                centralAuthenticationService.getObject(),
+                ticketGrantingTicketCookieGenerator.getObject(),
+                warnCookieGenerator.getObject(),
+                casProperties.getLogout(),
+                jpaOsfDao.getObject()
         );
     }
 }
