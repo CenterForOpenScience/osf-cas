@@ -59,6 +59,8 @@ import org.springframework.webflow.execution.RequestContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
 import javax.security.auth.login.AccountException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -145,6 +147,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     private static final String SHIBBOLETH_SESSION_HEADER = ATTRIBUTE_PREFIX + "shib-session-id";
 
     private static final String SHIBBOLETH_COOKIE_PREFIX = "_shibsession_";
+
+    private static final String LDAP_DN_OU_PREFIX = "ou=";
 
     @NotNull
     private CentralAuthenticationService centralAuthenticationService;
@@ -515,6 +519,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             final OsfPostgresCredential credential
     ) throws AccountException {
 
+        // Parse and normalize institution SSO authentication attributes
         final JSONObject normalizedPayload;
         try {
             normalizedPayload = extractInstnAuthnDataFromCredential(credential);
@@ -522,7 +527,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             LOGGER.error("[CAS XSLT] Failed to normalize attributes in the credential: {}", e.getMessage());
             throw new InstitutionSsoFailedException("Attribute normalization failure");
         }
-
+        // Verify required and optional attributes
         final JSONObject provider = normalizedPayload.optJSONObject("provider");
         if (provider == null) {
             LOGGER.error("[CAS XSLT] Missing identity provider.");
@@ -553,31 +558,55 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         }
         if (!isMemberOf.isEmpty()) {
             LOGGER.info(
-                    "[CAS XSLT] Secondary institution detected. SSO is '{}' and member is '{}'",
+                    "[CAS XSLT] Secondary institution detected: username={}, institution={}, member={}",
+                    username,
                     institutionId,
                     isMemberOf
             );
+        } else {
+            LOGGER.debug("[CAS XSLT] Secondary institution is not provided: username={}, institution={}", username, institutionId);
         }
-        final String payload = normalizedPayload.toString();
+        // Parse the department attribute
+        final String departmentRaw = user.optString("departmentRaw").trim();
+        // Unlike all the above attributes that are released to us from the institutions, the `eduPerson` is a boolean
+        // per-institution flag set by CAS in the "institutions-auth.xsl" file. It determines whether the department
+        // attribute uses the the eduPerson schema (https://wiki.refeds.org/display/STAN/eduPerson).
+        final boolean eduPerson = user.optBoolean("eduPerson");
+        String department = "";
+        if (!departmentRaw.isEmpty()) {
+            department = this.retrieveDepartment(departmentRaw, eduPerson);
+            LOGGER.info(
+                    "[CAS XSLT] Department detected and parsed: username={}, institution={}, eduPerson={}, departmentRaw={}, department={}",
+                    username,
+                    institutionId,
+                    eduPerson,
+                    departmentRaw,
+                    department
+            );
+        } else {
+            LOGGER.debug("[CAS XSLT] Department is not provided: username={} institution={}", username, institutionId);
+        }
+        // Insert the `department` attribute into the payload, which does not overwrite `departmentRaw`.
+        normalizedPayload.getJSONObject("provider").getJSONObject("user").put("department", department);
+
+        final String osfApiInstnAuthnPayload = normalizedPayload.toString();
         LOGGER.info(
-                "[CAS XSLT] All attributes checked: username={}, institution={}, member={}",
+                "[CAS XSLT] All attributes checked: username={}, institution={}",
                 username,
-                institutionId,
-                isMemberOf
+                institutionId
         );
         LOGGER.debug(
-                "[CAS XSLT] All attributes checked: username={}, institution={}, member={}, normalizedPayload={}",
+                "[CAS XSLT] All attributes checked: username={}, institution={}, normalizedPayload={}",
                 username,
                 institutionId,
-                isMemberOf,
-                payload
+                osfApiInstnAuthnPayload
         );
-
+        // Build the payload to be sent to OSF API institution authentication endpoint
         final String jweString;
         try {
             final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                     .subject(username)
-                    .claim("data", payload)
+                    .claim("data", osfApiInstnAuthnPayload)
                     .expirationTime(new Date(new Date().getTime() + SIXTY_SECONDS))
                     .build();
             final SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
@@ -597,7 +626,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             );
             throw new InstitutionSsoFailedException("OSF CAS failed to build JWT / JWE payload for OSF API");
         }
-
+        // Send the POST request to OSF API to verify an existing institution user or to create a new one
         try {
             final HttpResponse httpResponse = Request.Post(osfApiProperties.getInstnAuthnEndpoint())
                     .addHeader(new BasicHeader("Content-Type", "text/plain"))
@@ -627,5 +656,41 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             );
             throw new InstitutionSsoFailedException("Communication Error between OSF CAS and OSF API");
         }
+    }
+
+    /**
+     * Retrieve the department value from the raw department string.
+     *
+     * @param departmentRaw the raw department string
+     * @param eduPerson whether the department attribute uses eduPerson schema
+     * @return the department value
+     */
+    private String retrieveDepartment(final String departmentRaw, final boolean eduPerson) {
+
+        // Return the raw value as it is if institutions do not use eduPerson schema for the department attribute
+        if (!eduPerson) {
+            return departmentRaw;
+        }
+
+        // For institutions that use the eduPerson schema, the department must be retrieved from the raw value. Here is
+        // an example: "ou=Music Department, o=Notre Dame, dc=nd, dc=edu", whose syntax is LDAP Distinguished Names.
+        try {
+            final LdapName dn = new LdapName(departmentRaw);
+            for (int i = dn.size() - 1; i >=0; i--) {
+                final String rdn = dn.get(i);
+                if (rdn.startsWith(LDAP_DN_OU_PREFIX)) {
+                    return rdn.substring(LDAP_DN_OU_PREFIX.length());
+                }
+            }
+        } catch (final InvalidNameException | IndexOutOfBoundsException e) {
+            LOGGER.error(
+                    "[CAS XSLT] Invalid syntax for LDAP Distinguished Names: departmentRaw={}, error={}",
+                    departmentRaw,
+                    e.getMessage()
+            );
+            // Return an empty string if the syntax is wrong
+            return "";
+        }
+        return "";
     }
 }

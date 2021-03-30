@@ -93,64 +93,69 @@ idea {
 }
 
 apply plugin: "org.sonarqube"
-sonarqube {
-    properties {
-        property "sonar.projectKey", "CenterForOpenScience_osf-cas"
-        property "sonar.organization", "centerforopenscience"
-        property "sonar.host.url", "https://sonarcloud.io"
-    }
-}
 
 dependencies {
     // Other CAS dependencies/modules may be listed here...
 
-    // JSON Service Registry
-    implementation "org.apereo.cas:cas-server-support-json-service-registry:${project.'cas.version'}"
-
-    // Core Utilities
-    implementation "org.apereo.cas:cas-server-core-util-api:${project.'cas.version'}"
-
-    // Web and Requests
-    implementation "org.apereo.cas:cas-server-core-web-api:${project.'cas.version'}"
-
-    // Web Flow Customization
-    implementation "org.apereo.cas:cas-server-core-webflow:${project.'cas.version'}"
-    implementation "org.apereo.cas:cas-server-core-webflow-api:${project.'cas.version'}"
-    implementation "org.apereo.cas:cas-server-support-actions:${project.'cas.version'}"
-
-    // Authentication Customization
+    // Authentication
     implementation "org.apereo.cas:cas-server-core-authentication:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-core-authentication-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-authentication-attributes:${project.'cas.version'}"
     implementation "org.apereo.cas:cas-server-core-authentication-mfa-api:${project.'cas.version'}"
-
-    // Authentication Delegation: Vanilla
-    implementation "org.apereo.cas:cas-server-support-pac4j-webflow:${project.'cas.version'}"
-    // Authentication Delegation: Customization
-    implementation "org.apereo.cas:cas-server-support-pac4j-core:${project.'cas.version'}"
-
+    implementation "org.apereo.cas:cas-server-core-authentication-throttle:${project.'cas.version'}"
+    // Cookie
+    implementation "org.apereo.cas:cas-server-core-cookie-api:${project.'cas.version'}"
+    // Services
+    implementation "org.apereo.cas:cas-server-core-services:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-services-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-services-registry:${project.'cas.version'}"
+    // Ticket
+    implementation "org.apereo.cas:cas-server-core-tickets-api:${project.'cas.version'}"
+    // Core Utilities
+    implementation "org.apereo.cas:cas-server-core-util-api:${project.'cas.version'}"
+    // Validation
+    implementation "org.apereo.cas:cas-server-core-validation-api:${project.'cas.version'}"
+    // Web
+    implementation "org.apereo.cas:cas-server-core-web-api:${project.'cas.version'}"
+    // Web Flow
+    implementation "org.apereo.cas:cas-server-core-webflow:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-core-webflow-api:${project.'cas.version'}"
+    // Actions
+    implementation "org.apereo.cas:cas-server-support-actions:${project.'cas.version'}"
     // JDBC Drivers
     implementation "org.apereo.cas:cas-server-support-jdbc-drivers:${project.'cas.version'}"
-
-    // JPA OSF PostgreSQL
-    implementation "org.apereo.cas:cas-server-support-jpa-util:${project.'cas.version'}"
-
     // JPA Ticket Registry
     implementation "org.apereo.cas:cas-server-support-jpa-ticket-registry:${project.'cas.version'}"
+    // JPA Utilities
+    implementation "org.apereo.cas:cas-server-support-jpa-util:${project.'cas.version'}"
+    // JSON Service Registry
+    implementation "org.apereo.cas:cas-server-support-json-service-registry:${project.'cas.version'}"
+    // OAuth 2.0 Server
+    implementation "org.apereo.cas:cas-server-support-oauth-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-oauth-core-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-oauth-services:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-oauth-webflow:${project.'cas.version'}"
+    // Pac4j
+    implementation "org.apereo.cas:cas-server-support-pac4j-api:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-pac4j-core:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-pac4j-webflow:${project.'cas.version'}"
+    // Token
+    implementation "org.apereo.cas:cas-server-support-token-core-api:${project.'cas.version'}"
+    // Throttling
+    implementation "org.apereo.cas:cas-server-support-throttle:${project.'cas.version'}"
 
     // Tomcat Catalina
     implementation "org.apache.tomcat:tomcat-catalina:${springBootTomcatVersion}"
-
     // Hibernate
     implementation "org.hibernate:hibernate-core:${hibernateCoreVersion}"
-
     // Google GSON
     implementation "com.google.code.gson:gson:${gsonVersion}"
-
     // Javascript Object Signing and Encryption (JOSE) and JSON Web Tokens (JWT)
     implementation "com.nimbusds:nimbus-jose-jwt:${nimbusJoseVersion}"
-
-    // Apache HttpComponents Client fluent API
+    // Apache HttpComponents Client Fluent API
     implementation "org.apache.httpcomponents:fluent-hc:${fluentHcVersion}"
+    // Jasig CAS Client
+    implementation "org.jasig.cas.client:cas-client-core:${casClientVersion}"
 }
 
 tasks.findByName("jibDockerBuild")
