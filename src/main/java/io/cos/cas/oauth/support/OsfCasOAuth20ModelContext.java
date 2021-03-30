@@ -23,7 +23,7 @@ import java.util.Set;
  * This class stores information that are required by the front-end template for OSF CAS OAuth 2.0 views.
  *
  * @author Longze Chen
- * @since 21.x.0
+ * @since 21.1.0
  */
 @AllArgsConstructor
 @Getter

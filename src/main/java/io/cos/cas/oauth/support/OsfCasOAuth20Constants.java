@@ -6,7 +6,7 @@ package io.cos.cas.oauth.support;
  * See {@link org.apereo.cas.support.oauth.OAuth20Constants} for the main constants in the vanilla OAuth 2.0 implementation by Apereo.
  *
  * @author Longze Chen
- * @since 21.x.0
+ * @since 21.1.0
  */
 public interface OsfCasOAuth20Constants {
 

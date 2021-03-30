@@ -15,7 +15,7 @@ import java.io.Serializable;
  * the creation of an (person) access token of type {@link io.cos.cas.oauth.model.OsfCasOAuth20CodeType#PERSONAL}.
  *
  * @author Longze Chen
- * @since 21.x.0
+ * @since 21.1.0
  */
 @RequiresModule(name = "cas-server-support-oauth")
 @Getter

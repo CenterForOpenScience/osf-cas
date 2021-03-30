@@ -22,7 +22,7 @@ import java.util.Collection;
  * This is {@link OsfPostgresServiceRegistryConfiguration}, the configuration class for {@link OsfPostgresServiceRegistry}.
  *
  * @author Longze Chen
- * @since 21.x.0
+ * @since 21.1.0
  */
 @Configuration("osfPostgresServiceRegistryConfiguration")
 @EnableConfigurationProperties(CasConfigurationProperties.class)

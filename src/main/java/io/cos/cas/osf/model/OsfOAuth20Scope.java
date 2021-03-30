@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * This is {@link OsfOAuth20Scope}.
  *
  * @author Longze Chen
- * @since 21.x.0
+ * @since 21.1.0
  */
 @Entity
 @Table(name = "osf_apioauth2scope")

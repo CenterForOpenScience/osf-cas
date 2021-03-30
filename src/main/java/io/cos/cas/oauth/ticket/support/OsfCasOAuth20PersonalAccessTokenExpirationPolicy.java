@@ -28,7 +28,7 @@ import java.time.temporal.ChronoUnit;
  * using properties configured via {@link io.cos.cas.oauth.configuration.model.OsfCasOAuth20PersonalAccessTokenProperties}.
  *
  * @author Longze Chen
- * @since 21.x.0
+ * @since 21.1.0
  */
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)

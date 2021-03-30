@@ -34,7 +34,7 @@ import java.util.Set;
  * See {@link org.apereo.cas.support.oauth.util.OAuth20Utils}.
  *
  * @author Longze Chen
- * @since 21.x.0
+ * @since 21.1.0
  */
 @Slf4j
 @UtilityClass

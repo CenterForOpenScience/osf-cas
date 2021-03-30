@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Here is the configuration class: {@link io.cos.cas.oauth.config.OsfPostgresServiceRegistryConfiguration}.
  *
  * @author Longze Chen
- * @since 21.x.0
+ * @since 21.1.0
  */
 @Slf4j
 public class OsfPostgresServiceRegistry extends AbstractServiceRegistry {
