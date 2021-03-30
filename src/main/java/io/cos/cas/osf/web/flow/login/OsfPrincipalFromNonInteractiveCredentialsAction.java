@@ -519,6 +519,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             final OsfPostgresCredential credential
     ) throws AccountException {
 
+        // Parse and normalize institution SSO authentication attributes
         final JSONObject normalizedPayload;
         try {
             normalizedPayload = extractInstnAuthnDataFromCredential(credential);
@@ -526,7 +527,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             LOGGER.error("[CAS XSLT] Failed to normalize attributes in the credential: {}", e.getMessage());
             throw new InstitutionSsoFailedException("Attribute normalization failure");
         }
-
+        // Verify required and optional attributes
         final JSONObject provider = normalizedPayload.optJSONObject("provider");
         if (provider == null) {
             LOGGER.error("[CAS XSLT] Missing identity provider.");
@@ -557,46 +558,55 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         }
         if (!isMemberOf.isEmpty()) {
             LOGGER.info(
-                    "[CAS XSLT] Secondary institution detected. SSO is '{}' and member is '{}'",
+                    "[CAS XSLT] Secondary institution detected: username={}, institution={}, member={}",
+                    username,
                     institutionId,
                     isMemberOf
             );
+        } else {
+            LOGGER.debug("[CAS XSLT] Secondary institution is not provided: username={}, institution={}", username, institutionId);
         }
-        final String payload = normalizedPayload.toString();
-        LOGGER.info(
-                "[CAS XSLT] All attributes checked: username={}, institution={}, member={}",
-                username,
-                institutionId,
-                isMemberOf
-        );
-        LOGGER.debug(
-                "[CAS XSLT] All attributes checked: username={}, institution={}, member={}, normalizedPayload={}",
-                username,
-                institutionId,
-                isMemberOf,
-                payload
-        );
-
+        // Parse the department attribute
         final String departmentRaw = user.optString("departmentRaw").trim();
         // Unlike all the above attributes that are released to us from the institutions, the `eduPerson` is a boolean
         // per-institution flag set by CAS in the "institutions-auth.xsl" file. It determines whether the department
         // attribute uses the the eduPerson schema (https://wiki.refeds.org/display/STAN/eduPerson).
         final boolean eduPerson = user.optBoolean("eduPerson");
-
         String department = "";
-        if (departmentRaw.isEmpty()) {
-            LOGGER.warn("[CAS XSLT] Missing department: fullname={}, username={}, institution={}", fullname, username, institutionId);
-        } else {
+        if (!departmentRaw.isEmpty()) {
             department = this.retrieveDepartment(departmentRaw, eduPerson);
+            LOGGER.info(
+                    "[CAS XSLT] Department detected and parsed: username={}, institution={}, eduPerson={}, departmentRaw={}, department={}",
+                    username,
+                    institutionId,
+                    eduPerson,
+                    departmentRaw,
+                    department
+            );
+        } else {
+            LOGGER.debug("[CAS XSLT] Department is not provided: username={} institution={}", username, institutionId);
         }
         // Insert the `department` attribute into the payload, which does not overwrite `departmentRaw`.
         normalizedPayload.getJSONObject("provider").getJSONObject("user").put("department", department);
 
+        final String osfApiInstnAuthnPayload = normalizedPayload.toString();
+        LOGGER.info(
+                "[CAS XSLT] All attributes checked: username={}, institution={}",
+                username,
+                institutionId
+        );
+        LOGGER.debug(
+                "[CAS XSLT] All attributes checked: username={}, institution={}, normalizedPayload={}",
+                username,
+                institutionId,
+                osfApiInstnAuthnPayload
+        );
+        // Build the payload to be sent to OSF API institution authentication endpoint
         final String jweString;
         try {
             final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                     .subject(username)
-                    .claim("data", payload)
+                    .claim("data", osfApiInstnAuthnPayload)
                     .expirationTime(new Date(new Date().getTime() + SIXTY_SECONDS))
                     .build();
             final SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
@@ -616,7 +626,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             );
             throw new InstitutionSsoFailedException("OSF CAS failed to build JWT / JWE payload for OSF API");
         }
-
+        // Send the POST request to OSF API to verify an existing institution user or to create a new one
         try {
             final HttpResponse httpResponse = Request.Post(osfApiProperties.getInstnAuthnEndpoint())
                     .addHeader(new BasicHeader("Content-Type", "text/plain"))
