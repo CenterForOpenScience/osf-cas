@@ -332,6 +332,12 @@ button.close {
     word-break: break-all;
 }
 
+.wrap {
+    white-space: pre-wrap;      /* CSS3 */
+    white-space: -moz-pre-wrap; /* Firefox */
+    word-wrap: break-word;      /* IE */
+}
+
 .mdc-text-field>.mdc-text-field__input, .mdc-text-field:not(.mdc-text-field--disabled):not(.mdc-text-field--outlined):not(.mdc-text-field--textarea)>.mdc-text-field__input {
     border-color: #153e50;
     border: 1px solid var(--cas-theme-primary, #153e50);
@@ -882,6 +888,21 @@ body {
 
 .form-button-inline .delegation-button-label {
     font-size: 0.875rem;
+    color: black;
+    white-space: nowrap;
+    padding-left: 28px;
+}
+
+.form-button .delegation-button-logo {
+    position: absolute;
+    left: 20px;
+    top: 11px;
+    padding: 2px;
+    height: 36px;
+}
+
+.form-button .delegation-button-label {
+    font-size: 1rem;
     color: black;
     white-space: nowrap;
     padding-left: 28px;
