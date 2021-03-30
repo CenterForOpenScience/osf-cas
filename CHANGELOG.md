@@ -2,7 +2,19 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
-21.0.0 (02-03-2020)
+21.1.0 (03-30-2021)
+===================
+
+OSF CAS feature-complete release
+
+* OSF CAS as an OAuth 2.0 server
+* OSF personal access token, developer apps and oauth scopes
+* Authentication failure throttling
+* Customized institution logout
+* Institution department
+* Overlay template and core library upgrade
+
+21.0.0 (02-03-2021)
 ===================
 
 OSF CAS third release with web flow updates, institution SSO, and FE rework
