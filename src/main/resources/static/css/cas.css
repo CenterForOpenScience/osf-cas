@@ -887,6 +887,7 @@ body {
     color: black;
     white-space: nowrap;
     padding-left: 28px;
+    letter-spacing: normal;
 }
 
 .form-button .delegation-button-logo {
