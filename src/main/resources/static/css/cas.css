@@ -814,10 +814,6 @@ body {
     padding-bottom: 1rem;
 }
 
-.osf-shield-with-name-branded {
-    width: 1px;
-}
-
 .osf-shield-with-name .service-ui-logo {
     padding-right: 0.5rem;
 }
@@ -834,7 +830,7 @@ body {
 .osf-shield-with-name .service-ui-name-branded {
     font-size: 2rem;
     font-weight: normal;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
 }
 
 .text-with-mdi,
@@ -1187,10 +1183,6 @@ body {
 
     .form-button-inline .delegation-button-label {
         font-size: 1rem;
-    }
-
-    .osf-shield-with-name .service-ui-name-branded {
-        white-space: normal;
     }
 }
 
