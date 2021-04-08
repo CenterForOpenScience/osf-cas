@@ -947,6 +947,7 @@ body {
     height: 56px;
     font-size: 1.125rem;
     margin: 0.5rem 0;
+    padding-left: 1rem;
 }
 
 .login-error-list .banner {
