@@ -2,6 +2,16 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.1.2 (04-08-2021)
+===================
+
+OAuth callback authorize service update
+
+21.1.1 (04-08-2021)
+===================
+
+Front-end fixes improvements
+
 21.1.0 (03-30-2021)
 ===================
 
