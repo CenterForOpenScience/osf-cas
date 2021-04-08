@@ -37,7 +37,6 @@
                     </section>
 
                     <section class="text-with-mdi text-bold text-large">
-                        <i class="mdi mdi-bank mdi-before-text"></i>
                         <span th:unless=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.heading.select}"></span>
                         <span th:if=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.heading.auto}"></span>
                     </section>
@@ -49,7 +48,6 @@
                     </section>
 
                     <section class="text-with-mdi">
-                        <i class="mdi mdi-checkbox-blank-off-outline mdi-before-text"></i>
                         <span th:if="${osfCasLoginContext.institutionId}">
                             <a th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}" th:utext="#{screen.institutionlogin.link.select}"></a>
                         </span>
@@ -69,14 +67,12 @@
                     <hr class="my-4" />
 
                     <section class="text-with-mdi">
-                        <i class="mdi mdi-account-question-outline mdi-before-text"></i>
                         <span>
                             <a href="https://help.osf.io/hc/en-us/articles/360019737194-Sign-in-to-OSF" th:utext="#{screen.generic.link.support}"></a>
                         </span>
                     </section>
 
                     <section class="text-with-mdi">
-                        <i class="mdi mdi-backburger mdi-before-text"></i>
                         <span>
                             <a th:href="@{/login(service=${service?.originalUrl ?: ''})}" th:utext="#{screen.institutionlogin.osf}"></a>
                         </span>
