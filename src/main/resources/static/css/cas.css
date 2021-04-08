@@ -942,6 +942,10 @@ body {
     padding: 0;
 }
 
+.login-instn-card .form-button {
+    margin: 1rem 0;
+}
+
 .login-section .instn-select select {
     width: 100%;
     height: 56px;
