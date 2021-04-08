@@ -814,10 +814,6 @@ body {
     padding-bottom: 1rem;
 }
 
-.osf-shield-with-name-branded {
-    width: 1px;
-}
-
 .osf-shield-with-name .service-ui-logo {
     padding-right: 0.5rem;
 }
@@ -834,7 +830,7 @@ body {
 .osf-shield-with-name .service-ui-name-branded {
     font-size: 2rem;
     font-weight: normal;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
 }
 
 .text-with-mdi,
@@ -891,6 +887,7 @@ body {
     color: black;
     white-space: nowrap;
     padding-left: 28px;
+    letter-spacing: normal;
 }
 
 .form-button .delegation-button-logo {
@@ -945,11 +942,16 @@ body {
     padding: 0;
 }
 
+.login-instn-card .form-button {
+    margin: 1rem 0;
+}
+
 .login-section .instn-select select {
     width: 100%;
     height: 56px;
     font-size: 1.125rem;
     margin: 0.5rem 0;
+    padding-left: 1rem;
 }
 
 .login-error-list .banner {
@@ -1187,10 +1189,6 @@ body {
 
     .form-button-inline .delegation-button-label {
         font-size: 1rem;
-    }
-
-    .osf-shield-with-name .service-ui-name-branded {
-        white-space: normal;
     }
 }
 
