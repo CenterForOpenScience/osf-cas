@@ -86,7 +86,8 @@
                                 th:field="*{username}"
                                 th:accesskey="#{screen.welcome.label.email.accesskey}"
                                 th:value="${@casThymeleafLoginFormDirector.getLoginFormUsername(#vars)}"
-                                autocomplete="off" />
+                                autocomplete="off"
+                                autofocus />
                             <label for="username" class="mdc-floating-label" th:utext="#{screen.welcome.label.email}"></label>
                         </div>
                     </section>
