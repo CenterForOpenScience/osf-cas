@@ -6,7 +6,7 @@
         </provider>
     </xsl:template>
     <xsl:template match="auth">
-        <xsl:variable name="delegation-protocol" select="//attribute[@name='Delegation-Protocol']/@value"/>
+        <xsl:variable name="delegation-protocol" select="//attribute[@name='delegation-protocol']/@value"/>
         <xsl:choose>
             <!--  Institutions that use the SAML protocol for Authentication  -->
             <xsl:when test="$delegation-protocol = 'saml-shib'">
@@ -126,7 +126,7 @@
             </xsl:when>
             <!--  Institutions that use the CAS protocol for Authentication  -->
             <xsl:when test="$delegation-protocol = 'cas-pac4j'">
-                <xsl:variable name="idp" select="//attribute[@name='Cas-Identity-Provider']/@value"/>
+                <xsl:variable name="idp" select="//attribute[@name='cas-identity-provider']/@value"/>
                 <idp>
                     <xsl:value-of select="$idp"/>
                 </idp>
