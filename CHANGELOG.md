@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.1.3 (04-09-2021)
+===================
+
+Test server institution SSO update
+
 21.1.2 (04-08-2021)
 ===================
 
