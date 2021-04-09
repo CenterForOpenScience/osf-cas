@@ -327,7 +327,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         final OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
         osfPostgresCredential.setRemotePrincipal(Boolean.TRUE);
         osfPostgresCredential.setDelegationProtocol(DelegationProtocol.CAS_PAC4J);
-        osfPostgresCredential.getDelegationAttributes().put("Cas-Identity-Provider", clientName);
+        osfPostgresCredential.getDelegationAttributes().put("cas-identity-provider", clientName);
         if (principal.getAttributes().size() > 0) {
             for (final Map.Entry<String, List<Object>> entry : principal.getAttributes().entrySet()) {
                 final String attributeKey = entry.getKey();
@@ -485,7 +485,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         document.appendChild(rootElement);
 
         final Element delegationProtocolAttr = document.createElement("attribute");
-        delegationProtocolAttr.setAttribute("name", "Delegation-Protocol");
+        delegationProtocolAttr.setAttribute("name", "delegation-protocol");
         delegationProtocolAttr.setAttribute("value", credential.getDelegationProtocol().getId());
         rootElement.appendChild(delegationProtocolAttr);
 
