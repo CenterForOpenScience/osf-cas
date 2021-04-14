@@ -36,6 +36,15 @@ public class OsfOAuth20Pat extends AbstractOsfModel {
     @JoinColumn(name = "owner_id")
     private OsfUser owner;
 
+    /**
+     * Check if the personal access token has been deactivated.
+     *
+     * @return {@code true} or {@code false}
+     */
+    public Boolean isActive() {
+        return isActive;
+    }
+
     @Override
     public String toString() {
         return String.format("OsfOAuth20Pat [name=%s, owner=%s]", name, owner.getUsername());
