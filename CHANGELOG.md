@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.1.4 (04-14-2021)
+===================
+
+Fix personal access token revokation
+
 21.1.3 (04-09-2021)
 ===================
 
