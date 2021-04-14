@@ -181,7 +181,7 @@ public class OAuth20UserProfileEndpointController extends BaseOAuth20Controller 
 
         // Attempt to find the OSF personal access token by the given token ID from the OSF database
         val osfPersonalAccessToken = getJpaOsfDao().findOnePatByTokenId(tokenId);
-        if (osfPersonalAccessToken == null) {
+        if (osfPersonalAccessToken == null || !osfPersonalAccessToken.isActive()) {
             LOGGER.warn("Cannot find OSF OAuth 2.0 PAT with id=[{}] in the OSF database", tokenId);
             return null;
         }
