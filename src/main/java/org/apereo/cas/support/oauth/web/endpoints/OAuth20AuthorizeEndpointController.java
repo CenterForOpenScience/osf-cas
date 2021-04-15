@@ -245,11 +245,14 @@ public class OAuth20AuthorizeEndpointController extends BaseOAuth20Controller {
                 .map(String::valueOf)
                 .orElseGet(OAuth20GrantTypes.AUTHORIZATION_CODE::getType)
                 .toUpperCase();
-        val accessType = context
+        var accessType = context
                 .getRequestParameter(OsfCasOAuth20Constants.ACCESS_TYPE)
                 .map(String::valueOf)
-                .orElse(OsfCasOAuth20CodeType.ONLINE.name())
+                .orElse(StringUtils.EMPTY)
                 .toUpperCase();
+        if (!OsfCasOAuth20CodeType.OFFLINE.name().equalsIgnoreCase(accessType)) {
+            accessType = OsfCasOAuth20CodeType.ONLINE.name();
+        }
         val scopes = OAuth20Utils.parseRequestScopes(context);
         val codeChallenge = context
                 .getRequestParameter(OAuth20Constants.CODE_CHALLENGE)

@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.1.5 (04-14-2021)
+===================
+
+Fix invalid access type for OAuth /authorize
+
 21.1.4 (04-14-2021)
 ===================
 
