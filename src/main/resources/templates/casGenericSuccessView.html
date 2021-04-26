@@ -27,7 +27,7 @@
                     <h2 th:utext="#{screen.generic.loginsuccess.heading}"></h2>
                     <div th:utext="#{screen.generic.loginsuccess.message}"></div>
                 </section>
-                <section class="pre-formatted-small word-break-all">
+                <section id="authnAttr" class="pre-formatted-small word-break-all">
                     <pre th:unless="${#strings.isEmpty(authentication.principal.attributes.get('username'))}" th:utext="${'Email: ' + authentication.principal.attributes.get('username')}"></pre>
                     <pre th:unless="${#strings.isEmpty(authentication.principal.attributes.get('givenName')) or #strings.isEmpty(authentication.principal.attributes.get('familyName'))}" th:utext="${'Name: ' + authentication.principal.attributes.get('givenName') + ' ' + authentication.principal.attributes.get('familyName')}"></pre>
                     <pre th:unless="${#strings.isEmpty(authentication.principal.attributes.get('osfGuid'))}" th:utext="${'User ID: ' + authentication.principal.attributes.get('osfGuid')}"></pre>
