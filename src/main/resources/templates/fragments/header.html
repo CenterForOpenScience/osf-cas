@@ -39,6 +39,19 @@
         </header>
 
         <script type="text/javascript">
+            function disableSignUpButton() {
+                let signUpButton = document.getElementById("osfRegister");
+                if (signUpButton != null) {
+                    signUpButton.removeAttribute("href");
+                    signUpButton.style.opacity = "0.8";
+                    signUpButton.style.cursor = "not-allowed";
+                    signUpButton.style.backgroundColor = "#efefef";
+                    signUpButton.style.color = "#cccccc";
+                }
+            }
+        </script>
+
+        <script type="text/javascript">
             (function (material) {
                 var header = {
                     init: function () {
