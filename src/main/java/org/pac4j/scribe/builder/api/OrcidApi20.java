@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class OrcidApi20 extends DefaultApi20 {
 
-    private static final String AUTH_URL = "http://www.orcid.org/oauth/authorize";
+    private static final String AUTH_URL = "https://orcid.org/oauth/authorize";
     private static final String TOKEN_URL = "https://orcid.org/oauth/token";
 
     @Override
