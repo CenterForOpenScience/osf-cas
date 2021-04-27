@@ -27,7 +27,7 @@
                     <h2 th:utext="#{screen.service.error.heading}"></h2>
                     <p th:if="${rootCauseException != null and rootCauseException.code != null}" th:utext="#{${rootCauseException.code}}"></p>
                 </section>
-                <section class="form-button" th:with="loginUrl=@{/login(casRedirectSource=cas)}">
+                <section class="form-button" th:with="loginUrl=@{${@casServerLoginUrl}(casRedirectSource=cas)}">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${loginUrl})}">
                         <span class="mdc-button__label" th:utext="#{screen.error.page.loginagain}"></span>
                     </a>
