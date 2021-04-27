@@ -33,7 +33,7 @@
                     <pre th:utext="${'Timestamp: ' + #dates.formatISO(#dates.createNow())}"></pre>
                     <pre th:text="${'Message: ' + message}"></pre>
                 </section>
-                <section class="form-button" th:with="loginUrl=@{/login(casRedirectSource=cas)}">
+                <section class="form-button" th:with="loginUrl=@{${@casServerLoginUrl}(casRedirectSource=cas)}">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${loginUrl})}">
                         <span class="mdc-button__label" th:utext="#{screen.error.page.loginagain}"></span>
                     </a>

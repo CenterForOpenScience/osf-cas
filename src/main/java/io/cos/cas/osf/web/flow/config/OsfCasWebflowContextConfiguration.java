@@ -59,4 +59,13 @@ public class OsfCasWebflowContextConfiguration extends CasWebflowContextConfigur
         osfCasLogoutWebFlowConfigurer.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return osfCasLogoutWebFlowConfigurer;
     }
+
+    // TODO: Move all server-specific URLs, endpoints and other attributes to a dedicated class and initialize it as a
+    //       bean. ThymeLeaf templates can access Spring beans, which solves the issue of CasConfigurationProperties
+    //       accessibility in templates. For more details, refer to section "Spring Beans" in the following guide:
+    //       https://www.thymeleaf.org/doc/articles/springmvcaccessdata.html for details
+    @Bean(name="casServerLoginUrl")
+    public String casServerLoginUrl() {
+        return casProperties.getServer().getName() + "/login";
+    }
 }
