@@ -37,6 +37,7 @@ import java.util.Optional;
  * This is {@link CasWebAppConfiguration}.
  *
  * @author Misagh Moayyed
+ * @author Longze Chen
  * @since 5.0.0
  */
 @Configuration(value = "casWebAppConfiguration", proxyBeanMethods = false)
@@ -100,7 +101,9 @@ public class CasWebAppConfiguration implements WebMvcConfigurer {
                 val queryString = request.getQueryString();
                 val url = request.getContextPath() + "/login"
                         + Optional.ofNullable(queryString).map(string -> '?' + string).orElse(StringUtils.EMPTY);
-                return new ModelAndView(new RedirectView(response.encodeURL(url)));
+                // OSF CAS Customization: use absolute URL to temporarily solve the ingress issue on staging1 and prod.
+                val fullUrl = casProperties.getServer().getName() + url;
+                return new ModelAndView(new RedirectView(response.encodeURL(fullUrl)));
             }
         };
     }
