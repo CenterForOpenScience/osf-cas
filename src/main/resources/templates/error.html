@@ -27,17 +27,23 @@
                     <h2 th:utext="#{screen.unavailable.heading}"></h2>
                     <div th:utext="#{screen.unavailable.message}"></div>
                 </section>
-                <section class="form-button" th:with="loginUrl=@{/login(casRedirectSource=cas)}">
+                <section id="errorInfo" class="pre-formatted-small word-break-all">
+                    <pre id="initiatorUrl"></pre>
+                    <pre th:utext="${'Error: ' + status + ' - ' + error}"></pre>
+                    <pre th:utext="${'Timestamp: ' + #dates.formatISO(#dates.createNow())}"></pre>
+                    <pre th:text="${'Message: ' + message}"></pre>
+                </section>
+                <section class="form-button" th:with="loginUrl=@{${@casServerLoginUrl}(casRedirectSource=cas)}">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${loginUrl})}">
                         <span class="mdc-button__label" th:utext="#{screen.error.page.loginagain}"></span>
                     </a>
                 </section>
                 <hr class="my-4" />
                 <section class="text-with-mdi">
-                    <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.authnerror.button.backtoosf}"></a></span>
+                    <span><a th:href="@{/logout}" th:utext="#{screen.authnerror.button.logout}"></a></span>
                 </section>
+                <!--
                 <section>
-                <!-- <section th:if="${devMode}"> -->
                     <hr class="my-4" />
                     <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
                         <span th:utext="#{screen.authnerror.tips.devmode}"></span>
@@ -64,11 +70,13 @@
                         <pre th:utext="${#strings.escapeXml(trace)}"></pre>
                     </section>
                 </section>
+                -->
             </section>
         </div>
 
         <script type="text/javascript">
             disableSignUpButton();
+            document.getElementById("initiatorUrl").innerHTML = "Request URL: " + window.location.href;
         </script>
 
         <script type="text/javascript">

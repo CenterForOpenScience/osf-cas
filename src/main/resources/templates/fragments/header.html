@@ -20,16 +20,16 @@
                         <img class="cas-logo" src="/images/osf-logo-white.png">
                     </span>
                     <div class="cas-brand-text">
-                        <a class="navbar-link" th:href="@{${osfUrl.home}}">
+                        <a class="navbar-link" th:href="@{/login(casRedirectSource=tomcat)}">
                             <span class="cas-brand-name hidden-narrow" >OSF </span>
-                            <span class="cas-brand-name" >HOME</span>
+                            <span class="cas-brand-name" >CAS</span>
                         </a>
                     </div>
                 </section>
 
                 <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
                     <div class="form-button form-button-navbar">
-                        <a id="osfRegister" class="mdc-button mdc-button--raised button-osf-green" th:href="@{${osfUrl.register}}">
+                        <a class="mdc-button mdc-button--raised button-osf-disabled">
                             <span class="mdc-button__label">Sign up</span>
                         </a>
                     </div>

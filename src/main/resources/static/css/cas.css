@@ -942,6 +942,13 @@ body {
     padding: 0;
 }
 
+.login-error-card #errorInfo,
+.login-error-card #authnAttr {
+    margin-top: 1rem;
+    padding: 0 1rem;
+    border: solid #e7e7e7;
+}
+
 .login-instn-card .form-button {
     margin: 1rem 0;
 }

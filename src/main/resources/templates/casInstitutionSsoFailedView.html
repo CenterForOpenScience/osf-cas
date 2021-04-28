@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layoutosf}">
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -27,7 +27,7 @@
                     <h2 th:utext="#{screen.institutionssofailed.heading}"></h2>
                     <p th:utext="#{screen.institutionssofailed.message}"></p>
                 </section>
-                <section class="form-button" th:with="loginUrl=@{/login(casRedirectSource=cas)}">
+                <section class="form-button" th:with="loginUrl=@{${@casServerLoginUrl}(casRedirectSource=cas)}">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${loginUrl})}">
                         <span class="mdc-button__label" th:utext="#{screen.error.page.loginagain}"></span>
                     </a>

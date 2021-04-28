@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layoutosf}">
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -19,13 +19,20 @@
                         <a href="fragments/osfbannerui.html"></a>
                     </div>
                 </section>
-                <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
+                <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title">
                     <span th:utext="#{screen.generic.loginsuccess.tips}"></span>
                 </section>
                 <hr class="my-4" />
                 <section class="card-message">
                     <h2 th:utext="#{screen.generic.loginsuccess.heading}"></h2>
                     <div th:utext="#{screen.generic.loginsuccess.message}"></div>
+                </section>
+                <section id="authnAttr" class="pre-formatted-small word-break-all">
+                    <pre th:unless="${#strings.isEmpty(authentication.principal.attributes.get('username'))}" th:utext="${'Email: ' + authentication.principal.attributes.get('username')}"></pre>
+                    <pre th:unless="${#strings.isEmpty(authentication.principal.attributes.get('givenName')) or #strings.isEmpty(authentication.principal.attributes.get('familyName'))}" th:utext="${'Name: ' + authentication.principal.attributes.get('givenName') + ' ' + authentication.principal.attributes.get('familyName')}"></pre>
+                    <pre th:unless="${#strings.isEmpty(authentication.principal.attributes.get('osfGuid'))}" th:utext="${'User ID: ' + authentication.principal.attributes.get('osfGuid')}"></pre>
+                    <pre th:unless="${#strings.isEmpty(authentication.principal.id)}" th:utext="${'Principal ID: ' + authentication.principal.id}"></pre>
+                    <pre th:utext="${'Timestamp: ' + #dates.formatISO(#dates.createNow())}"></pre>
                 </section>
                 <section class="form-button">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{${osfUrl.dashboard}}">
@@ -36,8 +43,8 @@
                 <section class="text-with-mdi">
                     <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.generic.loginsuccess.link.cancel}"></a></span>
                 </section>
+                <!--
                 <section>
-                <!-- <section th:if="${osfCasLoginContext.devMode}"> -->
                     <hr class="my-4" />
                     <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
                         <span th:utext="#{screen.authnerror.tips.devmode}"></span>
@@ -83,6 +90,7 @@
                         </div>
                     </section>
                 </section>
+                -->
             </section>
         </div>
 

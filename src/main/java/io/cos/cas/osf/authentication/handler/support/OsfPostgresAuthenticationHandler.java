@@ -130,7 +130,12 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
 
         final OsfUser osfUser = jpaOsfDao.findOneUserByEmail(username);
         if (osfUser == null) {
-            throw new AccountNotFoundException("User [" + username + "] not found");
+            if (StringUtils.isNoneBlank(plainTextPassword) || StringUtils.isNoneBlank(oneTimePassword)) {
+                throw new AccountNotFoundException("User [" + username + "] not found");
+            }
+            if (StringUtils.isNoneBlank(verificationKey)) {
+                throw new InvalidVerificationKeyException("User [" + username + "] not found");
+            }
         }
         final OsfGuid osfGuid = jpaOsfDao.findGuidByUser(osfUser);
         if (osfGuid == null) {

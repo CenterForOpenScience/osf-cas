@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layoutosf}">
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -19,8 +19,8 @@
                         <a href="fragments/osfbannerui.html"></a>
                     </div>
                 </section>
-                <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
-                    <span th:utext="#{screen.generic.loginsuccess.tips}"></span>
+                <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title">
+                    <span th:utext="#{screen.generic.logoutsuccess.tips}"></span>
                 </section>
                 <hr class="my-4" />
                 <section class="card-message">
@@ -33,7 +33,7 @@
                     </a>
                 </section>
                 <hr class="my-4" />
-                <section class="text-with-mdi" th:with="loginUrl=@{/login(casRedirectSource=cas)}">
+                <section class="text-with-mdi">
                     <span><a th:href="@{/login(casRedirectSource=cas)}" th:utext="#{screen.generic.logoutsuccess.link.login}"></a></span>
                 </section>
             </section>
