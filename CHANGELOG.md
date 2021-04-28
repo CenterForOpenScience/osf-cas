@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.2.0 (04-28-2021)
+===================
+
+newCAS Production Server Release
+
 21.1.5 (04-14-2021)
 ===================
 
