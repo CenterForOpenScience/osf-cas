@@ -7,10 +7,10 @@
     </xsl:template>
 
     <xsl:template match="auth">
-        <xsl:variable name="delegation-protocol" select="//attribute[@name='Delegation-Protocol']/@value" />
+        <xsl:variable name="delegation-protocol" select="//attribute[@name='delegation-protocol']/@value" />
         <xsl:choose>
             <xsl:when test="$delegation-protocol = 'saml-shib'">
-                <xsl:variable name="idp" select="//attribute[@name='Shib-Identity-Provider']/@value" />
+                <xsl:variable name="idp" select="//attribute[@name='shib-identity-provider']/@value" />
                 <idp><xsl:value-of select="$idp"/></idp>
                 <xsl:choose>
                     <!-- Arizona State University (ASU) -->
@@ -18,9 +18,9 @@
                         <id>asu</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -31,9 +31,9 @@
                         <id>bt</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -43,9 +43,9 @@
                         <id>bu</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -55,10 +55,10 @@
                         <id>brown</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <isMemberOf><xsl:value-of select="//attribute[@name='isMemberOf']/@value"/></isMemberOf>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <isMemberOf><xsl:value-of select="//attribute[@name='ismemberof']/@value"/></isMemberOf>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -68,7 +68,7 @@
                         <id>callutheran</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -81,8 +81,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -93,8 +93,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -105,8 +105,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -116,9 +116,9 @@
                         <id>duke</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -128,9 +128,9 @@
                         <id>ecu</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -141,7 +141,7 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <fullname/>
                             <middleNames/>
                             <suffix/>
@@ -152,7 +152,7 @@
                         <id>fsu</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -165,8 +165,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -177,8 +177,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -189,8 +189,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='email']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -201,7 +201,7 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <fullname><xsl:value-of select="//attribute[@name='cn']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
@@ -212,9 +212,9 @@
                         <id>jmu</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayNamePrintable']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displaynameprintable']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -224,7 +224,7 @@
                         <id>jhu</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -236,9 +236,9 @@
                         <id>kuleuven</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -249,8 +249,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -261,8 +261,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -272,7 +272,7 @@
                         <id>nyu</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -285,8 +285,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -296,9 +296,9 @@
                         <id>pu</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -307,8 +307,8 @@
                     <xsl:when test="$idp='https://www.rediris.es/sir/csicidp'">
                         <id>csic</id>
                         <user>
-                            <username><xsl:value-of select="//attribute[@name='irisMailMainAddress']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>     
+                            <username><xsl:value-of select="//attribute[@name='irismailmainaddress']/@value"/></username>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -321,8 +321,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -332,9 +332,9 @@
                         <id>tufts</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -344,9 +344,9 @@
                         <id>ugent</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -356,9 +356,9 @@
                         <id>ua</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                             <departmentRaw><xsl:value-of select="//attribute[@name='department']/@value"/></departmentRaw>
@@ -370,7 +370,7 @@
                         <id>ubc</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -382,9 +382,9 @@
                         <id>ucla</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -394,7 +394,7 @@
                         <id>ucsd</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -406,9 +406,9 @@
                         <id>ucr</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -418,9 +418,9 @@
                         <id>uct</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames />
                             <suffix/>
                         </user>
@@ -430,7 +430,7 @@
                         <id>uc</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -442,7 +442,7 @@
                         <id>colorado</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -454,9 +454,9 @@
                         <id>ugoe</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -466,7 +466,7 @@
                         <id>universityofkent</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -479,8 +479,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -490,9 +490,9 @@
                         <id>umd</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -502,9 +502,9 @@
                         <id>unc</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -514,7 +514,7 @@
                         <id>nd</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -525,11 +525,11 @@
                     <xsl:when test="$idp='https://shibboleth.usc.edu/shibboleth-idp'">
                         <id>usc</id>
                         <user>
-                            <username><xsl:value-of select="//attribute[@name='uscEmailPrimaryAddress']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='uscDisplayGivenName']/@value"/><xsl:text> </xsl:text><xsl:value-of select="//attribute[@name='uscDisplaySn']/@value"/></fullname>
-                            <familyName><xsl:value-of select="//attribute[@name='uscDisplaySn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='uscDisplayGivenName']/@value"/></givenName>
-                            <middleNames><xsl:value-of select="//attribute[@name='uscDisplayMiddleName']/@value"/></middleNames>
+                            <username><xsl:value-of select="//attribute[@name='uscemailprimaryaddress']/@value"/></username>
+                            <fullname><xsl:value-of select="//attribute[@name='uscdisplaygivenname']/@value"/><xsl:text> </xsl:text><xsl:value-of select="//attribute[@name='uscdisplaysn']/@value"/></fullname>
+                            <familyName><xsl:value-of select="//attribute[@name='uscdisplaysn']/@value"/></familyName>
+                            <givenName><xsl:value-of select="//attribute[@name='uscdisplaygivenname']/@value"/></givenName>
+                            <middleNames><xsl:value-of select="//attribute[@name='uscdisplaymiddlename']/@value"/></middleNames>
                             <suffix/>
                         </user>
                     </xsl:when>
@@ -538,9 +538,9 @@
                         <id>sc</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -551,8 +551,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -562,7 +562,7 @@
                         <id>uva</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -574,7 +574,7 @@
                         <id>uw</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -587,8 +587,8 @@
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -598,7 +598,7 @@
                         <id>vcu</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -612,7 +612,7 @@
                         <id>vt</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
                             <middleNames/>
@@ -624,9 +624,9 @@
                         <id>wustl</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='eppn']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -638,7 +638,7 @@
                 </xsl:choose>
             </xsl:when>
             <xsl:when test="$delegation-protocol = 'cas-pac4j'">
-                <xsl:variable name="idp" select="//attribute[@name='Cas-Identity-Provider']/@value" />
+                <xsl:variable name="idp" select="//attribute[@name='cas-identity-provider']/@value" />
                 <idp><xsl:value-of select="$idp"/></idp>
                 <xsl:choose>
                     <!-- Concordia College (CORD) -->
@@ -646,7 +646,7 @@
                         <id>cord</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <fullname><xsl:value-of select="//attribute[@name='displayName']/@value"/></fullname>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName />
                             <givenName />
                             <middleNames/>
@@ -660,7 +660,7 @@
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
                             <fullname/>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
