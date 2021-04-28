@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.2.1 (04-28-2021)
+===================
+
+Fix root controller relative redirection
+
 21.2.0 (04-28-2021)
 ===================
 
