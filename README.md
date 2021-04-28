@@ -19,14 +19,15 @@ OSF CAS is the centralized authentication and authorization service for the [OSF
 * OSF username and verification key login
 * OSF two-factor authentication
 * Delegated authentication
-  * ORCiD login
-  * **WIP** - CAS client: supports CAS protocol based institution SSO
-  * **WIP** - SAML service provider: supports SAML protocol based institution SSO
-* **TBI** - OAuth authorization server for OSF
+  * OAuth 2.0 client: supports ORCiD login
+  * CAS client: supports institution SSO using the CAS protocol
+  * SAML service provider: supports institution SSO using the SAML protocol
+* OAuth 2.0 authorization server for OSF
+* Authentication failure throttling
 
 # Implementations
 
-The implementation of OSF CAS is based on [Apereo CAS 6.2.x](https://github.com/apereo/cas/tree/6.2.x) via [CAS Overlay Template 6.2.x](https://github.com/apereo/cas-overlay-template/tree/6.2). Refer to [CAS Documentaion 6.2.x](https://apereo.github.io/cas/6.2.x/) for more details.
+The implementation of OSF CAS is based on [Apereo CAS 6.2.8](https://github.com/apereo/cas/tree/v6.2.8) via [CAS Overlay Template 6.2.x](https://github.com/apereo/cas-overlay-template/tree/6.2). Refer to [CAS Documentation 6.2.x](https://apereo.github.io/cas/6.2.x/) for more details.
 
 ## Legacy Implementations
 
@@ -34,20 +35,20 @@ A legacy version can be found at [CAS Overlay](https://github.com/CenterForOpenS
 
 # Versions
 
-- OSF CAS     `20.0.x`
-- Apereo CAS  `6.2.x`
+- OSF CAS     [21.2.x](https://github.com/CenterForOpenScience/osf-cas/releases/latest)
+- Apereo CAS  `6.2.8`
 - PostgreSQL  `9.6`
 - JDK         `11`
 
 # Configure, Build and Run OSF CAS
 
-It is recommended to use the provided scripts to [build](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-build.sh) and [run](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-run.sh) CAS. Refer to Apereo's [README.md](https://github.com/apereo/cas-overlay-template/tree/6.2#cas-overlay-template-) for more options.
+It is recommended to use the provided scripts to [build](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-build.sh) and [run](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-run.sh) CAS. Refer to Apereo [README.md](https://github.com/apereo/cas-overlay-template/tree/6.2#cas-overlay-template-) for more options.
 
 Use [`cas.properties`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/etc/cas/config/cas.properties) and [`Dockerfile`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/Dockerfile) to configure staging and production servers. Use [`cas-local.properties`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/etc/cas/config/local/cas-local.properties) and [`Dockerfile-local`](https://github.com/CenterForOpenScience/osf-cas/blob/develop/Dockerfile-local) for local development. To accelerate developing OSF CAS, use the [reload](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-reload.sh) script to rebuild, reconfigure and restart the running container.
 
 ## OSF
 
-OSF CAS requires a working OSF running locally. Refer to OSF's [README-docker-compose.md](https://github.com/CenterForOpenScience/osf.io/blob/develop/README-docker-compose.md) for how to set up and run OSF with `docker-compose`. Must disable `fakeCAS` to free port `8080`.
+OSF CAS requires a working OSF running locally. Refer to OSF [README-docker-compose.md](https://github.com/CenterForOpenScience/osf.io/blob/develop/README-docker-compose.md) for how to set up and run OSF with `docker-compose`. Must disable `fakeCAS` to free port `8080` for CAS to use.
 
 ### OSF DB
 
@@ -67,7 +68,7 @@ cas.authn.osf-postgres.jpa.dialect=io.cos.cas.osf.hibernate.dialect.OsfPostgresD
 
 ## CAS DB
 
-The implementation of OSF CAS uses the [JPA Ticket Registry](https://apereo.github.io/cas/6.2.x/ticketing/Configuring-Ticketing-Components.html#ticket-registry) for durable ticket storage and thus requires a relational database. Set up a `PostgreSQL@9.6` server and review [JPA Ticket Registry settings](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/cas.properties#L90-L138). In most cases, only [Database connections](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/cas.properties#L104-L108) need to be updated. In addition, [JDBC settings](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/cas.properties#L96-L98) can be adjusted if necessary.
+The implementation of OSF CAS uses the [JPA Ticket Registry](https://apereo.github.io/cas/6.2.x/ticketing/Configuring-Ticketing-Components.html#ticket-registry) for durable ticket storage and thus requires a relational database. Set up a `PostgreSQL@9.6` server and review [JPA Ticket Registry settings](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L127-L173). In most cases, only [Database connections](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L139-L143) need to be updated. Other JDBC and JPA settings can be adjusted if necessary.
 
 Here is an example for local development. Use `192.168.168.167` to access host outside the docker container. Use the port `54321` since the default `5432` one has been used by OSF DB. Update `pg_hba.conf` to grant proper access permission depending on the setup.
 
@@ -90,17 +91,19 @@ host    osf-cas         longzechen      192.168.168.167/24      trust
 
 ## Signing and Encryption Keys
 
-Refer to [signing and encryption settings](https://github.com/CenterForOpenScience/osf-cas/blob/790cac1ac5a19754c67d6ea1f53afc26e1809d23/etc/cas/config/cas.properties#L142-L158) in `cas.properties` for signing and encrypting client sessions and ticket granting cookies. Use the following default keys **for local development only**.
+### CAS Server
 
-```yaml
-# In `cas-local.properties`
+* Refer to [signing and encryption 1](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L175-L190) in `cas.properties` for signing and encrypting client sessions and ticket granting cookies.
 
-cas.webflow.crypto.signing.key=7okipSDHBKuZL2n66cfYU4OH1Z_BRYkmEJazc29hzhXCXbRvws7Hv4_hEVd4E2osMrgIEdykzV2hAVD9CCQpJw
-cas.webflow.crypto.encryption.key=1A9hLtxA-Es-hbQsfxqxxw
+### OAuth Server
 
-cas.tgc.crypto.signing.key=_WTRQmXGuq-mx2pTjNCXuX5971-e8KOCFOa27Mh5I3oBobYSzyUrLS9rfSiXQQDolJrJrWv7jURID1vtouznHg
-cas.tgc.crypto.encryption.key=dcjD5PIfrcqGM8tv4_FGubcay-DbqKPPoz9xQ3IHQi0
-```
+* Refer to [signing and encryption 2](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L291-L295) in `cas.properties` for signing and encrypting OAuth 2.0 registered services.
+
+* You can optionally enable OAuth JWT access tokens, which requires [signing and encryption 3](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L273-L282) to be configured.
+
+### Auto-generate Key Pairs
+
+Set empty values to the above keys and CAS will generate the key pairs automatically. The keys will be re-generated once server restarts. Follow the server warning logs for further actions.
 
 ## Authentication Delegation
 
@@ -112,7 +115,13 @@ For local development, set up a developer app at [ORCiD](https://orcid.org/devel
 
 ### Institution Login
 
-( ... WIP ... )
+#### SAML / Shibboleth
+
+Details coming soon ...
+
+#### CAS / Pac4j
+
+Details coming soon ...
 
 #### `fakeCAS` Login (Local Development Only)
 
@@ -142,3 +151,7 @@ cas.authn.pac4j.cas[2].client-name=fakecas
 cas.authn.pac4j.cas[2].protocol=CAS30
 cas.authn.pac4j.cas[2].callback-url-type=QUERY_PARAMETER
 ```
+
+### OAuth 2.0 Server
+
+Details coming soon ...
