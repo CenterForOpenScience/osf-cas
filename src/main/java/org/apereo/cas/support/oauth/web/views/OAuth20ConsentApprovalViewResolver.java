@@ -20,6 +20,7 @@ import org.pac4j.core.util.CommonHelper;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Map;
@@ -139,14 +140,24 @@ public class OAuth20ConsentApprovalViewResolver implements ConsentApprovalViewRe
      */
     protected String getCallbackUrl(final JEEContext context) throws URISyntaxException {
         val callbackUrl = context.getFullRequestURL();
+        val serverPrefix = casProperties.getServer().getPrefix();
+        if (!callbackUrl.startsWith(serverPrefix)) {
+            LOGGER.warn("[OAuth ConsentApproval] callback URL [{}] doesn't have the correct server prefix [{}]", callbackUrl, serverPrefix);
+        } else {
+            LOGGER.info("[OAuth ConsentApproval] callback URL [{}] uses the correct server prefix [{}]", callbackUrl, serverPrefix);
+        }
+        val serverPrefixUrl = new URI(serverPrefix);
         val url = new URIBuilder(callbackUrl);
+        url.setScheme(serverPrefixUrl.getScheme());
+        url.setHost(serverPrefixUrl.getHost());
+        url.setPort(-1);
         // APPROVAL_PROMPT can be set to any value. It does not have any effect since BYPASS_APPROVAL_PROMPT is present.
         // However, setting it to EMPTY is preferred so that it is different from its original values "auto" or "force".
         url.setParameter(OsfCasOAuth20Constants.APPROVAL_PROMPT, StringUtils.EMPTY);
         url.setParameter(OAuth20Constants.BYPASS_APPROVAL_PROMPT, Boolean.TRUE.toString());
-        LOGGER.debug("Callback URL for approval submit action: [{}]", callbackUrl);
-        return url.toString();
-
+        val approvalCallbackUrl = url.toString();
+        LOGGER.info("[OAuth ConsentApproval] modified approval callback URL [{}]", approvalCallbackUrl);
+        return approvalCallbackUrl;
     }
 
     /**
