@@ -26,6 +26,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 /**
  * OAuth callback authorize controller based on the pac4j callback controller.
  *
@@ -58,16 +61,37 @@ public class OAuth20CallbackAuthorizeEndpointController extends BaseOAuth20Contr
 
         val callback = new OAuth20CallbackLogic();
         val context = new JEEContext(request, response, getOAuthConfigurationContext().getSessionStore());
+        // Build the request URL with server prefix "https://accounts.osf.io" instead of calling `context.getFullRequestURL()` which
+        // somehow uses "https://127.0.0.1". This is a work-around for a weird tomcat relative redirect issue on staging 1 and prod.
+        val serverPrefix = getOAuthConfigurationContext().getCasProperties().getServer().getPrefix();
+        val fullRequestUrl = serverPrefix + request.getRequestURI() + '?' + request.getQueryString();
+        LOGGER.debug("[OAuth callbackAuthorize] full request URL in context [{}]", context.getFullRequestURL());
+        LOGGER.debug("[OAuth callbackAuthorize] full request URL customized [{}]", fullRequestUrl);
         callback.perform(
                 context,
                 getOAuthConfigurationContext().getOauthConfig(), (object, ctx) -> Boolean.FALSE,
-                context.getFullRequestURL(),
+                fullRequestUrl,
                 Boolean.TRUE,
                 Boolean.FALSE,
                 Boolean.FALSE,
                 Authenticators.CAS_OAUTH_CLIENT
         );
         var url = callback.getRedirectUrl();
+        if (!url.startsWith(serverPrefix)) {
+            LOGGER.warn("[OAuth callbackAuthorize] redirect URL [{}] doesn't have the correct server prefix [{}]", url, serverPrefix);
+            try {
+                URI uri = new URI(url);
+                url = serverPrefix + uri.getPath() + '?' + uri.getRawQuery();
+                LOGGER.warn("[OAuth callbackAuthorize] use server prefix for redirect URL [{}]", url);
+            } catch (URISyntaxException e) {
+                modelContext.setErrorCode(OsfCasOAuth20Constants.INTERNAL_SERVER_ERROR);
+                modelContext.setErrorMsg(e.getMessage());
+                modelContext.setOsfUrl(getOsfUrl());
+                return OsfCasOAuth20Utils.produceOAuth20ErrorView(modelContext);
+            }
+        } else {
+            LOGGER.info("[OAuth callbackAuthorize] redirect URL [{}] uses the correct server prefix: [{}}]", url, serverPrefix);
+        }
         if (StringUtils.isBlank(url)) {
             modelContext.setErrorCode(OsfCasOAuth20Constants.SESSION_STALE_MISMATCH);
             LOGGER.error(modelContext.getErrorMsg());
@@ -76,7 +100,7 @@ public class OAuth20CallbackAuthorizeEndpointController extends BaseOAuth20Contr
             return OsfCasOAuth20Utils.produceOAuth20ErrorView(modelContext);
         }
         val manager = new ProfileManager<>(context, context.getSessionStore());
-        LOGGER.trace("OAuth callback URL is [{}]", url);
+        LOGGER.debug("OAuth callback URL is [{}]", url);
         return getOAuthConfigurationContext().getCallbackAuthorizeViewResolver().resolve(context, manager, url);
     }
 

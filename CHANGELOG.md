@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.2.2 (04-29-2021)
+===================
+
+Fix OAuth callback authorize redirect URL and consent approval callback URL
+
 21.2.1 (04-28-2021)
 ===================
 
