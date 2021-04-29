@@ -58,10 +58,14 @@ public class OAuth20CallbackAuthorizeEndpointController extends BaseOAuth20Contr
 
         val callback = new OAuth20CallbackLogic();
         val context = new JEEContext(request, response, getOAuthConfigurationContext().getSessionStore());
+        // Build the request URL with server prefix "https://accounts.osf.io" instead of calling `context.getFullRequestURL()` which
+        // somehow uses "https://127.0.0.1". This is a work-around for a weird tomcat relative redirect issue on staging 1 and prod.
+        val serverPrefix = getOAuthConfigurationContext().getCasProperties().getServer().getPrefix();
+        val fullRequestUrl = serverPrefix + request.getRequestURI() + '?' + request.getQueryString();
         callback.perform(
                 context,
                 getOAuthConfigurationContext().getOauthConfig(), (object, ctx) -> Boolean.FALSE,
-                context.getFullRequestURL(),
+                fullRequestUrl,
                 Boolean.TRUE,
                 Boolean.FALSE,
                 Boolean.FALSE,
@@ -76,7 +80,7 @@ public class OAuth20CallbackAuthorizeEndpointController extends BaseOAuth20Contr
             return OsfCasOAuth20Utils.produceOAuth20ErrorView(modelContext);
         }
         val manager = new ProfileManager<>(context, context.getSessionStore());
-        LOGGER.trace("OAuth callback URL is [{}]", url);
+        LOGGER.debug("OAuth callback URL is [{}]", url);
         return getOAuthConfigurationContext().getCallbackAuthorizeViewResolver().resolve(context, manager, url);
     }
 
