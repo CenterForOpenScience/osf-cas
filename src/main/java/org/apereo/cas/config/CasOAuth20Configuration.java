@@ -265,11 +265,8 @@ public class CasOAuth20Configuration {
     @RefreshScope
     public Config oauthSecConfig() {
         val clientList = oauthSecConfigClients();
-        // OSF CAS customization 1: similar to `CasOAuth20Configuration.casCallbackUrlResolver()`
-        // OSF CAS customization 2: must append the full server name, otherwise the flow gets redirected to the /oauth2/authorize
-        //                          endpoint with https://127.0.0.1 on staging 1 and prod after successful login
-        val oAuthCallbackUrl = OsfCasOAuth20Utils.casOAuthCallbackUrl(casProperties.getServer().getPrefix());
-        val config = new Config(casProperties.getServer().getName() + oAuthCallbackUrl, clientList);
+        // OSF CAS customization: similar to `CasOAuth20Configuration.casCallbackUrlResolver()`
+        val config = new Config(OsfCasOAuth20Utils.casOAuthCallbackUrl(casProperties.getServer().getPrefix()), clientList);
         config.setSessionStore(oauthDistributedSessionStore());
         Config.setProfileManagerFactory("CASOAuthSecurityProfileManager", webContext ->
             new OAuth20ClientIdAwareProfileManager(webContext, config.getSessionStore(), servicesManager.getObject()));
