@@ -110,7 +110,7 @@ public class OsfInstitutionLoginPreparationAction extends OsfAbstractLoginPrepar
                     } else {
                         final String clientUrl = ((DelegatedClientIdentityProviderConfiguration) client).getRedirectUrl();
                         pac4jInstitutionLoginUrlMap.put(clientName, clientUrl);
-                        LOGGER.warn("{}: {}", clientName, clientUrl);
+                        LOGGER.debug("Store PAC4J institution client [{}] with redirect URL [{}] in context", clientName, clientUrl);
                     }
                 }
             }
