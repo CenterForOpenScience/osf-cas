@@ -154,8 +154,12 @@ dependencies {
     implementation "com.nimbusds:nimbus-jose-jwt:${nimbusJoseVersion}"
     // Apache HttpComponents Client Fluent API
     implementation "org.apache.httpcomponents:fluent-hc:${fluentHcVersion}"
+
     // Jasig CAS Client
+    // The core module supports CAS client for both OAuth login and institution SSO
     implementation "org.jasig.cas.client:cas-client-core:${casClientVersion}"
+    // The SAML module supports SAML validation for CAS-PAC4J institution SSO
+    implementation "org.jasig.cas.client:cas-client-support-saml:${casClientVersion}"
 }
 
 tasks.findByName("jibDockerBuild")
