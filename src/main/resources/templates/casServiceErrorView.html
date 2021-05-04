@@ -27,6 +27,13 @@
                     <h2 th:utext="#{screen.service.error.heading}"></h2>
                     <p th:if="${rootCauseException != null and rootCauseException.code != null}" th:utext="#{${rootCauseException.code}}"></p>
                 </section>
+                <section id="errorInfo" class="pre-formatted-small word-break-all">
+                    <pre id="initiatorUrl"></pre>
+                    <pre th:if="${rootCauseException}" th:text="${'Error: ' + rootCauseException.getClass().getSimpleName()}"></pre>
+                    <pre th:if="${rootCauseException}" th:text="${'Message: ' + rootCauseException.getMessage()}"></pre>
+                    <pre th:if="${service}" th:text="${'Service: ' + service}"></pre>
+                    <pre th:utext="${'Timestamp: ' + #dates.formatISO(#dates.createNow())}"></pre>
+                </section>
                 <section class="form-button" th:with="loginUrl=@{${@casServerLoginUrl}(casRedirectSource=cas)}">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${loginUrl})}">
                         <span class="mdc-button__label" th:utext="#{screen.error.page.loginagain}"></span>
@@ -41,6 +48,7 @@
 
         <script type="text/javascript">
             disableSignUpButton();
+            document.getElementById("initiatorUrl").innerHTML = "Request URL: " + window.location.href;
         </script>
 
     </div>
