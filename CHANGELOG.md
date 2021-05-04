@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.2.3 (05-03-2021)
+===================
+
+Fix login URLs for cas-pac4j institution SSO
+
 21.2.2 (04-29-2021)
 ===================
 
