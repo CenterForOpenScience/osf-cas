@@ -2,6 +2,12 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+
+21.2.4 (05-04-2021)
+===================
+
+Fix dependencies to support CAS client using SAML validation
+
 21.2.3 (05-03-2021)
 ===================
 
