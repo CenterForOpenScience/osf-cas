@@ -30,8 +30,9 @@
                 <section id="errorInfo" class="pre-formatted-small word-break-all">
                     <pre id="initiatorUrl"></pre>
                     <pre th:utext="${'Error: ' + status + ' - ' + error}"></pre>
-                    <pre th:utext="${'Timestamp: ' + #dates.formatISO(#dates.createNow())}"></pre>
                     <pre th:text="${'Message: ' + message}"></pre>
+                    <pre th:if="${service}" th:text="${'Service: ' + service}"></pre>
+                    <pre th:utext="${'Timestamp: ' + #dates.formatISO(#dates.createNow())}"></pre>
                 </section>
                 <section class="form-button" th:with="loginUrl=@{${@casServerLoginUrl}(casRedirectSource=cas)}">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${loginUrl})}">
