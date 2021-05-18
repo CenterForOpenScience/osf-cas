@@ -2,6 +2,10 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.2.5 (05-18-2021)
+===================
+
+Customize pac4j stop web flow view
 
 21.2.4 (05-04-2021)
 ===================
