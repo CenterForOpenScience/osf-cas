@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layoutosf}">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title th:text="#{screen.pac4j.error.title}">Pac4j Stop Webflow View</title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
+</head>
+
+<body class="mdc-typography">
+<div layout:fragment="content" class="d-flex justify-content-center">
+
+    <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
+        <section class="login-error-card">
+            <section>
+                <div th:replace="fragments/osfbannerui :: osfBannerUI">
+                    <a href="fragments/osfbannerui.html"></a>
+                </div>
+            </section>
+            <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
+                <span th:utext="#{screen.authnerror.tips}"></span>
+            </section>
+            <hr class="my-4" />
+            <section class="card-message">
+                <h2 th:utext="#{screen.pac4j.error.heading}"></h2>
+                <p th:utext="#{screen.pac4j.error.message}"></p>
+            </section>
+            <section id="errorInfo" class="pre-formatted-small word-break-all">
+                <pre id="initiatorUrl"></pre>
+                <pre th:if="${rootCauseException}" th:text="${'Error: ' + rootCauseException.getClass().getSimpleName()}"></pre>
+                <pre th:if="${rootCauseException}" th:text="${'Message: ' + rootCauseException.getMessage()}"></pre>
+                <pre th:if="${service}" th:text="${'Service: ' + service}"></pre>
+                <pre th:utext="${'Timestamp: ' + #dates.formatISO(#dates.createNow())}"></pre>
+            </section>
+            <section class="form-button" th:with="loginUrl=@{${@casServerLoginUrl}(casRedirectSource=cas)}">
+                <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${loginUrl})}">
+                    <span class="mdc-button__label" th:utext="#{screen.error.page.loginagain}"></span>
+                </a>
+            </section>
+            <hr class="my-4" />
+            <section class="text-with-mdi">
+                <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.authnerror.button.backtoosf}"></a></span>
+            </section>
+        </section>
+    </div>
+
+    <script type="text/javascript">
+        disableSignUpButton();
+        document.getElementById("initiatorUrl").innerHTML = "Request URL: " + window.location.href;
+    </script>
+
+</div>
+</body>
+
+</html>
