@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -89,7 +88,6 @@ public class CasOAuth20ThrottleConfiguration {
 
     @ConditionalOnMissingBean(name = "oauthHandlerInterceptorAdapter")
     @Bean
-    @RefreshScope
     public HandlerInterceptor oauthHandlerInterceptorAdapter() {
         return new OAuth20HandlerInterceptorAdapter(
             requiresAuthenticationAccessTokenInterceptor(),
