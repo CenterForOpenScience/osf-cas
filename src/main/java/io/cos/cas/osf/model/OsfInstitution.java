@@ -9,6 +9,9 @@ import lombok.ToString;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
 
 /**
  * This is {@link OsfInstitution}.
@@ -42,6 +45,10 @@ public class OsfInstitution extends AbstractOsfModel {
 
     @Column(name = "is_deleted")
     private Boolean deleted;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "deactivated")
+    private Date dateDeactivated;
 
     public DelegationProtocol getDelegationProtocol() {
         try {
