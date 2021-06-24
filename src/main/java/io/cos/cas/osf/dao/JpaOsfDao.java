@@ -100,7 +100,7 @@ public class JpaOsfDao extends AbstractOsfDao {
     public OsfInstitution findOneInstitutionById(final String id) {
         try {
             final TypedQuery<OsfInstitution> query = entityManager.createQuery(
-                    "select i from OsfInstitution i where i.institutionId = :id",
+                    "select i from OsfInstitution i where i.institutionId = :id and i.deleted = false and i.dateDeactivated is null",
                     OsfInstitution.class
             );
             query.setParameter("id", id);
@@ -108,7 +108,6 @@ public class JpaOsfDao extends AbstractOsfDao {
         } catch (final PersistenceException e) {
             return null;
         }
-
     }
 
     @Override
@@ -116,7 +115,7 @@ public class JpaOsfDao extends AbstractOsfDao {
         try {
             final TypedQuery<OsfInstitution> query = entityManager.createQuery(
                     "select i from OsfInstitution i "
-                            + "where (not i.delegationProtocol = '') and i.deleted = false",
+                            + "where (not i.delegationProtocol = '') and i.deleted = false and i.dateDeactivated is null",
                     OsfInstitution.class
             );
             return query.getResultList();
