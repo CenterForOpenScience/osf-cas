@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.3.0 (07-19-2021)
+===================
+
+Support OSF institution deactivation/reactivation
+
 21.2.5 (05-18-2021)
 ===================
 
