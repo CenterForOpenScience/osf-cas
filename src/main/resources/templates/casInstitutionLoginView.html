@@ -37,8 +37,8 @@
                     </section>
 
                     <section class="text-with-mdi text-bold text-large">
-                        <span th:unless=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.heading.select}"></span>
-                        <span th:if=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.heading.auto}"></span>
+                        <label for="institutionSelect" th:unless=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.heading.select}"></label>
+                        <label for="institutionSelect" th:if=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.heading.auto}"></label>
                     </section>
 
                     <section class="instn-select">

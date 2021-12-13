@@ -80,9 +80,9 @@
                                     maxlength="6"
                                     th:accesskey="#{screen.twofactor.label.onetimepassword.accesskey}"
                                     th:field="*{oneTimePassword}"
-                                    autocomplete="off"
+                                    autocomplete="new-password"
                                     autofocus />
-                                <label for="username" class="mdc-floating-label" th:utext="#{screen.twofactor.label.onetimepassword}"></label>
+                                <label for="oneTimePassword" class="mdc-floating-label" th:utext="#{screen.twofactor.label.onetimepassword}"></label>
                             </div>
                         </div>
                         <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append" type="button">

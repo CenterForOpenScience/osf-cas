@@ -17,7 +17,7 @@
 
                 <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
                     <span class="cas-brand mx-auto" >
-                        <img class="cas-logo" src="/images/osf-logo-white.png">
+                        <img class="cas-logo" src="/images/osf-logo-white.png" alt="OSF logo image in the top navigation bar">
                     </span>
                     <div class="cas-brand-text">
                         <a class="navbar-link" th:href="@{/login(casRedirectSource=tomcat)}">
@@ -29,7 +29,7 @@
 
                 <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
                     <div class="form-button form-button-navbar">
-                        <a class="mdc-button mdc-button--raised button-osf-disabled">
+                        <a id="osfRegister" class="mdc-button mdc-button--raised button-osf-disabled">
                             <span class="mdc-button__label">Sign up</span>
                         </a>
                     </div>
@@ -47,8 +47,10 @@
                     signUpButton.style.cursor = "not-allowed";
                     signUpButton.style.backgroundColor = "#efefef";
                     signUpButton.style.color = "#cccccc";
+                    signUpButton.style.visibility = "hidden";
                 }
             }
+            disableSignUpButton();
         </script>
 
         <script type="text/javascript">

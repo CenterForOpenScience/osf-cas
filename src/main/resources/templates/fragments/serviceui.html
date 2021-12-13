@@ -15,18 +15,18 @@
         <div th:fragment="serviceUI" th:if="${registeredService}" id="serviceui" class="mb-4 service-ui text-center">
             <div th:if="${#strings.equalsIgnoreCase(registeredService.class.simpleName, 'OAuthRegisteredService')}">
                 <div class="osf-banner-without-name">
-                    <img id="serviceLogo" class="service-ui-logo" th:src="@{'images/osf-banner.png'}" />
+                    <img id="serviceLogo" class="service-ui-logo" th:src="@{'images/osf-banner.png'}" alt="OSF banner image in the main form"/>
                 </div>
             </div>
             <div th:unless="${#strings.equalsIgnoreCase(registeredService.class.simpleName, 'OAuthRegisteredService')}">
                 <div class="osf-banner-without-name" th:if="${#strings.isEmpty(registeredService.name)}">
-                    <img id="serviceLogo" class="service-ui-logo" th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-banner.png'}" />
+                    <img id="serviceLogo" class="service-ui-logo" th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-banner.png'}" alt="Service banner image in the main form"/>
                 </div>
                 <table class="osf-shield-with-name osf-shield-with-name-branded" th:unless="${#strings.isEmpty(registeredService.name)}">
                     <tbody>
                     <tr>
                         <td>
-                            <img id="serviceLogoBranded" class="service-ui-logo service-ui-logo-branded" th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-logo.png'}" />
+                            <img id="serviceLogoBranded" class="service-ui-logo service-ui-logo-branded" th:src="${registeredService.logo} ? ${registeredService.logo} : @{'images/osf-logo.png'}" alt="Service logo image in the main form"/>
                         </td>
                         <td>
                             <span id="serviceNameBranded" class="service-ui-name service-ui-name-branded" th:text="${registeredService.name}"></span>
