@@ -94,7 +94,14 @@ bootWar {
             // skip = false     // the same as enabled = true
             provided = false
             enableCompilation = true
-            // excludes = []
+            excludes = [
+                    "WEB-INF/lib/log4j-api-2.13.3.jar",
+                    "WEB-INF/lib/log4j-core-2.13.3.jar",
+                    "WEB-INF/lib/log4j-jcl-2.13.3.jar",
+                    "WEB-INF/lib/log4j-jul-2.12.1.jar",
+                    "WEB-INF/lib/log4j-slf4j18-impl-2.13.3.jar",
+                    "WEB-INF/lib/log4j-web-2.13.3.jar"
+            ]
             // includes = []
             // targetPath = ""  //  the content of the overlay is added in the root structure of the webapp by default
         }
