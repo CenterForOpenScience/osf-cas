@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+21.3.1 (12-14-2021)
+===================
+
+Upgrade logger for CAS 6.2.x
+
 21.3.0 (07-19-2021)
 ===================
 
