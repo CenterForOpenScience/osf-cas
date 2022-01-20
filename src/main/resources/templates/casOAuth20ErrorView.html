@@ -24,8 +24,7 @@
             </section>
             <hr class="my-4" />
             <section class="card-message">
-                <h1></h1>
-                <h2 th:utext="#{screen.oauth.error.heading}"></h2>
+                <h1 th:utext="#{screen.oauth.error.heading}"></h1>
                 <p th:utext="#{${errorMsg}}"></p>
                 <p class="pre-formatted-small word-break-all">
                     <pre class="wrap" th:utext="#{${errorCode + ': ' + errorParam}}"></pre>

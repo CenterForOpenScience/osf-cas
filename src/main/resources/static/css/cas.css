@@ -48,8 +48,45 @@ a:hover, a:visited, a:active {
     color: var(--cas-theme-primary-light);
 }
 
+h1 {
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+}
+
+h2,
+h1.downsize-to-h2 {
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+h3,
+h2.downsize-to-h3 {
+    font-size: 1em;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+}
+
+h4,
+h3.downsize-to-h4 {
+    font-size: 0.83em;
+    margin-block-start: 1.67em;
+    margin-block-end: 1.67em;
+}
+
+h5, h6 {
+    font-size: 0.67em;
+    margin-block-start: 2.33em;
+    margin-block-end: 2.33em;
+}
+
 h1, h2, h3, h4, h5, h6 {
+    display: block;
     margin-top: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    font-weight: bold;
 }
 
 aside, section, main {
