@@ -24,6 +24,7 @@
                 </section>
                 <hr class="my-4" />
                 <section class="card-message">
+                    <h1></h1>
                     <h2 th:utext="#{screen.service.error.heading}"></h2>
                     <p th:if="${rootCauseException != null and rootCauseException.code != null}" th:utext="#{${rootCauseException.code}}"></p>
                 </section>
