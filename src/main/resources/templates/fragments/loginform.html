@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <main role="main" class="container mt-3 mb-3">
+    <main class="container mt-3 mb-3">
 
         <!-- Login form template begins here -->
         <div th:fragment="loginform" class="d-flex flex-column justify-content-between m-auto">
@@ -28,11 +28,11 @@
 
             <section class="form-button-inline" th:if="${osfCasLoginContext.orcidLoginUrl}">
                 <a class="mdc-button mdc-button--raised button-osf-grey" id="orcidlogin" th:href="@{${osfCasLoginContext.orcidLoginUrl}}">
-                    <img class="delegation-button-logo" src="/images/orcid-logo.png">
+                    <img class="delegation-button-logo" src="/images/orcid-logo.png" alt="ORCiD logo">
                     <span class="delegation-button-label" th:utext="#{screen.welcome.button.orcidlogin}"></span>
                 </a>
                 <a class="mdc-button mdc-button--raised button-osf-grey" id="instnLogin" th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}">
-                    <img class="delegation-button-logo" src="/images/institution-logo.png">
+                    <img class="delegation-button-logo" src="/images/institution-logo.png" alt="Institution logo">
                     <span class="delegation-button-label" th:utext="#{screen.welcome.button.institutionlogin}"></span>
                 </a>
             </section>
@@ -101,8 +101,8 @@
                                     size="25"
                                     th:accesskey="#{screen.welcome.label.password.accesskey}"
                                     th:field="*{password}"
-                                    autocomplete="off" />
-                                <label for="username" class="mdc-floating-label" th:utext="#{screen.welcome.label.password}"></label>
+                                    autocomplete="current-password" />
+                                <label for="password" class="mdc-floating-label" th:utext="#{screen.welcome.label.password}"></label>
                             </div>
                             <div class="mdc-text-field-helper-line caps-warn">
                                 <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg text-danger">

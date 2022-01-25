@@ -19,7 +19,7 @@
                         <tbody>
                         <tr>
                             <td>
-                                <img class="service-ui-logo" src="/images/osf-logo.png">
+                                <img class="service-ui-logo" src="/images/osf-logo.png" alt="OSF logo">
                             </td>
                             <td>
                                 <span class="service-ui-name hidden-narrow">OSF </span>
@@ -31,12 +31,12 @@
                 </section>
 
                 <section class="card-message">
-                    <h2 th:utext="#{screen.unsupp-instn.heading}"></h2>
+                    <h1 th:utext="#{screen.unsupp-instn.heading}"></h1>
                     <p th:utext="#{screen.unsupp-instn.message(${osfUrl.institutionsHome})}"></p>
                 </section>
 
                 <section class="card-message">
-                    <h3 th:utext="#{screen.unsupp-instn.existing.heading}"></h3>
+                    <h2 th:utext="#{screen.unsupp-instn.existing.heading}"></h2>
                     <p th:utext="#{screen.unsupp-instn.existing.message}"></p>
                 </section>
 
@@ -65,8 +65,7 @@
                                        size="256"
                                        type="email"
                                        name="forgot_password-email"
-                                       th:accesskey="#{screen.unsupp-instn.existing.setpw.label.email.accesskey}"
-                                       autocomplete="off" />
+                                       th:accesskey="#{screen.unsupp-instn.existing.setpw.label.email.accesskey}" />
                                 <label for="username" class="mdc-floating-label" th:utext="#{screen.unsupp-instn.existing.setpw.label.email}"></label>
                             </div>
                         </section>
