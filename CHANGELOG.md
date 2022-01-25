@@ -2,6 +2,12 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.0.0 (01-25-2022)
+===================
+
+CAS accessibility fixes
+
+
 21.3.4 (01-10-2022)
 ===================
 
