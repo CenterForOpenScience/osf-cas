@@ -1,8 +1,16 @@
 package io.cos.cas.osf.web.flow.login;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
+import io.cos.cas.osf.authentication.exception.InstitutionSelectiveSsoFailedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
+import io.cos.cas.osf.authentication.support.OsfApiPermissionDenied;
 import io.cos.cas.osf.configuration.model.OsfApiProperties;
 import io.cos.cas.osf.configuration.model.OsfUrlProperties;
 import io.cos.cas.osf.web.support.OsfApiInstitutionAuthenticationResult;
@@ -27,13 +35,15 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.ParseException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.message.BasicHeader;
 
+import org.apache.http.util.EntityUtils;
 import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.Authentication;
 import org.apereo.cas.authentication.AuthenticationException;
@@ -570,7 +580,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         final String departmentRaw = user.optString("departmentRaw").trim();
         // Unlike all the above attributes that are released to us from the institutions, the `eduPerson` is a boolean
         // per-institution flag set by CAS in the "institutions-auth.xsl" file. It determines whether the department
-        // attribute uses the the eduPerson schema (https://wiki.refeds.org/display/STAN/eduPerson).
+        // attribute uses the eduPerson schema (https://wiki.refeds.org/display/STAN/eduPerson).
         final boolean eduPerson = user.optBoolean("eduPerson");
         String department = "";
         if (!departmentRaw.isEmpty()) {
@@ -588,6 +598,17 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         }
         // Insert the `department` attribute into the payload, which does not overwrite `departmentRaw`.
         normalizedPayload.getJSONObject("provider").getJSONObject("user").put("department", department);
+        // Check selective login and parse the filter
+        final boolean isSelectiveSso = user.optBoolean("isSelectiveSso");
+        String selectiveSsoFilter = "";
+        if (!isSelectiveSso) {
+            LOGGER.debug("[CAS XSLT] Selective SSO is not enabled: institution={}", institutionId);
+        } else {
+            selectiveSsoFilter = user.optString("selectiveSsoFilter").trim();
+            LOGGER.debug("[CAS XSLT] Selective SSO is enabled for institution={} with filter={}", institutionId, selectiveSsoFilter);
+        }
+        // Insert the `selectiveSsoFilter` attribute into the payload
+        normalizedPayload.getJSONObject("provider").getJSONObject("user").put("selectiveSsoFilter", selectiveSsoFilter);
 
         final String osfApiInstnAuthnPayload = normalizedPayload.toString();
         LOGGER.info(
@@ -627,35 +648,79 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             throw new InstitutionSsoFailedException("OSF CAS failed to build JWT / JWE payload for OSF API");
         }
         // Send the POST request to OSF API to verify an existing institution user or to create a new one
+        int statusCode;
+        HttpResponse httpResponse;
         try {
-            final HttpResponse httpResponse = Request.Post(osfApiProperties.getInstnAuthnEndpoint())
+            httpResponse = Request.Post(osfApiProperties.getInstnAuthnEndpoint())
                     .addHeader(new BasicHeader("Content-Type", "text/plain"))
                     .bodyString(jweString, ContentType.APPLICATION_JSON)
                     .execute()
                     .returnResponse();
-            final int statusCode = httpResponse.getStatusLine().getStatusCode();
+            statusCode = httpResponse.getStatusLine().getStatusCode();
             LOGGER.info(
-                    "[OSF API] Notify Remote Principal Authenticated Response: username={} statusCode={}",
+                    "[OSF API] Notify Remote Principal Authenticated Response: username={}, statusCode={}",
                     username,
                     statusCode
             );
-            if (statusCode != HttpStatus.SC_NO_CONTENT) {
-                final String responseString = new BasicResponseHandler().handleResponse(httpResponse);
-                LOGGER.error(
-                        "[OSF API] Notify Remote Principal Authenticated Failed: statusCode={}, body={}",
-                        statusCode,
-                        responseString
-                );
-                throw new InstitutionSsoFailedException("OSF API failed to process CAS request");
-            }
-            return new OsfApiInstitutionAuthenticationResult(username, institutionId);
         } catch (final IOException e) {
-            LOGGER.error(
-                    "[OSF API] Notify Remote Principal Authenticated Failed: Communication Error - {}",
-                    e.getMessage()
-            );
+            LOGGER.error("[OSF API] Notify Remote Principal Authenticated Failed: Communication Error - {}", e.getMessage());
             throw new InstitutionSsoFailedException("Communication Error between OSF CAS and OSF API");
         }
+        // CAS expects OSF API to return HTTP 204 OK with no content if authentication succeeds
+        if (statusCode == HttpStatus.SC_NO_CONTENT) {
+            LOGGER.info("[OSF API] Notify Remote Principal Authenticated Passed: institution={}, username={}", institutionId, username);
+            return new OsfApiInstitutionAuthenticationResult(username, institutionId);
+        }
+        // Handler unexpected exceptions (i.e. any status other than 403)
+        if (statusCode != HttpStatus.SC_FORBIDDEN) {
+            LOGGER.error("[OSF API] Notify Remote Principal Authenticated Failed: Unexpected Failure - statusCode={}", statusCode);
+            throw new InstitutionSsoFailedException("OSF API failed to process CAS request");
+        }
+        // CAS expects OSF API to return HTTP 403 FORBIDDEN with error details if authentication fails.
+        String responseRaw;
+        try {
+            HttpEntity entity = httpResponse.getEntity();
+            responseRaw = EntityUtils.toString(entity);
+        } catch (final IOException | ParseException e) {
+            LOGGER.error("[OSF API] Notify Remote Principal Authenticated Failed: Entity String Parse Error - {}", e.getMessage());
+            throw new InstitutionSsoFailedException("CAS fails to parse OSF API error response");
+        }
+        // Handle failures due to denied selective SSO
+        try {
+            final JsonObject responseJson = JsonParser.parseString(responseRaw).getAsJsonObject();
+            final JsonArray errorList = responseJson.getAsJsonArray("errors");
+            for (final JsonElement error : errorList) {
+                if (!error.isJsonObject()) {
+                    LOGGER.warn("[OSF API] Unexpected API Response Format: error is not a JSON object");
+                    continue;
+                }
+                if (!((JsonObject) error).has("detail")) {
+                    LOGGER.warn("[OSF API] Unexpected API Response Format: missing key \"detail\" in the error object");
+                    continue;
+                }
+                final String errorDetail = ((JsonObject) error).get("detail").getAsString();
+                if (OsfApiPermissionDenied.INSTITUTION_SELECTIVE_SSO_FAILURE.getId().equals(errorDetail)) {
+                    LOGGER.error(
+                            "[OSF API] Institution Selective SSO Not Allowed: institution={}, email={}, filter={}",
+                            institutionId,
+                            username,
+                            selectiveSsoFilter
+                    );
+                    throw new InstitutionSelectiveSsoFailedException("OSF API denies selective SSO login");
+                }
+            }
+        } catch (final JsonParseException | IllegalStateException e) {
+            LOGGER.error("[OSF API] Notify Remote Principal Authenticated Failed: JSON Object Parse Error - {}", e.getMessage());
+            throw new InstitutionSsoFailedException("Fail to parse OSF API error response");
+        }
+        // Handle other 403 response with general error details
+        LOGGER.error(
+                "[OSF API] Notify Remote Principal Authenticated Failed: statusCode={}, institution={}, username={}",
+                statusCode,
+                institutionId,
+                username
+        );
+        throw new InstitutionSsoFailedException("OSF API failed to process CAS request");
     }
 
     /**

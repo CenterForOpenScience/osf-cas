@@ -15,104 +15,68 @@
                     <xsl:value-of select="$idp"/>
                 </idp>
                 <xsl:choose>
-                    <!--  Example SAML-auth University -->
-                    <xsl:when test="$idp='example-shib-auth-univeristy-entity-id'">
-                        <id>esu</id>
+                    <!-- An example SAML-auth institution without any special features -->
+                    <xsl:when test="$idp='fake-saml-idp-type-0-default'">
+                        <id>fake-saml-type-0</id>
                         <user>
-                            <!--  Each institution has its customized mapping of attributes  -->
-                            <username>
-                                <xsl:value-of select="//attribute[@name='eppn']/@value"/>
-                            </username>
-                            <isMemberOf>
-                                <xsl:value-of select="//attribute[@name='ismemberof']/@value"/>
-                            </isMemberOf>
-                            <departmentRaw>
-                                <xsl:value-of select="//attribute[@name='department']/@value"/>
-                            </departmentRaw>
-                            <eduPerson>false</eduPerson>
-                            <fullname>
-                                <xsl:value-of select="//attribute[@name='displayname']/@value"/>
-                            </fullname>
-                            <familyName>
-                                <xsl:value-of select="//attribute[@name='sn']/@value"/>
-                            </familyName>
-                            <givenName>
-                                <xsl:value-of select="//attribute[@name='givenname']/@value"/>
-                            </givenName>
+                            <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
+                            <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
                     </xsl:when>
-                    <!-- Brown University (BROWN) -->
-                    <xsl:when test="$idp='https://sso.brown.edu/idp/shibboleth'">
-                        <id>brown</id>
+                    <!-- An example SAML institution that has Shared SSO enabled -->
+                    <xsl:when test="$idp='fake-saml-idp-type-1-shared-sso'">
+                        <id>fake-saml-type-1</id>
                         <user>
-                            <username>
-                                <xsl:value-of select="//attribute[@name='mail']/@value"/>
-                            </username>
-                            <isMemberOf>
-                                <xsl:value-of select="//attribute[@name='ismemberof']/@value"/>
-                            </isMemberOf>
-                            <fullname>
-                                <xsl:value-of select="//attribute[@name='displayname']/@value"/>
-                            </fullname>
-                            <familyName>
-                                <xsl:value-of select="//attribute[@name='sn']/@value"/>
-                            </familyName>
-                            <givenName>
-                                <xsl:value-of select="//attribute[@name='givenname']/@value"/>
-                            </givenName>
+                            <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
+                            <isMemberOf><xsl:value-of select="//attribute[@name='ismemberof']/@value"/></isMemberOf>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
+                            <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
                     </xsl:when>
-                    <!-- Princeton University (PU) -->
-                    <!--
-                        The departmentRaw and eduPerson attributes are for local testing purpose only.
-                        Princeton does not release such an attribute yet.
-                    -->
-                    <xsl:when test="$idp='https://idp.princeton.edu/idp/shibboleth'">
-                        <id>pu</id>
+                    <!-- An example SAML-auth institution that has selective SSO enabled -->
+                    <xsl:when test="$idp='fake-saml-idp-type-2-selective-sso'">
+                        <id>fake-saml-type-2</id>
                         <user>
-                            <username>
-                                <xsl:value-of select="//attribute[@name='mail']/@value"/>
-                            </username>
-                            <departmentRaw>
-                                <xsl:value-of select="//attribute[@name='department']/@value"/>
-                            </departmentRaw>
+                            <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
+                            <isSelectiveSso>true</isSelectiveSso>
+                            <selectiveSsoFilter><xsl:value-of select="//attribute[@name='selectivessofilter']/@value"/></selectiveSsoFilter>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
+                            <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <middleNames/>
+                            <suffix/>
+                        </user>
+                    </xsl:when>
+                    <!-- An example SAML-auth institution that uses `eduPersonPrimaryOrgUnitDN` for the department attribute -->
+                    <xsl:when test="$idp='fake-saml-idp-type-3-department-eduperson'">
+                        <id>fake-saml-type-3</id>
+                        <user>
+                            <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
+                            <departmentRaw><xsl:value-of select="//attribute[@name='department']/@value"/></departmentRaw>
                             <eduPerson>true</eduPerson>
-                            <fullname>
-                                <xsl:value-of select="//attribute[@name='displayname']/@value"/>
-                            </fullname>
-                            <familyName>
-                                <xsl:value-of select="//attribute[@name='sn']/@value"/>
-                            </familyName>
-                            <givenName>
-                                <xsl:value-of select="//attribute[@name='givenname']/@value"/>
-                            </givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
+                            <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <suffix/>
                         </user>
                     </xsl:when>
-                    <!-- University of Arizona (UA) -->
-                    <xsl:when test="$idp='urn:mace:incommon:arizona.edu'">
-                        <id>ua</id>
+                    <!-- An example SAML-auth institution that uses a customized department attribute -->
+                    <xsl:when test="$idp='fake-saml-idp-type-4-department-customized'">
+                        <id>fake-saml-type-4</id>
                         <user>
-                            <username>
-                                <xsl:value-of select="//attribute[@name='mail']/@value"/>
-                            </username>
-                            <departmentRaw>
-                                <xsl:value-of select="//attribute[@name='department']/@value"/>
-                            </departmentRaw>
+                            <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
+                            <departmentRaw><xsl:value-of select="//attribute[@name='department']/@value"/></departmentRaw>
                             <eduPerson>false</eduPerson>
-                            <fullname>
-                                <xsl:value-of select="//attribute[@name='displayname']/@value"/>
-                            </fullname>
-                            <familyName>
-                                <xsl:value-of select="//attribute[@name='sn']/@value"/>
-                            </familyName>
-                            <givenName>
-                                <xsl:value-of select="//attribute[@name='givenname']/@value"/>
-                            </givenName>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
+                            <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                         </user>
@@ -131,51 +95,13 @@
                     <xsl:value-of select="$idp"/>
                 </idp>
                 <xsl:choose>
-                    <!--  Example CAS-auth University  -->
-                    <xsl:when test="$idp='ecu'">
-                        <id>ecu</id>
+                    <!--  An example CAS-auth institution without any special features  -->
+                    <xsl:when test="$idp='fake-cas-idp-type-0-default'">
+                        <id>fake-cas-type-0</id>
                         <user>
-                            <!--  Each institution has its customized mapping of attributes  -->
-                            <username>
-                                <xsl:value-of select="//attribute[@name='mail']/@value"/>
-                            </username>
-                            <isMemberOf>
-                                <xsl:value-of select="//attribute[@name='ismemberof']/@value"/>
-                            </isMemberOf>
-                            <departmentRaw>
-                                <xsl:value-of select="//attribute[@name='department']/@value"/>
-                            </departmentRaw>
-                            <eduPerson>false</eduPerson>
-                            <fullname>
-                                <xsl:value-of select="//attribute[@name='displayname']/@value"/>
-                            </fullname>
-                            <familyName>
-                                <xsl:value-of select="//attribute[@name='sn']/@value"/>
-                            </familyName>
-                            <givenName>
-                                <xsl:value-of select="//attribute[@name='givenname']/@value"/>
-                            </givenName>
-                            <middleNames/>
-                            <suffix/>
-                        </user>
-                    </xsl:when><!--  Example CAS-auth University  -->
-                    <xsl:when test="$idp='fakecas'">
-                        <id>fakecas</id>
-                        <user>
-                            <!-- Tweaked fakeCAS as an institution IdP for local development -->
-                            <username>
-                                <xsl:value-of select="//attribute[@name='username']/@value"/>
-                            </username>
-                            <departmentRaw>
-                                <xsl:value-of select="//attribute[@name='department']/@value"/>
-                            </departmentRaw>
-                            <eduPerson>false</eduPerson>
-                            <familyName>
-                                <xsl:value-of select="//attribute[@name='familyName']/@value"/>
-                            </familyName>
-                            <givenName>
-                                <xsl:value-of select="//attribute[@name='givenName']/@value"/>
-                            </givenName>
+                            <username><xsl:value-of select="//attribute[@name='username']/@value"/></username>
+                            <familyName><xsl:value-of select="//attribute[@name='familyName']/@value"/></familyName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
                             <fullname/>
                             <middleNames/>
                             <suffix/>
