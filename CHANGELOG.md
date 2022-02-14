@@ -2,6 +2,12 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.0.1 (02-14-2022)
+===================
+
+Institution selective SSO - CAS Part
+
+
 22.0.0 (01-25-2022)
 ===================
 
