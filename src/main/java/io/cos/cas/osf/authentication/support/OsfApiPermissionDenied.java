@@ -4,7 +4,7 @@ package io.cos.cas.osf.authentication.support;
  * This is {@link OsfApiPermissionDenied}.
  *
  * @author Longze Chen
- * @since 22.0.0
+ * @since 22.0.1
  */
 public enum OsfApiPermissionDenied {
 

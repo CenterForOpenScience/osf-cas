@@ -8,7 +8,7 @@ import javax.security.auth.login.AccountException;
  * Describes an authentication error condition where user is not allowed to access OSF via institution SSO.
  *
  * @author Longze Chen
- * @since 22.0.0
+ * @since 22.0.1
  */
 @NoArgsConstructor
 public class InstitutionSelectiveSsoFailedException extends AccountException {
