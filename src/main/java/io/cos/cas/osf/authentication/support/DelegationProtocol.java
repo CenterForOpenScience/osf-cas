@@ -14,7 +14,9 @@ public enum DelegationProtocol {
 
     CAS_PAC4J("cas-pac4j"),
 
-    SAML_SHIB("saml-shib");
+    SAML_SHIB("saml-shib"),
+
+    AFFILIATION_VIA_ORCID("via-orcid");
 
     private final String id;
 

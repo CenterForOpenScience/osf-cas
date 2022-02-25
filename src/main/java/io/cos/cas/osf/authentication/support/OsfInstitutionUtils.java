@@ -22,6 +22,8 @@ import java.util.Map;
 @Slf4j
 public final class OsfInstitutionUtils {
 
+    public final static String ORCID_SUFFIX = " (via ORCiD SSO)";
+
     public static boolean validateInstitutionForLogin(final JpaOsfDao jpaOsfDao, final String id) {
         final OsfInstitution institution = jpaOsfDao.findOneInstitutionById(id);
         return institution != null && institution.getDelegationProtocol() != null;
@@ -53,6 +55,8 @@ public final class OsfInstitutionUtils {
                 );
             } else if (DelegationProtocol.CAS_PAC4J.equals(delegationProtocol)) {
                 institutionLoginUrlMap.put(institution.getInstitutionId(), institution.getName());
+            } else if (DelegationProtocol.AFFILIATION_VIA_ORCID.equals(delegationProtocol)) {
+                institutionLoginUrlMap.put(DelegationProtocol.AFFILIATION_VIA_ORCID.getId(), institution.getName() + ORCID_SUFFIX);
             }
         }
         return institutionLoginUrlMap;
