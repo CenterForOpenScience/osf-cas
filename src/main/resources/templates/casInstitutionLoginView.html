@@ -103,7 +103,7 @@
                         /*<![CDATA[*/
                             institutionLoginUrl = /*[[${pac4jInstnLoginUrls.get('osftype0')}]]*/ '';
                         /*]]>*/
-                    } else if (institutionLoginUrl === "via-orcid") {
+                    } else if (institutionLoginUrl.startsWith("via-orcid")) {
                         institutionLoginUrl = /*[[${osfCasLoginContext.orcidLoginUrl}]]*/ ''
                     } else {
                         let lastIndexOfHash = institutionLoginUrl.lastIndexOf("#");

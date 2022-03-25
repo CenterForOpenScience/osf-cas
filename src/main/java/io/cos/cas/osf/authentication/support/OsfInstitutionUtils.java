@@ -56,7 +56,10 @@ public final class OsfInstitutionUtils {
             } else if (DelegationProtocol.CAS_PAC4J.equals(delegationProtocol)) {
                 institutionLoginUrlMap.put(institution.getInstitutionId(), institution.getName());
             } else if (DelegationProtocol.AFFILIATION_VIA_ORCID.equals(delegationProtocol)) {
-                institutionLoginUrlMap.put(DelegationProtocol.AFFILIATION_VIA_ORCID.getId(), institution.getName() + ORCID_SUFFIX);
+                institutionLoginUrlMap.put(
+                        DelegationProtocol.AFFILIATION_VIA_ORCID.getId() + '#' + institution.getInstitutionId(),
+                        institution.getName() + ORCID_SUFFIX
+                );
             }
         }
         return institutionLoginUrlMap;
