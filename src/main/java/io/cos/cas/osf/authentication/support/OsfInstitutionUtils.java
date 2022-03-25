@@ -50,7 +50,7 @@ public final class OsfInstitutionUtils {
             final DelegationProtocol delegationProtocol = institution.getDelegationProtocol();
             if (DelegationProtocol.SAML_SHIB.equals(delegationProtocol)) {
                 institutionLoginUrlMap.put(
-                        institution.getLoginUrl() + "&target=" + target + '#' + institution.getId(),
+                        institution.getLoginUrl() + "&target=" + target + '#' + institution.getInstitutionId(),
                         institution.getName()
                 );
             } else if (DelegationProtocol.CAS_PAC4J.equals(delegationProtocol)) {
