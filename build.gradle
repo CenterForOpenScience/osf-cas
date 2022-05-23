@@ -143,6 +143,8 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-token-core-api:${project.'cas.version'}"
     // Throttling
     implementation "org.apereo.cas:cas-server-support-throttle:${project.'cas.version'}"
+    // Monitoring & Statistics
+    implementation "org.apereo.cas:cas-server-support-reports:${project.'cas.version'}"
 
     // Tomcat Catalina
     implementation "org.apache.tomcat:tomcat-catalina:${springBootTomcatVersion}"
