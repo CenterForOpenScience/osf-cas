@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.0.2 (05-23-2022)
+===================
+
+Enable CAS health endpoint for K8s liveness probing
+
 22.0.1 (02-14-2022)
 ===================
 
