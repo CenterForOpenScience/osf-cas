@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.0.3 (05-26-2022)
+===================
+
+Update CAS PAT to never expire
+
 22.0.2 (05-23-2022)
 ===================
 
