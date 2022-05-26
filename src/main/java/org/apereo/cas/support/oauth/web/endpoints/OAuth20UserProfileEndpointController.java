@@ -112,13 +112,13 @@ public class OAuth20UserProfileEndpointController extends BaseOAuth20Controller 
                     .getTicket(personalAccessTokenId, OAuth20AccessToken.class);
         }
         if (accessTokenTicket == null || accessTokenTicket.isExpired()) {
-            // If neither is found nor active, remove unexpired ticket first.
+            // If neither is found nor active, remove expired ticket first.
             LOGGER.debug("Access token [{}] cannot be found in the ticket registry or has expired.", accessTokenId);
             if (accessTokenTicket != null) {
                 LOGGER.debug("Delete expired access token  [{}].", accessTokenId);
                 getOAuthConfigurationContext().getTicketRegistry().deleteTicket(accessTokenTicket);
             }
-            // Then try to create an CAS access token if the token provided is an valid and active OSF personal access token.
+            // Then try to create an CAS access token if the token provided is a valid and active OSF personal access token.
             LOGGER.debug("Check personal access token [{}] in the OSF database.", accessTokenId);
             accessTokenTicket = attemptToGenerateAccessTokenFromOsfPat(accessTokenId);
             // Raise authorization error if all attempts have been failed.
