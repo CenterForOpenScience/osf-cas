@@ -610,6 +610,20 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         // Insert the `selectiveSsoFilter` attribute into the payload
         normalizedPayload.getJSONObject("provider").getJSONObject("user").put("selectiveSsoFilter", selectiveSsoFilter);
 
+        // Check if `eppn` is provided for user's institutional identity.
+        // This is a temporary solution for institutions that switched its email attribute from `eppn` to `mail`.
+        final String eduPersonPrincipalName = user.optString("eppn").trim();
+        if (!eduPersonPrincipalName.isEmpty()) {
+            LOGGER.info(
+                    "[CAS XSLT] eduPersonPrincipalName detected for user identity: eduPersonPrincipalName={}, username={}, institution={}",
+                    eduPersonPrincipalName,
+                    username,
+                    institutionId
+            );
+        }
+        // Insert the `eduPersonPrincipalName` attribute into the payload
+        normalizedPayload.getJSONObject("provider").getJSONObject("user").put("eppn", eduPersonPrincipalName);
+
         final String osfApiInstnAuthnPayload = normalizedPayload.toString();
         LOGGER.info(
                 "[CAS XSLT] All attributes checked: username={}, institution={}",
