@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.0.4 (06-29-2022)
+===================
+
+Support institution affiliation via ORCiD SSO
+
 22.0.3 (05-26-2022)
 ===================
 
