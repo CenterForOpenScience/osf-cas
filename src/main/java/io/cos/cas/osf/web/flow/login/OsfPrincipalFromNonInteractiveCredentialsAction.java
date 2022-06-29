@@ -238,7 +238,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                     final OsfPostgresCredential osfPostgresCredential = constructCredentialsFromPac4jAuthentication(context, clientName);
                     if (osfPostgresCredential != null) {
                         final OsfApiInstitutionAuthenticationResult remoteUserInfo = notifyOsfApiOfInstnAuthnSuccess(osfPostgresCredential);
-                        osfPostgresCredential.setUsername(remoteUserInfo.getUsername());
+                        osfPostgresCredential.setUsername(remoteUserInfo.getSsoEmail());
                         osfPostgresCredential.setInstitutionId(remoteUserInfo.getInstitutionId());
                         WebUtils.removeCredential(context);
                         return osfPostgresCredential;
@@ -277,13 +277,12 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 );
                 throw new InstitutionSsoFailedException("Critical SAML-Shibboleth SSO Failure");
             }
-
-            osfPostgresCredential.setUsername(remoteUserInfo.getUsername());
+            osfPostgresCredential.setUsername(remoteUserInfo.getSsoEmail());
             osfPostgresCredential.setInstitutionId(remoteUserInfo.getInstitutionId());
             if (StringUtils.isBlank(osfPostgresCredential.getInstitutionalIdentity())) {
                 LOGGER.warn(
-                        "[SAML Shibboleth] Missing user's institutional identity: username={}, institutionId={}",
-                        remoteUserInfo.getUsername(),
+                        "[SAML Shibboleth] Missing user's institutional identity: ssoEmail={}, institutionId={}",
+                        remoteUserInfo.getSsoEmail(),
                         remoteUserInfo.getInstitutionId()
                 );
             }
@@ -582,24 +581,24 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             LOGGER.error("[CAS XSLT] Missing institutional user");
             throw new InstitutionSsoFailedException("Missing institutional user");
         }
-        final String username = user.optString("username").trim();
+        final String ssoEmail = user.optString("username").trim();
         final String fullname = user.optString("fullname").trim();
         final String givenName = user.optString("givenName").trim();
         final String familyName = user.optString("familyName").trim();
         final String isMemberOf = user.optString("isMemberOf").trim();
         final String userRoles = user.optString("userRoles").trim();
-        if (username.isEmpty()) {
+        if (ssoEmail.isEmpty()) {
             LOGGER.error("[CAS XSLT] Missing email (username) for user at institution '{}'", institutionId);
             throw new InstitutionSsoFailedException("Missing email (username)");
         }
         if (fullname.isEmpty() && (givenName.isEmpty() || familyName.isEmpty())) {
-            LOGGER.error("[CAS XSLT] Missing names: username={}, institution={}", username, institutionId);
+            LOGGER.error("[CAS XSLT] Missing names: ssoEmail={}, institution={}", ssoEmail, institutionId);
             throw new InstitutionSsoFailedException("Missing user's names");
         }
         if (!isMemberOf.isEmpty()) {
             LOGGER.info(
-                    "[CAS XSLT] Shared SSO \"isMemberOf\" detected: username={}, institution={}, isMemberOf={}",
-                    username,
+                    "[CAS XSLT] Shared SSO \"isMemberOf\" detected: ssoEmail={}, institution={}, isMemberOf={}",
+                    ssoEmail,
                     institutionId,
                     isMemberOf
             );
@@ -611,7 +610,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                     userRoles
             );
         } else {
-            LOGGER.debug("[CAS XSLT] Shared SSO not eligible: username={}, institution={}", username, institutionId);
+            LOGGER.debug("[CAS XSLT] Shared SSO not eligible: ssoEmail={}, institution={}", ssoEmail, institutionId);
         }
         // Parse the department attribute
         final String departmentRaw = user.optString("departmentRaw").trim();
@@ -623,15 +622,15 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         if (!departmentRaw.isEmpty()) {
             department = this.retrieveDepartment(departmentRaw, eduPerson);
             LOGGER.info(
-                    "[CAS XSLT] Department detected and parsed: username={}, institution={}, eduPerson={}, departmentRaw={}, department={}",
-                    username,
+                    "[CAS XSLT] Department detected and parsed: ssoEmail={}, institution={}, eduPerson={}, departmentRaw={}, department={}",
+                    ssoEmail,
                     institutionId,
                     eduPerson,
                     departmentRaw,
                     department
             );
         } else {
-            LOGGER.debug("[CAS XSLT] Department is not provided: username={} institution={}", username, institutionId);
+            LOGGER.debug("[CAS XSLT] Department is not provided: ssoEmail={} institution={}", ssoEmail, institutionId);
         }
         // Insert the `department` attribute into the payload, which does not overwrite `departmentRaw`.
         normalizedPayload.getJSONObject("provider").getJSONObject("user").put("department", department);
@@ -652,24 +651,26 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         final String eduPersonPrincipalName = user.optString("eppn").trim();
         if (!eduPersonPrincipalName.isEmpty()) {
             LOGGER.info(
-                    "[CAS XSLT] eduPersonPrincipalName detected for user identity: eduPersonPrincipalName={}, username={}, institution={}",
+                    "[CAS XSLT] eduPersonPrincipalName detected for user identity: eduPersonPrincipalName={}, ssoEmail={}, institution={}",
                     eduPersonPrincipalName,
-                    username,
+                    ssoEmail,
                     institutionId
             );
         }
         // Insert the `eduPersonPrincipalName` attribute into the payload
         normalizedPayload.getJSONObject("provider").getJSONObject("user").put("eppn", eduPersonPrincipalName);
+        // Insert `username` as `ssoEmail` into the payload
+        normalizedPayload.getJSONObject("provider").getJSONObject("user").put("ssoEmail", ssoEmail);
 
         final String osfApiInstnAuthnPayload = normalizedPayload.toString();
         LOGGER.info(
-                "[CAS XSLT] All attributes checked: username={}, institution={}",
-                username,
+                "[CAS XSLT] All attributes checked: ssoEmail={}, institution={}",
+                ssoEmail,
                 institutionId
         );
         LOGGER.debug(
-                "[CAS XSLT] All attributes checked: username={}, institution={}, normalizedPayload={}",
-                username,
+                "[CAS XSLT] All attributes checked: ssoEmail={}, institution={}, normalizedPayload={}",
+                ssoEmail,
                 institutionId,
                 osfApiInstnAuthnPayload
         );
@@ -677,7 +678,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         final String jweString;
         try {
             final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                    .subject(username)
+                    .subject(ssoEmail)
                     .claim("data", osfApiInstnAuthnPayload)
                     .expirationTime(new Date(new Date().getTime() + SIXTY_SECONDS))
                     .build();
@@ -701,7 +702,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         // Send the POST request to OSF API to verify an existing institution user or to create a new one
         int statusCode = -1;
         int retry = 0;
-        final String ssoUser = String.format("institution=%s, username=%s", institutionId, username);
+        final String ssoUser = String.format("institution=%s, ssoEmail=%s", institutionId, ssoEmail);
         HttpResponse httpResponse = null;
         InstitutionSsoOsfApiFailureException casError = null;
         while (retry < OSF_API_RETRY_LIMIT) {
@@ -801,7 +802,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                     LOGGER.error(
                             "[OSF API] Institution Selective SSO Not Allowed: institution={}, email={}, filter={}",
                             institutionId,
-                            username,
+                            ssoEmail,
                             selectiveSsoFilter
                     );
                     throw new InstitutionSelectiveSsoFailedException("OSF API denies selective SSO login");
@@ -813,10 +814,10 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         }
         // Handle other 403 response with general error details
         LOGGER.error(
-                "[OSF API] Notify Remote Principal Authenticated Failed: statusCode={}, institution={}, username={}",
+                "[OSF API] Notify Remote Principal Authenticated Failed: statusCode={}, institution={}, ssoEmail={}",
                 statusCode,
                 institutionId,
-                username
+                ssoEmail
         );
         throw new InstitutionSsoFailedException("OSF API failed to process CAS request");
     }
