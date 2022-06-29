@@ -23,7 +23,7 @@ public class OsfApiInstitutionAuthenticationResult implements Serializable {
 
     private static final long serialVersionUID = 3971349776123204760L;
 
-    private String username;
+    private String ssoEmail;
 
     private String institutionId;
 }
