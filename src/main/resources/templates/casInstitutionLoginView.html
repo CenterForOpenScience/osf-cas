@@ -99,10 +99,12 @@
                         /*<![CDATA[*/
                             institutionLoginUrl = /*[[${pac4jInstnLoginUrls.get('cord')}]]*/ '';
                         /*]]>*/
-                    } else if (institutionLoginUrl === "fakecas") {
+                    } else if (institutionLoginUrl === "osftype0") {
                         /*<![CDATA[*/
-                            institutionLoginUrl = /*[[${pac4jInstnLoginUrls.get('fakecas')}]]*/ '';
+                            institutionLoginUrl = /*[[${pac4jInstnLoginUrls.get('osftype0')}]]*/ '';
                         /*]]>*/
+                    } else if (institutionLoginUrl.startsWith("via-orcid")) {
+                        institutionLoginUrl = /*[[${osfCasLoginContext.orcidLoginUrl}]]*/ ''
                     } else {
                         let lastIndexOfHash = institutionLoginUrl.lastIndexOf("#");
                         if (lastIndexOfHash >= 0) {
