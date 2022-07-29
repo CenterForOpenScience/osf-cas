@@ -558,6 +558,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         final String givenName = user.optString("givenName").trim();
         final String familyName = user.optString("familyName").trim();
         final String isMemberOf = user.optString("isMemberOf").trim();
+        final String userRoles = user.optString("userRoles").trim();
         if (username.isEmpty()) {
             LOGGER.error("[CAS XSLT] Missing email (username) for user at institution '{}'", institutionId);
             throw new InstitutionSsoFailedException("Missing email (username)");
@@ -568,13 +569,20 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         }
         if (!isMemberOf.isEmpty()) {
             LOGGER.info(
-                    "[CAS XSLT] Secondary institution detected: username={}, institution={}, member={}",
+                    "[CAS XSLT] Shared SSO \"isMemberOf\" detected: username={}, institution={}, isMemberOf={}",
                     username,
                     institutionId,
                     isMemberOf
             );
+        } else if (!userRoles.isEmpty()) {
+            LOGGER.info(
+                    "[CAS XSLT] Shared SSO \"userRoles\" detected: username={}, institution={}, userRoles={}",
+                    username,
+                    institutionId,
+                    userRoles
+            );
         } else {
-            LOGGER.debug("[CAS XSLT] Secondary institution is not provided: username={}, institution={}", username, institutionId);
+            LOGGER.debug("[CAS XSLT] Shared SSO not eligible: username={}, institution={}", username, institutionId);
         }
         // Parse the department attribute
         final String departmentRaw = user.optString("departmentRaw").trim();
