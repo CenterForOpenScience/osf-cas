@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.0.5 (07-29-2022)
+===================
+
+Support shared SSO between FSU and MagLab
+
 22.0.4 (06-29-2022)
 ===================
 
