@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.0.6 (09-30-2022)
+===================
+
+Add branded login logo image for CoP Preprints
+
 22.0.5 (07-29-2022)
 ===================
 
