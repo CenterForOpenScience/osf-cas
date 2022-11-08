@@ -295,6 +295,18 @@
                             <suffix/>
                         </user>
                     </xsl:when>
+                    <!-- OK State University (OKSTATE) -->
+                    <xsl:when test="$idp='https://stwcas.okstate.edu/idp'">
+                        <id>okstate</id>
+                        <user>
+                            <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
+                            <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
+                            <middleNames/>
+                            <suffix/>
+                        </user>
+                    </xsl:when>
                     <!-- The University of Oklahoma (OU) -->
                     <xsl:when test="$idp='https://shib.ou.edu/idp/shibboleth'">
                         <id>ou</id>
@@ -633,17 +645,6 @@
                             <givenName />
                             <middleNames />
                             <suffix />
-                        </user>
-                    </xsl:when>
-                    <!-- OK State University (OKSTATE) -->
-                    <xsl:when test="$idp='okstate'">
-                        <id>okstate</id>
-                        <user>
-                            <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
-                            <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givenName']/@value"/></givenName>
-                            <middleNames/>
-                            <suffix/>
                         </user>
                     </xsl:when>
                     <!-- Unknown Identity Provider -->

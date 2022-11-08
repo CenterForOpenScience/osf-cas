@@ -146,10 +146,10 @@ Related `cas.propeties` settings can be found [here](https://github.com/CenterFo
 
 cas.authn.osf-postgres.institution-clients[2]=${cas.authn.pac4j.cas[2].client-name}
 
-cas.authn.pac4j.cas[2].login-url=http://192.168.168.167:8081/login
-cas.authn.pac4j.cas[2].client-name=osftype0
-cas.authn.pac4j.cas[2].protocol=CAS30
-cas.authn.pac4j.cas[2].callback-url-type=QUERY_PARAMETER
+cas.authn.pac4j.cas[1].login-url=http://192.168.168.167:8081/login
+cas.authn.pac4j.cas[1].client-name=osftype0
+cas.authn.pac4j.cas[1].protocol=CAS30
+cas.authn.pac4j.cas[1].callback-url-type=QUERY_PARAMETER
 ```
 
 ### OAuth 2.0 Server

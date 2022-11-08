@@ -106,7 +106,7 @@ import java.util.Map;
  *
  * For 1) only, the success event will trigger authentication with pac4j's authentication handler.
  *
- * 2) In the case of institution pac4j authentication delegation (e.g. OKState and Concordia), if credential with a
+ * 2) In the case of institution pac4j authentication delegation (e.g. Concordia), if credential with a
  * matching client is found, extract the client info, principal ID and authentication attributes and store them into
  * the {@code OsfPostgresCredential#delegationAttributes} object.
  *
