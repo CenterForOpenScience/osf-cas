@@ -123,7 +123,7 @@ Details coming soon ...
 
 Details coming soon ...
 
-#### `fakeCAS` Login (Local Development Only)
+#### `fakeCAS` Login for institution `osftype0` (Local Development Only)
 
 With OSF CAS running locally as the authentication server for OSF, the previously disabled `fakeCAS` can be re-configured to serve as an identity provider. Simply update `fakecas` in OSF's [docker-compose.yaml](https://github.com/CenterForOpenScience/osf.io/blob/dc87c86b2afb7ad4e801b23c6428e3d2169e3e36/docker-compose.yml#L235-L247) to listen on port `8081`.
 
@@ -147,7 +147,7 @@ Related `cas.propeties` settings can be found [here](https://github.com/CenterFo
 cas.authn.osf-postgres.institution-clients[2]=${cas.authn.pac4j.cas[2].client-name}
 
 cas.authn.pac4j.cas[2].login-url=http://192.168.168.167:8081/login
-cas.authn.pac4j.cas[2].client-name=fakecas
+cas.authn.pac4j.cas[2].client-name=osftype0
 cas.authn.pac4j.cas[2].protocol=CAS30
 cas.authn.pac4j.cas[2].callback-url-type=QUERY_PARAMETER
 ```
