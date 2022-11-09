@@ -2,6 +2,15 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.1.0 (11-09-2022)
+===================
+
+* Added the institution SSO integration guide
+* Synchronized the repo copy of institutions-auth.xsl against helm charts
+* Updated local configs for fakeCAS IdP with institution osftype0
+* Migrated okstate SSO from CAS to SAML
+* Updated readme accordingly 
+
 22.0.7 (10-06-2022)
 ===================
 
