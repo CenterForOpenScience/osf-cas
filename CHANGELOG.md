@@ -2,6 +2,12 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.1.1 (11-11-2022)
+===================
+
+* Trim config for instn cas clients
+* Sync with public charts
+
 22.1.0 (11-09-2022)
 ===================
 
