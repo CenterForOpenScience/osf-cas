@@ -239,7 +239,7 @@
                     <xsl:when test="$idp='https://login.iit.edu/cas/idp'">
                         <id>iit</id>
                         <user>
-                            <username><xsl:value-of select="//attribute[@name='email']/@value"/></username>
+                            <username><xsl:value-of select="//attribute[@name='mailother']/@value"/></username>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
                             <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
@@ -397,7 +397,7 @@
                     <xsl:when test="$idp='https://www.rediris.es/sir/csicidp'">
                         <id>csic</id>
                         <user>
-                            <username><xsl:value-of select="//attribute[@name='irismailmainaddress']/@value"/></username>
+                            <username><xsl:value-of select="//attribute[@name='mailother']/@value"/></username>
                             <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName/>
                             <givenName/>
@@ -653,7 +653,7 @@
                     <xsl:when test="$idp='https://shibboleth.usc.edu/shibboleth-idp'">
                         <id>usc</id>
                         <user>
-                            <username><xsl:value-of select="//attribute[@name='uscemailprimaryaddress']/@value"/></username>
+                            <username><xsl:value-of select="//attribute[@name='mailother']/@value"/></username>
                             <fullname><xsl:value-of select="//attribute[@name='uscdisplaygivenname']/@value"/><xsl:text> </xsl:text><xsl:value-of select="//attribute[@name='uscdisplaysn']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='uscdisplaysn']/@value"/></familyName>
                             <givenName><xsl:value-of select="//attribute[@name='uscdisplaygivenname']/@value"/></givenName>
