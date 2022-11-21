@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.1.2 (11-21-2022)
+===================
+
+* Add an extra check for username and its shib attribute during SSO
+
 22.1.1 (11-11-2022)
 ===================
 
