@@ -249,6 +249,22 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             final OsfPostgresCredential osfPostgresCredential = constructCredentialsFromShibbolethAuthentication(context, request);
 
             final OsfApiInstitutionAuthenticationResult remoteUserInfo = notifyOsfApiOfInstnAuthnSuccess(osfPostgresCredential);
+            final String ssoEppn = osfPostgresCredential.getDelegationAttributes().get("eppn");
+            final String ssoMail = osfPostgresCredential.getDelegationAttributes().get("mail");
+            final String ssoMailOther = osfPostgresCredential.getDelegationAttributes().get("mailother");
+            if (!remoteUserInfo.verifyOsfUsername(ssoEppn, ssoMail, ssoMailOther)) {
+                LOGGER.error(
+                        "[SAML Shibboleth] Critical Error: eppn={}, mail={}, mailOther={}, entityId={}, username={}, institutionId={}",
+                        ssoEppn,
+                        ssoMail,
+                        ssoMailOther,
+                        osfPostgresCredential.getDelegationAttributes().get("shib-session-id"),
+                        remoteUserInfo.getUsername(),
+                        remoteUserInfo.getInstitutionId()
+                );
+                throw new InstitutionSsoFailedException("Critical SAML-Shibboleth SSO Failure");
+            }
+
             osfPostgresCredential.setUsername(remoteUserInfo.getUsername());
             osfPostgresCredential.setInstitutionId(remoteUserInfo.getInstitutionId());
             if (StringUtils.isBlank(osfPostgresCredential.getInstitutionalIdentity())) {
