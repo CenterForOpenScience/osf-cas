@@ -696,6 +696,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             casError = null;
             try {
                 httpResponse = Request.Post(osfApiProperties.getInstnAuthnEndpoint())
+                        .connectTimeout(SIXTY_SECONDS)
+                        .socketTimeout(SIXTY_SECONDS)
                         .addHeader(new BasicHeader("Content-Type", "text/plain"))
                         .bodyString(jweString, ContentType.APPLICATION_JSON)
                         .execute()
