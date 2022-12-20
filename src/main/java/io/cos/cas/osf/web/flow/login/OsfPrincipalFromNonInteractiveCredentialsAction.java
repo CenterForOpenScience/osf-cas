@@ -9,6 +9,7 @@ import com.google.gson.JsonParser;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.InstitutionSelectiveSsoFailedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailureException;
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
 import io.cos.cas.osf.authentication.support.OsfApiPermissionDenied;
 import io.cos.cas.osf.configuration.model.OsfApiProperties;
@@ -688,7 +689,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         int retry = 0;
         final String ssoUser = String.format("institution=%s, username=%s", institutionId, username);
         HttpResponse httpResponse = null;
-        InstitutionSsoFailedException casError = null;
+        InstitutionSsoOsfApiFailureException casError = null;
         while (retry < OSF_API_RETRY_LIMIT) {
             retry += 1;
             // Reset exception from previous attempt
@@ -723,7 +724,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                             retry,
                             statusCode
                     );
-                    casError = new InstitutionSsoFailedException("Communication Error between OSF CAS and OSF API");
+                    casError = new InstitutionSsoOsfApiFailureException("Communication Error between OSF CAS and OSF API");
                 } else {
                     break;
                 }
@@ -734,7 +735,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                         retry,
                         e.getMessage()
                 );
-                casError = new InstitutionSsoFailedException("Communication Error between OSF CAS and OSF API");
+                casError = new InstitutionSsoOsfApiFailureException("Communication Error between OSF CAS and OSF API");
             }
             try {
                 TimeUnit.SECONDS.sleep(OSF_API_RETRY_DELAY_IN_SECONDS * retry);
@@ -745,7 +746,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                         retry,
                         e.getMessage()
                 );
-                casError = new InstitutionSsoFailedException("Communication Error between OSF CAS and OSF API");
+                casError = new InstitutionSsoOsfApiFailureException("Communication Error between OSF CAS and OSF API");
                 break;
             }
         }

@@ -4,6 +4,7 @@ import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedIdpException;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedOsfException;
 import io.cos.cas.osf.authentication.exception.InstitutionSelectiveSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailureException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
@@ -265,6 +266,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 InstitutionSelectiveSsoFailedException.class.getSimpleName(),
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SELECTIVE_SSO_FAILED
         );
+        createTransitionForState(
+                handler,
+                InstitutionSsoOsfApiFailureException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_OSF_API_FAILURE
+        );
 
         // The default transition
         createStateDefaultTransition(handler, CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM);
@@ -414,6 +420,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 flow,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SELECTIVE_SSO_FAILED,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SELECTIVE_SSO_FAILED
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_OSF_API_FAILURE,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_OSF_API_FAILURE
         );
     }
 
