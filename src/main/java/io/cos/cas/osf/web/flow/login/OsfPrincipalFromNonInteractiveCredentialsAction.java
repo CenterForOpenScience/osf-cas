@@ -9,6 +9,7 @@ import com.google.gson.JsonParser;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.InstitutionSelectiveSsoFailedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailureException;
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
 import io.cos.cas.osf.authentication.support.OsfApiPermissionDenied;
 import io.cos.cas.osf.configuration.model.OsfApiProperties;
@@ -92,6 +93,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This is {@link OsfPrincipalFromNonInteractiveCredentialsAction}.
@@ -159,6 +161,17 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     private static final String SHIBBOLETH_COOKIE_PREFIX = "_shibsession_";
 
     private static final String LDAP_DN_OU_PREFIX = "ou=";
+
+    private static final int OSF_API_RETRY_LIMIT = 3;
+
+    private static final List<Integer> OSF_API_RETRY_STATUS = List.of(
+            HttpStatus.SC_INTERNAL_SERVER_ERROR,
+            HttpStatus.SC_BAD_GATEWAY,
+            HttpStatus.SC_SERVICE_UNAVAILABLE,
+            HttpStatus.SC_GATEWAY_TIMEOUT
+    );
+
+    private static final int OSF_API_RETRY_DELAY_IN_SECONDS = 1;
 
     @NotNull
     private CentralAuthenticationService centralAuthenticationService;
@@ -672,28 +685,75 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             throw new InstitutionSsoFailedException("OSF CAS failed to build JWT / JWE payload for OSF API");
         }
         // Send the POST request to OSF API to verify an existing institution user or to create a new one
-        int statusCode;
-        HttpResponse httpResponse;
-        try {
-            httpResponse = Request.Post(osfApiProperties.getInstnAuthnEndpoint())
-                    .addHeader(new BasicHeader("Content-Type", "text/plain"))
-                    .bodyString(jweString, ContentType.APPLICATION_JSON)
-                    .execute()
-                    .returnResponse();
-            statusCode = httpResponse.getStatusLine().getStatusCode();
-            LOGGER.info(
-                    "[OSF API] Notify Remote Principal Authenticated Response: username={}, statusCode={}",
-                    username,
-                    statusCode
-            );
-        } catch (final IOException e) {
-            LOGGER.error("[OSF API] Notify Remote Principal Authenticated Failed: Communication Error - {}", e.getMessage());
-            throw new InstitutionSsoFailedException("Communication Error between OSF CAS and OSF API");
+        int statusCode = -1;
+        int retry = 0;
+        final String ssoUser = String.format("institution=%s, username=%s", institutionId, username);
+        HttpResponse httpResponse = null;
+        InstitutionSsoOsfApiFailureException casError = null;
+        while (retry < OSF_API_RETRY_LIMIT) {
+            retry += 1;
+            // Reset exception from previous attempt
+            casError = null;
+            try {
+                httpResponse = Request.Post(osfApiProperties.getInstnAuthnEndpoint())
+                        .connectTimeout(SIXTY_SECONDS)
+                        .socketTimeout(SIXTY_SECONDS)
+                        .addHeader(new BasicHeader("Content-Type", "text/plain"))
+                        .bodyString(jweString, ContentType.APPLICATION_JSON)
+                        .execute()
+                        .returnResponse();
+                statusCode = httpResponse.getStatusLine().getStatusCode();
+                LOGGER.info(
+                        "[OSF API] Notify Remote Principal Authenticated Response Received: {}, attempt={}, status={}",
+                        ssoUser,
+                        retry,
+                        statusCode
+                );
+                // CAS expects OSF API to return HTTP 204 OK with no content if authentication succeeds
+                if (statusCode == HttpStatus.SC_NO_CONTENT) {
+                    LOGGER.info(
+                            "[OSF API] Notify Remote Principal Authenticated Passed: {}, attempt={}, status={}",
+                            ssoUser,
+                            retry,
+                            statusCode
+                    );
+                    return new OsfApiInstitutionAuthenticationResult(username, institutionId);
+                }
+                if (OSF_API_RETRY_STATUS.contains(statusCode)) {
+                    LOGGER.error(
+                            "[OSF API] Notify Remote Principal Authenticated Failed - Server Error: {}, attempt={}, status={}",
+                            ssoUser,
+                            retry,
+                            statusCode
+                    );
+                    casError = new InstitutionSsoOsfApiFailureException("Communication Error between OSF CAS and OSF API");
+                } else {
+                    break;
+                }
+            } catch (final IOException e) {
+                LOGGER.error(
+                        "[OSF API] Notify Remote Principal Authenticated Failed - Communication Error: {}, attempt={}, error={}",
+                        ssoUser,
+                        retry,
+                        e.getMessage()
+                );
+                casError = new InstitutionSsoOsfApiFailureException("Communication Error between OSF CAS and OSF API");
+            }
+            try {
+                TimeUnit.SECONDS.sleep(OSF_API_RETRY_DELAY_IN_SECONDS * retry);
+            } catch (InterruptedException e) {
+                LOGGER.error(
+                        "[OSF API] Notify Remote Principal Authenticated Failed - Retry Interrupted: {}, attempt={}, error={}",
+                        ssoUser,
+                        retry,
+                        e.getMessage()
+                );
+                casError = new InstitutionSsoOsfApiFailureException("Communication Error between OSF CAS and OSF API");
+                break;
+            }
         }
-        // CAS expects OSF API to return HTTP 204 OK with no content if authentication succeeds
-        if (statusCode == HttpStatus.SC_NO_CONTENT) {
-            LOGGER.info("[OSF API] Notify Remote Principal Authenticated Passed: institution={}, username={}", institutionId, username);
-            return new OsfApiInstitutionAuthenticationResult(username, institutionId);
+        if (casError != null) {
+            throw casError;
         }
         // Handler unexpected exceptions (i.e. any status other than 403)
         if (statusCode != HttpStatus.SC_FORBIDDEN) {
