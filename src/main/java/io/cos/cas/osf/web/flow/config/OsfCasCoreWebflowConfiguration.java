@@ -3,6 +3,7 @@ package io.cos.cas.osf.web.flow.config;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedIdpException;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedOsfException;
 import io.cos.cas.osf.authentication.exception.InstitutionSelectiveSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailureException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidPasswordException;
@@ -50,6 +51,7 @@ public class OsfCasCoreWebflowConfiguration extends CasCoreWebflowConfiguration 
         errors.add(InvalidVerificationKeyException.class);
         errors.add(OneTimePasswordRequiredException.class);
         errors.add(InstitutionSelectiveSsoFailedException.class);
+        errors.add(InstitutionSsoOsfApiFailureException.class);
         errors.add(TermsOfServiceConsentRequiredException.class);
 
         // Add built-in exceptions after OSF-specific exceptions since order matters

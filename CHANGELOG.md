@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+22.1.3 (12-20-2022)
+===================
+
+* Add retries for OSF API requests during institution SSO
+
 22.1.2 (11-21-2022)
 ===================
 

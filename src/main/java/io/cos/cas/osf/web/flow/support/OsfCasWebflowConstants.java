@@ -64,5 +64,7 @@ public interface OsfCasWebflowConstants {
 
     String VIEW_ID_INSTITUTION_SELECTIVE_SSO_FAILED = "casInstitutionSelectiveSsoFailedView";
 
+    String VIEW_ID_INSTITUTION_OSF_API_FAILURE = "casInstitutionOsfApiFailureView";
+
     String VIEW_ID_OAUTH_20_ERROR_VIEW = "casOAuth20ErrorView";
 }
