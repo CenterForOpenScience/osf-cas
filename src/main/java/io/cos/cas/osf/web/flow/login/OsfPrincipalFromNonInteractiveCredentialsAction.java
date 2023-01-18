@@ -260,32 +260,39 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             // Type 3: institution sso via Shibboleth authentication using the SAML protocol
             LOGGER.debug("Shibboleth session / header found in request context.");
             final OsfPostgresCredential osfPostgresCredential = constructCredentialsFromShibbolethAuthentication(context, request);
-
             final OsfApiInstitutionAuthenticationResult remoteUserInfo = notifyOsfApiOfInstnAuthnSuccess(osfPostgresCredential);
-            final String ssoEppn = osfPostgresCredential.getDelegationAttributes().get("eppn");
-            final String ssoMail = osfPostgresCredential.getDelegationAttributes().get("mail");
-            final String ssoMailOther = osfPostgresCredential.getDelegationAttributes().get("mailother");
-            if (!remoteUserInfo.verifyOsfUsername(ssoEppn, ssoMail, ssoMailOther)) {
+            final String ssoIdentity = osfPostgresCredential.getSsoIdentity();
+            final String eppn = osfPostgresCredential.getDelegationAttributes().get("eppn");
+            final String mail = osfPostgresCredential.getDelegationAttributes().get("mail");
+            final String mailOther = osfPostgresCredential.getDelegationAttributes().get("mailother");
+            if (!remoteUserInfo.verifyOsfSsoEmail(eppn, mail, mailOther)) {
                 LOGGER.error(
-                        "[SAML Shibboleth] Critical Error: eppn={}, mail={}, mailOther={}, entityId={}, username={}, institutionId={}",
-                        ssoEppn,
-                        ssoMail,
-                        ssoMailOther,
-                        osfPostgresCredential.getDelegationAttributes().get("shib-session-id"),
-                        remoteUserInfo.getUsername(),
-                        remoteUserInfo.getInstitutionId()
+                        "[SAML Shibboleth] Critical Error: ssoIdentity={}, ssoEmail={}, institutionId={}, eppn={}, mail={}, mailOther={}",
+                        ssoIdentity,
+                        remoteUserInfo.getSsoEmail(),
+                        remoteUserInfo.getInstitutionId(),
+                        eppn,
+                        mail,
+                        mailOther
                 );
                 throw new InstitutionSsoFailedException("Critical SAML-Shibboleth SSO Failure");
             }
+            // Note: OsfPostgresCredential.username isn't necessarily the OSF user's username. It can be any of the user's emails.
             osfPostgresCredential.setUsername(remoteUserInfo.getSsoEmail());
             osfPostgresCredential.setInstitutionId(remoteUserInfo.getInstitutionId());
-            if (StringUtils.isBlank(osfPostgresCredential.getInstitutionalIdentity())) {
+            if (StringUtils.isBlank(ssoIdentity)) {
                 LOGGER.warn(
-                        "[SAML Shibboleth] Missing user's institutional identity: ssoEmail={}, institutionId={}",
-                        remoteUserInfo.getSsoEmail(),
-                        remoteUserInfo.getInstitutionId()
+                        "[SAML Shibboleth] OSF Postgres Credential created w/o identity: ssoEmail={}, institutionId={}",
+                        osfPostgresCredential.getUsername(),
+                        osfPostgresCredential.getInstitutionId()
                 );
             }
+            LOGGER.info(
+                    "[SAML Shibboleth] OSF Postgres Credential created w/ identity: ssoEmail={}, institution={}, ssoIdentity={}",
+                    osfPostgresCredential.getUsername(),
+                    osfPostgresCredential.getInstitutionId(),
+                    ssoIdentity
+            );
             return osfPostgresCredential;
         }
         LOGGER.debug("No valid shibboleth session found in request context: check username and verification key.");
@@ -442,17 +449,22 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         osfPostgresCredential.setRemotePrincipal(Boolean.TRUE);
         removeShibbolethSessionCookie(context);
 
-        final String remoteUser = request.getHeader(REMOTE_USER);
-        if (StringUtils.isEmpty(remoteUser)) {
-            LOGGER.error("[SAML Shibboleth] Missing or empty Shibboleth header: {}", REMOTE_USER);
+        // The request header REMOTE_USER stores the value for SSO user's institutional identity
+        String remoteUser = request.getHeader(REMOTE_USER);
+        if (remoteUser != null) {
+            remoteUser = remoteUser.trim();
+        }
+        if (StringUtils.isBlank(remoteUser)) {
+            LOGGER.warn("[SAML Shibboleth] Missing or empty Shibboleth header [{}] for SSO identity", REMOTE_USER);
         } else {
-            LOGGER.info("[SAML Shibboleth] User's institutional identity: '{}'", remoteUser);
+            osfPostgresCredential.setSsoIdentity(remoteUser);
+            LOGGER.info("[SAML Shibboleth] SSO identity [{}] found in header [{}]", remoteUser, REMOTE_USER);
         }
         for (final String headerName : Collections.list(request.getHeaderNames())) {
             if (headerName.startsWith(ATTRIBUTE_PREFIX)) {
                 final String headerValue = request.getHeader(headerName);
                 LOGGER.debug(
-                        "[SAML Shibboleth] User's institutional identity '{}' - auth header '{}': '{}'",
+                        "[SAML Shibboleth] Authn header [{}]<{}:{}>",
                         remoteUser,
                         headerName,
                         headerValue
@@ -463,7 +475,6 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 );
             }
         }
-        osfPostgresCredential.setInstitutionalIdentity(remoteUser);
         return osfPostgresCredential;
     }
 
@@ -581,7 +592,14 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             LOGGER.error("[CAS XSLT] Missing institutional user");
             throw new InstitutionSsoFailedException("Missing institutional user");
         }
+        // Note: SSO Identity didn't come from the normalized attribute set but came from a dedicated Shibboleth header. It was parsed,
+        //       trimmed and stored in the credential object. Thus, it must be explicitly inserted into the payload.
+        final String ssoIdentity = credential.getSsoIdentity();
+        normalizedPayload.getJSONObject("provider").getJSONObject("user").put("ssoIdentity", credential.getSsoIdentity());
+        // Note: For legacy reasons, the key for SSO email in the normalized attribute set is "username". SSO API endpoint now expects
+        //       "ssoEmail". Thus, it also needs to be explicitly inserted into the payload with key "ssoEmail".
         final String ssoEmail = user.optString("username").trim();
+        normalizedPayload.getJSONObject("provider").getJSONObject("user").put("ssoEmail", ssoEmail);
         final String fullname = user.optString("fullname").trim();
         final String givenName = user.optString("givenName").trim();
         final String familyName = user.optString("familyName").trim();
