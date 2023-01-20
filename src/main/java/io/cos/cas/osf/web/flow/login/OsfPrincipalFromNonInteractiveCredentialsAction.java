@@ -7,9 +7,12 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
-import io.cos.cas.osf.authentication.exception.InstitutionSelectiveSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeParsingException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoDuplicateIdentityException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
-import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailureException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoSelectiveLoginDeniedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailedException;
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
 import io.cos.cas.osf.authentication.support.OsfApiPermissionDenied;
 import io.cos.cas.osf.configuration.model.OsfApiProperties;
@@ -574,23 +577,23 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             normalizedPayload = extractInstnAuthnDataFromCredential(credential);
         } catch (final ParserConfigurationException | TransformerException e) {
             LOGGER.error("[CAS XSLT] Exception - Failed to normalize attributes in the credential: {}", e.getMessage());
-            throw new InstitutionSsoFailedException("Attribute normalization failure");
+            throw new InstitutionSsoAttributeParsingException("Attribute normalization failure");
         }
         // Verify required and optional attributes
         final JSONObject provider = normalizedPayload.optJSONObject("provider");
         if (provider == null) {
             LOGGER.error("[CAS XSLT] Error - Missing identity provider.");
-            throw new InstitutionSsoFailedException("Missing identity provider");
+            throw new InstitutionSsoAttributeMissingException("Missing identity provider");
         }
         final String institutionId = provider.optString("id").trim();
         if (institutionId.isEmpty()) {
             LOGGER.error("[CAS XSLT] Error - Empty identity provider");
-            throw new InstitutionSsoFailedException("Empty identity provider");
+            throw new InstitutionSsoAttributeMissingException("Empty identity provider");
         }
         final JSONObject user = provider.optJSONObject("user");
         if (user == null) {
             LOGGER.error("[CAS XSLT] Error - Missing institutional user");
-            throw new InstitutionSsoFailedException("Missing institutional user");
+            throw new InstitutionSsoAttributeMissingException("Missing institutional user");
         }
         // Note: SSO Identity didn't come from the normalized attribute set but came from a dedicated Shibboleth header. It was parsed,
         //       trimmed and stored in the credential object. Thus, it must be explicitly inserted into the payload.
@@ -609,11 +612,11 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         final String userRoles = user.optString("userRoles").trim();
         if (ssoEmail.isEmpty()) {
             LOGGER.error("[CAS XSLT] Error - Missing SSO Email for user: {}", ssoUser);
-            throw new InstitutionSsoFailedException("Missing email (username)");
+            throw new InstitutionSsoAttributeMissingException("Missing SSO Email)");
         }
         if (fullname.isEmpty() && (givenName.isEmpty() || familyName.isEmpty())) {
             LOGGER.error("[CAS XSLT] Error - Missing names: {}", ssoUser);
-            throw new InstitutionSsoFailedException("Missing user's names");
+            throw new InstitutionSsoAttributeMissingException("Missing user's names");
         }
         if (!isMemberOf.isEmpty()) {
             LOGGER.info("[CAS XSLT] Shared SSO \"isMemberOf\" detected: {}, isMemberOf={}", ssoUser, isMemberOf);
@@ -678,13 +681,13 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             jweString = jweObject.serialize();
         } catch (final JOSEException e) {
             LOGGER.error("[OSF API] Exception - Failed to construct API Payload: {}, error={}", ssoUser, e.getMessage());
-            throw new InstitutionSsoFailedException("OSF CAS failed to build JWT / JWE payload for OSF API");
+            throw new InstitutionSsoOsfApiFailedException("OSF CAS failed to build JWT / JWE payload for OSF API");
         }
         // Send the POST request to OSF API to verify an existing institution user or to create a new one
         int statusCode = -1;
         int retry = 0;
         HttpResponse httpResponse = null;
-        InstitutionSsoOsfApiFailureException casError = null;
+        InstitutionSsoOsfApiFailedException casError = null;
         while (retry < OSF_API_RETRY_LIMIT) {
             retry += 1;
             // Reset exception from previous attempt
@@ -706,19 +709,19 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 }
                 if (OSF_API_RETRY_STATUS.contains(statusCode)) {
                     LOGGER.error("[OSF API] Failure - Server Error: {}, attempt={}, status={}", ssoUser, retry, statusCode);
-                    casError = new InstitutionSsoOsfApiFailureException("Communication Error between OSF CAS and OSF API");
+                    casError = new InstitutionSsoOsfApiFailedException("Communication Error between OSF CAS and OSF API");
                 } else {
                     break;
                 }
             } catch (final IOException e) {
                 LOGGER.error("[OSF API] Exception - IO Exception: {}, attempt={}, error={}", ssoUser, retry, e.getMessage());
-                casError = new InstitutionSsoOsfApiFailureException("Communication Error between OSF CAS and OSF API");
+                casError = new InstitutionSsoOsfApiFailedException("Communication Error between OSF CAS and OSF API");
             }
             try {
                 TimeUnit.SECONDS.sleep(OSF_API_RETRY_DELAY_IN_SECONDS * retry);
             } catch (InterruptedException e) {
                 LOGGER.error("[OSF API] Exception - Retry Interrupted: {}, attempt={}, error={}", ssoUser, retry, e.getMessage());
-                casError = new InstitutionSsoOsfApiFailureException("Communication Error between OSF CAS and OSF API");
+                casError = new InstitutionSsoOsfApiFailedException("Communication Error between OSF CAS and OSF API");
                 break;
             }
         }
@@ -728,7 +731,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         // Handler unexpected exceptions (i.e. any status other than 403)
         if (statusCode != HttpStatus.SC_FORBIDDEN) {
             LOGGER.error("[OSF API] Failure - Unexpected HTTP response code: {}, statusCode={}", ssoUser, statusCode);
-            throw new InstitutionSsoFailedException("OSF API failed to process CAS request");
+            throw new InstitutionSsoOsfApiFailedException("OSF API failed to process CAS request");
         }
         // CAS expects OSF API to return HTTP 403 FORBIDDEN with error details if authentication fails.
         String responseRaw;
@@ -753,17 +756,25 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                     continue;
                 }
                 final String errorDetail = ((JsonObject) error).get("detail").getAsString();
-                if (OsfApiPermissionDenied.INSTITUTION_SELECTIVE_SSO_FAILURE.getId().equals(errorDetail)) {
+                if (OsfApiPermissionDenied.INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED.getId().equals(errorDetail)) {
                     LOGGER.error("[OSF API] Failure - Institution Selective SSO Not Allowed: {}, filter={}", ssoUser, selectiveSsoFilter);
-                    throw new InstitutionSelectiveSsoFailedException("OSF API denies selective SSO login");
+                    throw new InstitutionSsoSelectiveLoginDeniedException("OSF API denies selective SSO login");
+                }
+                if (OsfApiPermissionDenied.INSTITUTION_SSO_DUPLICATE_IDENTITY.getId().equals(errorDetail)) {
+                    LOGGER.error("[OSF API] Failure - Duplicate SSO Identity: {}", ssoUser);
+                    throw new InstitutionSsoDuplicateIdentityException("OSF API can't handle duplicate SSO identity");
+                }
+                if (OsfApiPermissionDenied.INSTITUTION_SSO_ACCOUNT_INACTIVE.getId().equals(errorDetail)) {
+                    LOGGER.error("[OSF API] Failure - Inactive Account: {}", ssoUser);
+                    throw new InstitutionSsoDuplicateIdentityException("OSF API denies inactive account");
                 }
             }
             // Handle unidentified HTTP 403 FORBIDDEN failures
             LOGGER.error("[OSF API] Failure - HTTP 403 FORBIDDEN: {}, statusCode={}", ssoUser, statusCode);
-            throw new InstitutionSsoFailedException("OSF API failed to process CAS request");
+            throw new InstitutionSsoOsfApiFailedException("OSF API failed to process CAS request");
         } catch (final JsonParseException | IllegalStateException e) {
             LOGGER.error("[OSF API] Exception - Invalid Response: {}, error={}", ssoUser, e.getMessage());
-            throw new InstitutionSsoFailedException("CAS failed to parse OSF API error response");
+            throw new InstitutionSsoOsfApiFailedException("CAS failed to parse OSF API error response");
         }
     }
 
