@@ -2,9 +2,13 @@ package io.cos.cas.osf.web.flow.config;
 
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedIdpException;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedOsfException;
-import io.cos.cas.osf.authentication.exception.InstitutionSelectiveSsoFailedException;
-import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailureException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoAccountInactiveException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeParsingException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoDuplicateIdentityException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoSelectiveLoginDeniedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidPasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
@@ -44,14 +48,18 @@ public class OsfCasCoreWebflowConfiguration extends CasCoreWebflowConfiguration 
         Set<Class<? extends Throwable>> errors = new LinkedHashSet<>();
         errors.add(AccountNotConfirmedIdpException.class);
         errors.add(AccountNotConfirmedOsfException.class);
-        errors.add(InvalidOneTimePasswordException.class);
+        errors.add(InstitutionSsoAccountInactiveException.class);
+        errors.add(InstitutionSsoAttributeMissingException.class);
+        errors.add(InstitutionSsoAttributeParsingException.class);
+        errors.add(InstitutionSsoDuplicateIdentityException.class);
         errors.add(InstitutionSsoFailedException.class);
+        errors.add(InstitutionSsoOsfApiFailedException.class);
+        errors.add(InstitutionSsoSelectiveLoginDeniedException.class);
+        errors.add(InvalidOneTimePasswordException.class);
         errors.add(InvalidPasswordException.class);
         errors.add(InvalidUserStatusException.class);
         errors.add(InvalidVerificationKeyException.class);
         errors.add(OneTimePasswordRequiredException.class);
-        errors.add(InstitutionSelectiveSsoFailedException.class);
-        errors.add(InstitutionSsoOsfApiFailureException.class);
         errors.add(TermsOfServiceConsentRequiredException.class);
 
         // Add built-in exceptions after OSF-specific exceptions since order matters
