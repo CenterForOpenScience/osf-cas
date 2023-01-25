@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+23.1.0 (01-25-2023)
+===================
+
+* Institution Rework Project - CAS Part
+
 22.1.3 (12-20-2022)
 ===================
 

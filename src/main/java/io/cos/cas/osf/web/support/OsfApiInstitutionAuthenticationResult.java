@@ -27,23 +27,38 @@ public class OsfApiInstitutionAuthenticationResult implements Serializable {
 
     private static final long serialVersionUID = 3971349776123204760L;
 
-    private String username;
-
+    /**
+     * The object ID of an OSF Institution.
+     */
     private String institutionId;
 
     /**
-     * Verify that the username comes from one of the three attributes in Shibboleth SSO headers.
-     *
-     * @param ssoEppn eppn
-     * @param ssoMail mail
-     * @param ssoMailOther customized attribute for email
-     * @return true if username equals to any of the three else false
+     * The user's institutional email.
      */
-    public Boolean verifyOsfUsername(final String ssoEppn, final String ssoMail, final String ssoMailOther) {
-        if (StringUtils.isBlank(username)) {
-            LOGGER.error("[CAS XSLT] Username={} is blank", username);
+    private String ssoEmail;
+
+    /**
+     * The user's institutional identity.
+     */
+    private String ssoIdentity;
+
+    /**
+     * Verify that the SSO email comes from one of the three attributes in Shibboleth SSO headers.
+     *
+     * Note: From OSF API's perspective, the email provided by SSO is stored in {@link #ssoEmail} which doesn't have to be
+     *       the {@code username} f a candidate OSF user. From CAS's perspective, this {@link #ssoEmail} comes from three
+     *       SSO attributes provided by Shibboleth's authn request: {@code eppn}, {@code mail} and {@code mailOther}.
+     *
+     * @param eppn the eppn attribute
+     * @param mail the mail attribute
+     * @param mailOther the customized mail attribute
+     * @return {@code true} if {@link #ssoEmail} equals to any of the three email attributes; otherwise return {@code false}
+     */
+    public Boolean verifyOsfSsoEmail(final String eppn, final String mail, final String mailOther) {
+        if (StringUtils.isBlank(ssoEmail)) {
+            LOGGER.error("[CAS XSLT] SSO Email cannot be blank!");
             return false;
         }
-        return username.equalsIgnoreCase(ssoEppn) || username.equalsIgnoreCase(ssoMail) || username.equalsIgnoreCase(ssoMailOther);
+        return ssoEmail.equalsIgnoreCase(eppn) || ssoEmail.equalsIgnoreCase(mail) || ssoEmail.equalsIgnoreCase(mailOther);
     }
 }

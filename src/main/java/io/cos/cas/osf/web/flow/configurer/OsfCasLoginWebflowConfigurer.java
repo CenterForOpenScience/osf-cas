@@ -3,9 +3,13 @@ package io.cos.cas.osf.web.flow.configurer;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedIdpException;
 import io.cos.cas.osf.authentication.exception.AccountNotConfirmedOsfException;
-import io.cos.cas.osf.authentication.exception.InstitutionSelectiveSsoFailedException;
-import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailureException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoAccountInactiveException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeParsingException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoDuplicateIdentityException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoSelectiveLoginDeniedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
 import io.cos.cas.osf.authentication.exception.InvalidVerificationKeyException;
@@ -233,6 +237,41 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createTransitionForState(
                 handler,
+                InstitutionSsoAccountInactiveException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_ACCOUNT_INACTIVE
+        );
+        createTransitionForState(
+                handler,
+                InstitutionSsoAttributeMissingException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_ATTRIBUTE_MISSING
+        );
+        createTransitionForState(
+                handler,
+                InstitutionSsoAttributeParsingException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_ATTRIBUTE_PARSING_FAILED
+        );
+        createTransitionForState(
+                handler,
+                InstitutionSsoDuplicateIdentityException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_DUPLICATE_IDENTITY
+        );
+        createTransitionForState(
+                handler,
+                InstitutionSsoFailedException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
+        );
+        createTransitionForState(
+                handler,
+                InstitutionSsoOsfApiFailedException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_OSF_API_FAILED
+        );
+        createTransitionForState(
+                handler,
+                InstitutionSsoSelectiveLoginDeniedException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED
+        );
+        createTransitionForState(
+                handler,
                 InvalidUserStatusException.class.getSimpleName(),
                 OsfCasWebflowConstants.VIEW_ID_INVALID_USER_STATUS
         );
@@ -255,21 +294,6 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 handler,
                 TermsOfServiceConsentRequiredException.class.getSimpleName(),
                 OsfCasWebflowConstants.VIEW_ID_TERMS_OF_SERVICE_CONSENT_REQUIRED
-        );
-        createTransitionForState(
-                handler,
-                InstitutionSsoFailedException.class.getSimpleName(),
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
-        );
-        createTransitionForState(
-                handler,
-                InstitutionSelectiveSsoFailedException.class.getSimpleName(),
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SELECTIVE_SSO_FAILED
-        );
-        createTransitionForState(
-                handler,
-                InstitutionSsoOsfApiFailureException.class.getSimpleName(),
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_OSF_API_FAILURE
         );
 
         // The default transition
@@ -413,18 +437,38 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createViewState(
                 flow,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_ACCOUNT_INACTIVE,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_ACCOUNT_INACTIVE
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_ATTRIBUTE_MISSING,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_ATTRIBUTE_MISSING
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_ATTRIBUTE_PARSING_FAILED,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_ATTRIBUTE_PARSING_FAILED
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_DUPLICATE_IDENTITY,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_DUPLICATE_IDENTITY
+        );
+        createViewState(
+                flow,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_FAILED
         );
         createViewState(
                 flow,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SELECTIVE_SSO_FAILED,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SELECTIVE_SSO_FAILED
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_OSF_API_FAILED,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_OSF_API_FAILED
         );
         createViewState(
                 flow,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_OSF_API_FAILURE,
-                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_OSF_API_FAILURE
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED
         );
     }
 
