@@ -60,11 +60,23 @@ public interface OsfCasWebflowConstants {
 
     String VIEW_ID_INVALID_VERIFICATION_KEY = "casInvalidVerificationKeyView";
 
+    // Exception Views for Institution SSO
+
+    String VIEW_ID_INSTITUTION_SSO_ACCOUNT_INACTIVE = "casInstitutionSsoAccountInactiveView";
+
+    String VIEW_ID_INSTITUTION_SSO_ATTRIBUTE_MISSING = "casInstitutionSsoAttributeMissingView";
+
+    String VIEW_ID_INSTITUTION_SSO_ATTRIBUTE_PARSING_FAILED = "casInstitutionSsoAttributeParsingFailedView";
+
+    String VIEW_ID_INSTITUTION_SSO_DUPLICATE_IDENTITY = "casInstitutionSsoDuplicateIdentityView";
+
     String VIEW_ID_INSTITUTION_SSO_FAILED = "casInstitutionSsoFailedView";
 
-    String VIEW_ID_INSTITUTION_SELECTIVE_SSO_FAILED = "casInstitutionSelectiveSsoFailedView";
+    String VIEW_ID_INSTITUTION_SSO_OSF_API_FAILED = "casInstitutionSsoOsfApiFailedView";
 
-    String VIEW_ID_INSTITUTION_OSF_API_FAILURE = "casInstitutionOsfApiFailureView";
+    String VIEW_ID_INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED = "casInstitutionSsoSelectiveLoginDeniedView";
+
+    // Exception Views for OAuth 2.0 Authorization Flow
 
     String VIEW_ID_OAUTH_20_ERROR_VIEW = "casOAuth20ErrorView";
 }

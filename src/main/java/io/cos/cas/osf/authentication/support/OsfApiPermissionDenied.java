@@ -10,7 +10,11 @@ public enum OsfApiPermissionDenied {
 
     DEFAULT("PermissionDenied"),
 
-    INSTITUTION_SELECTIVE_SSO_FAILURE("InstitutionSsoSelectiveNotAllowed");
+    INSTITUTION_SSO_DUPLICATE_IDENTITY("InstitutionSsoDuplicateIdentity"),
+
+    INSTITUTION_SSO_ACCOUNT_INACTIVE("InstitutionSsoAccountInactive"),
+
+    INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED("InstitutionSsoSelectiveLoginDenied");
 
     private final String id;
 
