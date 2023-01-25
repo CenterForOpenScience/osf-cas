@@ -72,7 +72,7 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
     /**
      * The user's institutional identity when authenticated via institutional SSO.
      */
-    private String institutionalIdentity = "";
+    private String ssoIdentity = "";
 
     /**
      * The authentication delegation protocol that is used between CAS / Shib and institutions.

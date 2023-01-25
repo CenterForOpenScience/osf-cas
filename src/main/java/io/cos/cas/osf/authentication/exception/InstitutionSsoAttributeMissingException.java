@@ -6,25 +6,25 @@ import javax.security.auth.login.AccountException;
 
 /**
  * Describes an authentication error condition where institution SSO has failed
- * in a way that doesn't fit into any specific exception.
+ * due to missing required attributes from IdP.
  *
  * @author Longze Chen
- * @since 21.0.0
+ * @since 23.1.0
  */
 @NoArgsConstructor
-public class InstitutionSsoFailedException extends AccountException {
+public class InstitutionSsoAttributeMissingException extends AccountException {
 
     /**
      * Serialization metadata.
      */
-    private static final long serialVersionUID = 6977786012016534260L;
+    private static final long serialVersionUID = 1412743002614665584L;
 
     /**
-     * Instantiates a new {@link InstitutionSsoFailedException}.
+     * Instantiates a new {@link InstitutionSsoAttributeMissingException}.
      *
      * @param msg the msg
      */
-    public InstitutionSsoFailedException(final String msg) {
+    public InstitutionSsoAttributeMissingException(final String msg) {
         super(msg);
     }
 }
