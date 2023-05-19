@@ -50,6 +50,9 @@ public class OsfInstitution extends AbstractOsfModel {
     @Column(name = "deactivated")
     private Date dateDeactivated;
 
+    @Column(name = "support_email", nullable = false)
+    private String supportEmail;
+
     public DelegationProtocol getDelegationProtocol() {
         try {
             return DelegationProtocol.getType(delegationProtocol);
