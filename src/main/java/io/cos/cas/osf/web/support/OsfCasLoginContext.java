@@ -40,6 +40,8 @@ public class OsfCasLoginContext implements Serializable  {
 
     private String institutionId;
 
+    private String institutionSupportEmail;
+
     private boolean unsupportedInstitutionLogin;
 
     private boolean orcidRedirect;
@@ -59,6 +61,7 @@ public class OsfCasLoginContext implements Serializable  {
             final String encodedServiceUrl,
             final boolean institutionLogin,
             final String institutionId,
+            final String institutionSupportEmail,
             final boolean unsupportedInstitutionLogin,
             final boolean orcidRedirect,
             final String orcidLoginUrl,
@@ -69,6 +72,7 @@ public class OsfCasLoginContext implements Serializable  {
         this.handleErrorName = null;
         this.institutionLogin = institutionLogin;
         this.institutionId = institutionId;
+        this.institutionSupportEmail = institutionSupportEmail;
         this.unsupportedInstitutionLogin = unsupportedInstitutionLogin;
         this.orcidRedirect = orcidRedirect;
         this.orcidLoginUrl = orcidLoginUrl;

@@ -75,6 +75,7 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
                     encodedServiceUrl,
                     institutionLogin,
                     institutionId,
+                    StringUtils.EMPTY,
                     unsupportedInstitutionLogin,
                     orcidRedirect,
                     orcidLoginUrl,
@@ -85,6 +86,7 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
             loginContext.setEncodedServiceUrl(encodedServiceUrl);
             loginContext.setInstitutionLogin(institutionLogin);
             loginContext.setInstitutionId(institutionId);
+            loginContext.setInstitutionSupportEmail(StringUtils.EMPTY);
             loginContext.setUnsupportedInstitutionLogin(unsupportedInstitutionLogin);
             loginContext.setOrcidLoginUrl(orcidLoginUrl);
             loginContext.setOrcidRedirect(false);
