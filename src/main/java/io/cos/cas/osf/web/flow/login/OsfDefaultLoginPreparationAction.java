@@ -17,8 +17,6 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 import java.io.Serializable;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.Set;
 
@@ -55,8 +53,6 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
         final boolean unsupportedInstitutionLogin = isUnsupportedInstitutionLogin(context);
         final boolean orcidRedirect = isOrcidLoginAutoRedirect(context);
         final String orcidLoginUrl = getOrcidLoginUrlFromFlowScope(context);
-
-        final String encodedServiceUrl = getEncodedServiceUrlFromRequestContext(context);
         final boolean defaultService = isFromFlowlessErrorPage(context);
         final OsfUrlProperties osfUrl = Optional.of(context).map(
                 requestContext -> (OsfUrlProperties) requestContext.getFlowScope().get(OsfCasWebflowConstants.FLOW_PARAMETER_OSF_URL)
@@ -72,7 +68,6 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
                 -> (OsfCasLoginContext) requestContext.getFlowScope().get(PARAMETER_LOGIN_CONTEXT)).orElse(null);
         if (loginContext == null) {
             loginContext = new OsfCasLoginContext(
-                    encodedServiceUrl,
                     institutionLogin,
                     institutionId,
                     StringUtils.EMPTY,
@@ -83,7 +78,6 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
                     defaultServiceUrl
             );
         } else {
-            loginContext.setEncodedServiceUrl(encodedServiceUrl);
             loginContext.setInstitutionLogin(institutionLogin);
             loginContext.setInstitutionId(institutionId);
             loginContext.setInstitutionSupportEmail(StringUtils.EMPTY);
@@ -148,14 +142,6 @@ public class OsfDefaultLoginPreparationAction extends OsfAbstractLoginPreparatio
             }
         }
         return null;
-    }
-
-    private String getEncodedServiceUrlFromRequestContext(final RequestContext context) throws AssertionError {
-        final String serviceUrl = context.getRequestParameters().get(PARAMETER_SERVICE);
-        if (StringUtils.isBlank(serviceUrl)) {
-            return null;
-        }
-        return URLEncoder.encode(serviceUrl, StandardCharsets.UTF_8);
     }
 
     private boolean isFromFlowlessErrorPage(final RequestContext context) {

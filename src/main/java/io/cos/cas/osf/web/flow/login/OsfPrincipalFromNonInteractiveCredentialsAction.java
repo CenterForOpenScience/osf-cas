@@ -18,6 +18,7 @@ import io.cos.cas.osf.authentication.support.OsfApiPermissionDenied;
 import io.cos.cas.osf.configuration.model.OsfApiProperties;
 import io.cos.cas.osf.configuration.model.OsfUrlProperties;
 import io.cos.cas.osf.web.support.OsfApiInstitutionAuthenticationResult;
+import io.cos.cas.osf.web.support.OsfCasSsoErrorContext;
 
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -140,6 +141,8 @@ import java.util.concurrent.TimeUnit;
 @Setter
 @Getter
 public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNonInteractiveCredentialsAction {
+
+    private static final String PARAMETER_SSO_ERROR_CONTEXT = "osfSsoErrorContext";
 
     private static final String USERNAME_PARAMETER_NAME = "username";
 
@@ -809,5 +812,36 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             return "";
         }
         return "";
+    }
+
+    /**
+     * Prepare {@link OsfCasSsoErrorContext} and put it in flow.
+     *
+     * @param context the request context
+     * @param handleErrorName the error name
+     * @param errorMessage the error message
+     * @param ssoEmail user's SSO email
+     * @param ssoIdentity user's SSO identity
+     * @param institutionId institution ID
+     * @param institutionSupportEmail institution support email
+     */
+    private void setSsoErrorContext(
+            final RequestContext context,
+            final String handleErrorName,
+            final String errorMessage,
+            final String ssoEmail,
+            final String ssoIdentity,
+            final String institutionId,
+            final String institutionSupportEmail
+    ) {
+        OsfCasSsoErrorContext ssoErrorContext =  new OsfCasSsoErrorContext(
+                handleErrorName,
+                errorMessage,
+                ssoEmail,
+                ssoIdentity,
+                institutionId,
+                institutionSupportEmail
+        );
+        context.getFlowScope().put(PARAMETER_SSO_ERROR_CONTEXT, ssoErrorContext);
     }
 }
