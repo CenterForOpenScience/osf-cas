@@ -15,9 +15,12 @@ import io.cos.cas.osf.authentication.exception.InstitutionSsoSelectiveLoginDenie
 import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailedException;
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
 import io.cos.cas.osf.authentication.support.OsfApiPermissionDenied;
+import io.cos.cas.osf.authentication.support.OsfInstitutionUtils;
 import io.cos.cas.osf.configuration.model.OsfApiProperties;
 import io.cos.cas.osf.configuration.model.OsfUrlProperties;
+import io.cos.cas.osf.dao.JpaOsfDao;
 import io.cos.cas.osf.web.support.OsfApiInstitutionAuthenticationResult;
+import io.cos.cas.osf.web.support.OsfCasSsoErrorContext;
 
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -141,6 +144,8 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNonInteractiveCredentialsAction {
 
+    private static final String PARAMETER_SSO_ERROR_CONTEXT = "osfCasSsoErrorContext";
+
     private static final String USERNAME_PARAMETER_NAME = "username";
 
     private static final String VERIFICATION_KEY_PARAMETER_NAME = "verification_key";
@@ -180,6 +185,9 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     private CentralAuthenticationService centralAuthenticationService;
 
     @NotNull
+    private final JpaOsfDao jpaOsfDao;
+
+    @NotNull
     private OsfUrlProperties osfUrlProperties;
 
     @NotNull
@@ -195,6 +203,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
             final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy,
             final CentralAuthenticationService centralAuthenticationService,
+            final JpaOsfDao jpaOsfDao,
             final OsfUrlProperties osfUrlProperties,
             final OsfApiProperties osfApiProperties,
             final Map<String, List<String>> authnDelegationClients
@@ -205,6 +214,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 adaptiveAuthenticationPolicy
         );
         this.centralAuthenticationService = centralAuthenticationService;
+        this.jpaOsfDao = jpaOsfDao;
         this.osfUrlProperties = osfUrlProperties;
         this.osfApiProperties = osfApiProperties;
         this.authnDelegationClients = authnDelegationClients;
@@ -240,7 +250,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                     );
                     final OsfPostgresCredential osfPostgresCredential = constructCredentialsFromPac4jAuthentication(context, clientName);
                     if (osfPostgresCredential != null) {
-                        final OsfApiInstitutionAuthenticationResult remoteUserInfo = notifyOsfApiOfInstnAuthnSuccess(osfPostgresCredential);
+                        final OsfApiInstitutionAuthenticationResult remoteUserInfo
+                                = notifyOsfApiOfInstnAuthnSuccess(context, osfPostgresCredential);
                         osfPostgresCredential.setUsername(remoteUserInfo.getSsoEmail());
                         osfPostgresCredential.setInstitutionId(remoteUserInfo.getInstitutionId());
                         WebUtils.removeCredential(context);
@@ -263,7 +274,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             // Type 3: institution sso via Shibboleth authentication using the SAML protocol
             LOGGER.debug("Shibboleth session / header found in request context.");
             final OsfPostgresCredential osfPostgresCredential = constructCredentialsFromShibbolethAuthentication(context, request);
-            final OsfApiInstitutionAuthenticationResult remoteUserInfo = notifyOsfApiOfInstnAuthnSuccess(osfPostgresCredential);
+            final OsfApiInstitutionAuthenticationResult remoteUserInfo
+                    = notifyOsfApiOfInstnAuthnSuccess(context, osfPostgresCredential);
             final String ssoIdentity = osfPostgresCredential.getSsoIdentity();
             final String eppn = osfPostgresCredential.getDelegationAttributes().get("eppn");
             final String mail = osfPostgresCredential.getDelegationAttributes().get("mail");
@@ -568,6 +580,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
      * @throws AccountException if there is an issue with authentication data or if the OSF API request has failed
      */
     private OsfApiInstitutionAuthenticationResult notifyOsfApiOfInstnAuthnSuccess(
+            final RequestContext context,
             final OsfPostgresCredential credential
     ) throws AccountException {
 
@@ -758,6 +771,15 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 final String errorDetail = ((JsonObject) error).get("detail").getAsString();
                 if (OsfApiPermissionDenied.INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED.getId().equals(errorDetail)) {
                     LOGGER.error("[OSF API] Failure - Institution Selective SSO Not Allowed: {}, filter={}", ssoUser, selectiveSsoFilter);
+                    setSsoErrorContext(
+                            context,
+                            InstitutionSsoSelectiveLoginDeniedException.class.getSimpleName(),
+                            String.format("Institution Selective SSO Not Allowed: %s", ssoUser),
+                            ssoEmail,
+                            ssoIdentity,
+                            institutionId,
+                            OsfInstitutionUtils.getInstitutionSupportEmail(this.jpaOsfDao, institutionId)
+                    );
                     throw new InstitutionSsoSelectiveLoginDeniedException("OSF API denies selective SSO login");
                 }
                 if (OsfApiPermissionDenied.INSTITUTION_SSO_DUPLICATE_IDENTITY.getId().equals(errorDetail)) {
@@ -809,5 +831,36 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             return "";
         }
         return "";
+    }
+
+    /**
+     * Prepare {@link OsfCasSsoErrorContext} and put it in flow.
+     *
+     * @param context the request context
+     * @param handleErrorName the error name
+     * @param errorMessage the error message
+     * @param ssoEmail user's SSO email
+     * @param ssoIdentity user's SSO identity
+     * @param institutionId institution ID
+     * @param institutionSupportEmail institution support email
+     */
+    private void setSsoErrorContext(
+            final RequestContext context,
+            final String handleErrorName,
+            final String errorMessage,
+            final String ssoEmail,
+            final String ssoIdentity,
+            final String institutionId,
+            final String institutionSupportEmail
+    ) {
+        OsfCasSsoErrorContext ssoErrorContext =  new OsfCasSsoErrorContext(
+                handleErrorName,
+                errorMessage,
+                ssoEmail,
+                ssoIdentity,
+                institutionId,
+                institutionSupportEmail
+        );
+        context.getFlowScope().put(PARAMETER_SSO_ERROR_CONTEXT, ssoErrorContext);
     }
 }

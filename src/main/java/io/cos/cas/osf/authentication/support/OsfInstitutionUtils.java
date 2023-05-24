@@ -29,6 +29,11 @@ public final class OsfInstitutionUtils {
         return institution != null && institution.getDelegationProtocol() != null;
     }
 
+    public static String getInstitutionSupportEmail(final JpaOsfDao jpaOsfDao, final String id) {
+        final OsfInstitution institution = jpaOsfDao.findOneInstitutionById(id);
+        return institution != null ? institution.getSupportEmail() : null;
+    }
+
     public static Map<String, String> getInstitutionLoginUrlMap(
             final JpaOsfDao jpaOsfDao,
             final String target,

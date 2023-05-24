@@ -25,7 +25,8 @@
                 <hr class="my-4" />
                 <section class="card-message">
                     <h1 th:utext="#{screen.institutionssofailed.heading}"></h1>
-                    <p th:utext="#{screen.institutionssoselectivelogindenied.message}"></p>
+                    <p th:if="${#strings.isEmpty(osfCasSsoErrorContext.institutionSupportEmail)}" th:utext="#{screen.institutionssoselectivelogindenied.standard.message}"></p>
+                    <p th:unless="${#strings.isEmpty(osfCasSsoErrorContext.institutionSupportEmail)}" th:utext="#{screen.institutionssoselectivelogindenied.support.message(${osfCasSsoErrorContext.institutionSupportEmail})}"></p>
                 </section>
                 <section class="form-button">
                     <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{/logout(service=${osfUrl.logout})}">
