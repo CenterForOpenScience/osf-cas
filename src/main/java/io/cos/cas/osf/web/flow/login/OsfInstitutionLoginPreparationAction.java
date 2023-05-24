@@ -82,8 +82,9 @@ public class OsfInstitutionLoginPreparationAction extends OsfAbstractLoginPrepar
                 institutionId = null;
             } else {
                 final String institutionSupportEmail = OsfInstitutionUtils.getInstitutionSupportEmail(jpaOsfDao, institutionId);
-                if (institutionSupportEmail != null)
-                loginContext.setInstitutionSupportEmail(institutionSupportEmail);
+                if (institutionSupportEmail != null) {
+                    loginContext.setInstitutionSupportEmail(institutionSupportEmail);
+                }
             }
         }
 
