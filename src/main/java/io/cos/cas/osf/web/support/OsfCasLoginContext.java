@@ -26,19 +26,11 @@ public class OsfCasLoginContext implements Serializable  {
 
     private static final long serialVersionUID = 7523144720609509742L;
 
-    /**
-     * The encoded service URL provided by the "service=" query param in the request URL.
-     *
-     * This attribute is deprecated and should be removed since 1) ThymeLeaf handles URL building elegantly in the template and 2) both of
-     * the flow parameters "service.originalUrl" and "originalUrl" stores the current service information.
-     */
-    private String encodedServiceUrl;
-
-    private String handleErrorName;
-
     private boolean institutionLogin;
 
     private String institutionId;
+
+    private String institutionSupportEmail;
 
     private boolean unsupportedInstitutionLogin;
 
@@ -54,25 +46,4 @@ public class OsfCasLoginContext implements Serializable  {
      * e.g. http(s)://[OSF Domain]/login?next=[encoded version of http(s)://[OSF Domain]/]
      */
     private String defaultServiceUrl;
-
-    public OsfCasLoginContext (
-            final String encodedServiceUrl,
-            final boolean institutionLogin,
-            final String institutionId,
-            final boolean unsupportedInstitutionLogin,
-            final boolean orcidRedirect,
-            final String orcidLoginUrl,
-            final boolean defaultService,
-            final String defaultServiceUrl
-    ) {
-        this.encodedServiceUrl = encodedServiceUrl;
-        this.handleErrorName = null;
-        this.institutionLogin = institutionLogin;
-        this.institutionId = institutionId;
-        this.unsupportedInstitutionLogin = unsupportedInstitutionLogin;
-        this.orcidRedirect = orcidRedirect;
-        this.orcidLoginUrl = orcidLoginUrl;
-        this.defaultService = defaultService;
-        this.defaultServiceUrl = defaultServiceUrl;
-    }
 }

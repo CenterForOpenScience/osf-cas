@@ -100,6 +100,7 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
                 serviceTicketRequestWebflowEventResolver.getObject(),
                 adaptiveAuthenticationPolicy.getObject(),
                 centralAuthenticationService.getObject(),
+                jpaOsfDao.getObject(),
                 casProperties.getAuthn().getOsfUrl(),
                 casProperties.getAuthn().getOsfApi(),
                 authnDelegationClients

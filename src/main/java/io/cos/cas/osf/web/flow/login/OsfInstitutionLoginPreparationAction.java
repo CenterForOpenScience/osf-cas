@@ -80,6 +80,11 @@ public class OsfInstitutionLoginPreparationAction extends OsfAbstractLoginPrepar
                 loginContext.setInstitutionId(null);
                 context.getFlowScope().put(PARAMETER_LOGIN_CONTEXT, loginContext);
                 institutionId = null;
+            } else {
+                final String institutionSupportEmail = OsfInstitutionUtils.getInstitutionSupportEmail(jpaOsfDao, institutionId);
+                if (institutionSupportEmail != null) {
+                    loginContext.setInstitutionSupportEmail(institutionSupportEmail);
+                }
             }
         }
 
