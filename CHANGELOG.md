@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+23.2.0 (06-25-2023)
+===================
+
+* Institution support email for selective SSO
+
 23.1.0 (01-25-2023)
 ===================
 
