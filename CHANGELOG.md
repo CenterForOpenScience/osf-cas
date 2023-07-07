@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+23.2.1 (07-07-2023)
+===================
+
+* Fix SSO error handling for inactive users
+
 23.2.0 (06-25-2023)
 ===================
 
