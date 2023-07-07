@@ -7,6 +7,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoAccountInactiveException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeParsingException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoDuplicateIdentityException;
@@ -788,7 +789,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 }
                 if (OsfApiPermissionDenied.INSTITUTION_SSO_ACCOUNT_INACTIVE.getId().equals(errorDetail)) {
                     LOGGER.error("[OSF API] Failure - Inactive Account: {}", ssoUser);
-                    throw new InstitutionSsoDuplicateIdentityException("OSF API denies inactive account");
+                    throw new InstitutionSsoAccountInactiveException("OSF API denies inactive account");
                 }
             }
             // Handle unidentified HTTP 403 FORBIDDEN failures
