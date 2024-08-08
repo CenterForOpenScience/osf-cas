@@ -165,13 +165,15 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
             if (oneTimePassword == null) {
                 throw new OneTimePasswordRequiredException("2FA TOTP required for user [" + username + "]");
             }
+            final long transformedOneTimePassword = Long.parseLong(oneTimePassword);
+            boolean checkPassed;
             try {
-                final long transformedOneTimePassword = Long.parseLong(oneTimePassword);
-                if (!TotpUtils.checkCode(osfTotp.getTotpSecretBase32(), transformedOneTimePassword)) {
-                    throw new InvalidOneTimePasswordException("Invalid 2FA TOTP for user [" + username + "] (Type 1)");
-                }
-            } catch (final Exception e) {
+                checkPassed = TotpUtils.checkCode(osfTotp.getTotpSecretBase32(), transformedOneTimePassword);
+            } catch (final Exception e){
                 throw new InvalidOneTimePasswordException("Invalid 2FA TOTP for user [" + username + "] (Type 2)");
+            }
+            if (!checkPassed) {
+                throw new InvalidOneTimePasswordException("Invalid 2FA TOTP for user [" + username + "] (Type 1)");
             }
         }
 
