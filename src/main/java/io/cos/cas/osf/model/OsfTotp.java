@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.codec.binary.Base32;
 
@@ -28,6 +29,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @ToString
+@Slf4j
 public class OsfTotp extends AbstractOsfModel {
 
     @OneToOne
@@ -50,8 +52,14 @@ public class OsfTotp extends AbstractOsfModel {
     }
 
     public String getTotpSecretBase32() {
-        final byte[] bytes = DatatypeConverter.parseHexBinary(totpSecret);
-        return new Base32().encodeAsString(bytes);
+        try {
+            // Handle totpSecret generated before OSF Python 3.12 upgrade
+            final byte[] bytes = DatatypeConverter.parseHexBinary(totpSecret);
+            return new Base32().encodeAsString(bytes);
+        } catch (final IllegalArgumentException e) {
+            // Handle totpSecret generated after OSF Python 3.12 upgrade
+            return new Base32().encodeAsString(totpSecret.getBytes());
+        }
     }
 
     public boolean isActive() {
