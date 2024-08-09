@@ -52,7 +52,7 @@ For institutions that are not registered with any participant of eduGAIN, COS of
   * Required Attribute
     * Unique identifier for the user
     * User's institutional email
-    * Either of the follwoing two
+    * Either of the following two
         * User's full name
         * User's first **AND** last name
   * Attribute name and format
@@ -68,7 +68,7 @@ For institutions that are not registered with any participant of eduGAIN, COS of
 
 * Provide COS with the metadata URL for your IdP server.
 
-* Provide COS with the entiry ID for your IdP server, which should be the same as the one defined in your metadata.
+* Provide COS with the entity ID for your IdP server, which should be the same as the one defined in your metadata.
 
 * It is recommended that a temporary institution test account is created for COS engineers if possible, which will significantly aid and accelerate the process.
 
