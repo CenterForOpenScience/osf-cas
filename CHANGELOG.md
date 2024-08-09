@@ -2,6 +2,13 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+24.1.0 (08-09-2024)
+===================
+
+* Updated 2FA secretparsing to support osf.io python 3.12 upgrade
+* Added OAuth guide
+* Fixed typo in Institution SSO guide
+
 23.2.1 (07-07-2023)
 ===================
 
