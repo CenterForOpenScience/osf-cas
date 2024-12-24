@@ -1,0 +1,422 @@
+<SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config"
+          xmlns:conf="urn:mace:shibboleth:2.0:native:sp:config"
+          xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+          xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+          xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+          clockSkew="180">
+
+    <InProcess logger="native.logger" checkSpoofing="true"/>
+
+    <!-- The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined. -->
+    <ApplicationDefaults entityID="https://accounts.test.osf.io/shibboleth"
+                         REMOTE_USER="institutionalidentity eppn oid" attributePrefix="AUTH-">
+        <!-- Controls session lifetimes, address checks, cookie handling, and the protocol handlers. -->
+        <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
+                  checkAddress="false" handlerSSL="false" cookieProps="http">
+            <!-- Configures SSO for a default IdP. -->
+            <SSO>SAML2 SAML1</SSO>
+            <!-- SAML and local-only logout. -->
+            <Logout>SAML2 Local</Logout>
+            <!-- Extension service that generates "approximate" metadata based on SP configuration. -->
+            <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
+            <!-- Status reporting service. -->
+            <Handler type="Status" Location="/Status"/>
+            <!-- Session diagnostic service. -->
+            <Handler type="Session" Location="/Session" showAttributeValues="true"/>
+            <!-- JSON feed of discovery information. -->
+            <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
+        </Sessions>
+
+        <!-- Allows overriding of error template information/filenames. -->
+        <Errors supportContact="support@cos.io" helpLocation="/about.html" styleSheet="/shibboleth-sp/main.css"/>
+
+        <!-- Here goes all InCommon/eduGAIN IdPs, all of which are production IdP server using the MDQ service -->
+
+        <!-- Arizona State University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Aasu.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Brown University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fsso.brown.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Carnegie Mellon University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Flogin.cmu.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Case Western Reserve University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Acase.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Cornell University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fshibidp.cit.cornell.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Duke University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Aduke.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Erasmus University Rotterdam -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fsts.windows.net%2F715902d6-f63e-4b8d-929b-4bb170bad492%2F</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Florida State University -->
+        <!-- National High Magnetic Field Laboratory (Shared SSO via Florida State University) -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fidp.fsu.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- George Mason University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fshibboleth.gmu.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- George Washington University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fsinglesignon.gwu.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Georgia Institute of Technology -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fidp.gatech.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Harvard University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Ffed.huit.harvard.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- James Madison University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Ajmu.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- KU Leuven -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Akuleuven.be%3Akulassoc%3Akuleuven.be</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Massachusetts Institute of Technology -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Amit.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- New York University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Anyu.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Princeton University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fidp.princeton.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Purdue University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fidp.purdue.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Temple University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Ffim.temple.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- The University of Oklahoma -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fshib.ou.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- The University of Texas at Dallas -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fidp.utdallas.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Tufts University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fshib-idp.tufts.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Universidade do Algarve -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fsi-saai.ualg.pt%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Universiteit Gent -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fidentity.ugent.be%2Fsimplesaml%2Fsaml2%2Fidp%2Fmetadata.php</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Arizona -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Aarizona.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of California, Berkeley -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Aberkeley.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of California, Los Angles -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Aucla.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Chicago -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Auchicago.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Cincinnati -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Flogin.uc.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Colorado Boulder -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Ffedauth.colorado.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Edinburgh -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fidp.ed.ac.uk%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of London -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fidp.uolia.london.ac.uk%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Manchester -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fshib.manchester.ac.uk%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Maryland -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Aumd.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Maryland, Baltimore -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fwebauth.umaryland.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of North Carolina at Chapel Hill -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Aunc.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Notre Dame -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Flogin.nd.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Rochester -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fuidp-prod.its.rochester.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Sussex -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fidp.sussex.ac.uk%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- University of Virginia -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/urn%3Amace%3Aincommon%3Avirginia.edu</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Virginia Commonwealth University -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fshibboleth.vcu.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Virginia Tech -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Flogin.wustl.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Washington University in St. Louis -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fshib.manchester.ac.uk%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Yale Law School -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/https%3A%2F%2Fauth.yale.edu%2Fidp%2Fshibboleth</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Here is the end of InCommon/eduGAIN IdPs. Current total: 44 unique provider and 45 institutions. -->
+
+        <!-- Here goes the non-InCommon/eduGAIN IdPs. -->
+
+        <!-- Boys Town [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://login.microsoftonline.com/e2ab7419-36ab-4a95-a19f-ee90b6a9b8ac/federationmetadata/2007-06/federationmetadata.xml?appid=76c28b50-eb66-449c-a803-a0129b2c14c7"
+                          backingFilePath="bt-test-idp-metadata.xml"
+                          reloadInterval="180000" >
+            <MetadataFilter type="Signature" certificate="bt-idp-test.pem" />
+        </MetadataProvider>
+
+        <!-- East Carolina University [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://login.microsoftonline.com/17143cbb-385c-4c45-a36a-c65b72e3eae8/federationmetadata/2007-06/federationmetadata.xml?appid=b35fa85e-451e-490e-a8a4-ea3c68de0eb8"
+                          backingFilePath="ecu-test-idp-metadata.xml"
+                          reloadInterval="86400" />
+
+        <!-- Macquarie University [Test] -->
+        <MetadataProvider type="XML" path="mq-test-idp-metadata.xml"
+                          reloadInterval="180000"/>
+
+        <!-- Oklahoma State University [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://stwcas.okstate.edu/cas/idp/metadata"
+                          backingFilePath="okstate-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
+        <!-- University of British Columbia [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://authentication.stg.id.ubc.ca/idp/shibboleth"
+                          backingFilePath="ubc-test-idp-metadata.xml"
+                          reloadInterval="86400" />
+
+        <!-- University of South Carolina [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://cas.auth.sc.edu/cas/idp/metadata"
+                          backingFilePath="sc-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
+        <!-- Universiteit Gent [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://ideq.ugent.be/simplesaml/saml2/idp/metadata.php"
+                          backingFilePath="ugent-test-idp-metadata.xml"
+                          reloadInterval="86400" />
+
+        <!-- Vrije Universiteit Amsterdam [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://stsfed.test.vu.nl/FederationMetadata/2007-06/FederationMetadata.xml"
+                          backingFilePath="vua-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
+        <!-- Yale Law (yls) [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://auth-test.yale.edu/idp/shibboleth"
+                          backingFilePath="yalelaw-test-idp-metadata.xml"
+                          reloadInterval="86400" />
+
+        <!-- Map to extract attributes from SAML assertions. -->
+        <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
+
+        <!-- Use a SAML query if no attributes are supplied during SSO. -->
+        <AttributeResolver type="Query" subjectMatch="true"/>
+
+        <!-- Default filtering policy for recognized attributes, lets other data pass. -->
+        <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
+
+        <!-- Simple file-based resolver for using a single keypair. -->
+        <CredentialResolver type="File" key="sp-key.pem" certificate="sp-cert.pem"/>
+
+    </ApplicationDefaults>
+
+    <!-- Policies that determine how to process and authenticate runtime messages. -->
+    <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
+
+    <!-- Low-level configuration about protocols and bindings available for use. -->
+    <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>
+
+</SPConfig>
