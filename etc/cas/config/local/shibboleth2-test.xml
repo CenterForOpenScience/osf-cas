@@ -350,14 +350,14 @@
                           uri="https://login.microsoftonline.com/e2ab7419-36ab-4a95-a19f-ee90b6a9b8ac/federationmetadata/2007-06/federationmetadata.xml?appid=76c28b50-eb66-449c-a803-a0129b2c14c7"
                           backingFilePath="bt-test-idp-metadata.xml"
                           reloadInterval="180000" >
-            <MetadataFilter type="Signature" certificate="bt-idp-test.pem" />
+            <MetadataFilter type="Signature" certificate="bt-test-idp.pem" />
         </MetadataProvider>
 
         <!-- East Carolina University [Test] -->
         <MetadataProvider type="XML"
                           uri="https://login.microsoftonline.com/17143cbb-385c-4c45-a36a-c65b72e3eae8/federationmetadata/2007-06/federationmetadata.xml?appid=b35fa85e-451e-490e-a8a4-ea3c68de0eb8"
                           backingFilePath="ecu-test-idp-metadata.xml"
-                          reloadInterval="86400" />
+                          reloadInterval="180000" />
 
         <!-- Macquarie University [Test] -->
         <MetadataProvider type="XML" path="mq-test-idp-metadata.xml"
@@ -373,7 +373,7 @@
         <MetadataProvider type="XML"
                           uri="https://authentication.stg.id.ubc.ca/idp/shibboleth"
                           backingFilePath="ubc-test-idp-metadata.xml"
-                          reloadInterval="86400" />
+                          reloadInterval="180000" />
 
         <!-- University of South Carolina [Test] -->
         <MetadataProvider type="XML"
@@ -385,7 +385,7 @@
         <MetadataProvider type="XML"
                           uri="https://ideq.ugent.be/simplesaml/saml2/idp/metadata.php"
                           backingFilePath="ugent-test-idp-metadata.xml"
-                          reloadInterval="86400" />
+                          reloadInterval="180000" />
 
         <!-- Vrije Universiteit Amsterdam [Test] -->
         <MetadataProvider type="XML"
@@ -397,7 +397,7 @@
         <MetadataProvider type="XML"
                           uri="https://auth-test.yale.edu/idp/shibboleth"
                           backingFilePath="yalelaw-test-idp-metadata.xml"
-                          reloadInterval="86400" />
+                          reloadInterval="180000" />
 
         <!-- Map to extract attributes from SAML assertions. -->
         <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
