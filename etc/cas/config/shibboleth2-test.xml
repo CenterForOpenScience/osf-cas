@@ -1,0 +1,168 @@
+<SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config"
+          xmlns:conf="urn:mace:shibboleth:2.0:native:sp:config"
+          xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+          xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+          xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+          clockSkew="180">
+
+    <InProcess logger="native.logger" checkSpoofing="true"/>
+
+    <!-- The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined. -->
+    <ApplicationDefaults entityID="https://accounts.test.osf.io/shibboleth"
+                         REMOTE_USER="institutionalidentity eppn oid" attributePrefix="AUTH-">
+        <!-- Controls session lifetimes, address checks, cookie handling, and the protocol handlers. -->
+        <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
+                  checkAddress="false" handlerSSL="false" cookieProps="http">
+            <!-- Configures SSO for a default IdP. -->
+            <SSO>SAML2 SAML1</SSO>
+            <!-- SAML and local-only logout. -->
+            <Logout>SAML2 Local</Logout>
+            <!-- Extension service that generates "approximate" metadata based on SP configuration. -->
+            <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
+            <!-- Status reporting service. -->
+            <Handler type="Status" Location="/Status"/>
+            <!-- Session diagnostic service. -->
+            <Handler type="Session" Location="/Session" showAttributeValues="true"/>
+            <!-- JSON feed of discovery information. -->
+            <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
+        </Sessions>
+
+        <!-- Allows overriding of error template information/filenames. -->
+        <Errors supportContact="support@cos.io" helpLocation="/about.html" styleSheet="/shibboleth-sp/main.css"/>
+
+        <!-- Here goes the non-InCommon/eduGAIN IdPs. -->
+        <!-- This is above InCommon to take precedence for institutions that have Metadata in InCommon but prefer providing their own. -->
+
+        <!-- Boys Town [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://login.microsoftonline.com/e2ab7419-36ab-4a95-a19f-ee90b6a9b8ac/federationmetadata/2007-06/federationmetadata.xml?appid=76c28b50-eb66-449c-a803-a0129b2c14c7"
+                          backingFilePath="bt-test-idp-metadata.xml"
+                          reloadInterval="180000" >
+            <MetadataFilter type="Signature" certificate="bt-test-idp.pem" />
+        </MetadataProvider>
+
+        <!-- East Carolina University [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://login.microsoftonline.com/17143cbb-385c-4c45-a36a-c65b72e3eae8/federationmetadata/2007-06/federationmetadata.xml?appid=b35fa85e-451e-490e-a8a4-ea3c68de0eb8"
+                          backingFilePath="ecu-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
+        <!-- Macquarie University [Test] -->
+        <MetadataProvider type="XML" path="mq-test-idp-metadata.xml"
+                          reloadInterval="180000"/>
+
+        <!-- Oklahoma State University [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://stwcas.okstate.edu/cas/idp/metadata"
+                          backingFilePath="okstate-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
+        <!-- University of British Columbia [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://authentication.stg.id.ubc.ca/idp/shibboleth"
+                          backingFilePath="ubc-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
+        <!-- University of South Carolina [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://cas.auth.sc.edu/cas/idp/metadata"
+                          backingFilePath="sc-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
+        <!-- Universiteit Gent [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://ideq.ugent.be/simplesaml/saml2/idp/metadata.php"
+                          backingFilePath="ugent-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
+        <!-- Vrije Universiteit Amsterdam [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://stsfed.test.vu.nl/FederationMetadata/2007-06/FederationMetadata.xml"
+                          backingFilePath="vua-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
+        <!-- Yale Law (yls) [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://auth-test.yale.edu/idp/shibboleth"
+                          backingFilePath="yalelaw-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
+        <!-- Here is the end of non-InCommon/eduGAIN IdPs. Current total: 9 unique provider and 9 institutions. -->
+
+        <!-- Here goes all InCommon/eduGAIN IdPs, all of which are production IdP server using the MDQ service -->
+
+        <!-- This is a list of all servers using a Dynamic Metadata Provider configuration with MDQ -->
+        <!-- Arizona State University -->
+        <!-- Brown University -->
+        <!-- Carnegie Mellon University -->
+        <!-- Case Western Reserve University -->
+        <!-- Cornell University -->
+        <!-- Duke University -->
+        <!-- Erasmus University Rotterdam -->
+        <!-- Florida State University -->
+        <!-- National High Magnetic Field Laboratory (Shared SSO via Florida State University) -->
+        <!-- George Mason University -->
+        <!-- George Washington University -->
+        <!-- Georgia Institute of Technology -->
+        <!-- Harvard University -->
+        <!-- James Madison University -->
+        <!-- KU Leuven -->
+        <!-- Massachusetts Institute of Technology -->
+        <!-- New York University -->
+        <!-- Princeton University -->
+        <!-- Purdue University -->
+        <!-- Temple University -->
+        <!-- The University of Oklahoma -->
+        <!-- The University of Texas at Dallas -->
+        <!-- Tufts University -->
+        <!-- Universidade do Algarve -->
+        <!-- Universiteit Gent -->
+        <!-- University of Arizona -->
+        <!-- University of California, Berkeley -->
+        <!-- University of California, Los Angles -->
+        <!-- University of Chicago -->
+        <!-- University of Cincinnati -->
+        <!-- University of Colorado Boulder -->
+        <!-- University of Edinburgh -->
+        <!-- University of London -->
+        <!-- University of Manchester -->
+        <!-- University of Maryland -->
+        <!-- University of Maryland, Baltimore -->
+        <!-- University of North Carolina at Chapel Hill -->
+        <!-- University of Notre Dame -->
+        <!-- University of Rochester -->
+        <!-- University of Sussex -->
+        <!-- University of Virginia -->
+        <!-- Virginia Commonwealth University -->
+        <!-- Virginia Tech -->
+        <!-- Washington University in St. Louis -->
+        <!-- Yale Law School -->
+        <MetadataProvider type="Dynamic" ignoreTransport="true" maxCacheDuration="86400" minCacheDuration="60">
+            <Subst>https://mdq.incommon.org/entities/$entityID</Subst>
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="1209600"/>
+            <MetadataFilter type="Signature" certificate="inc-md-cert-mdq.pem"/>
+        </MetadataProvider>
+
+        <!-- Here is the end of InCommon/eduGAIN IdPs. Current total: 1 dynamic provider for 45 institutions. -->
+
+        <!-- Map to extract attributes from SAML assertions. -->
+        <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
+
+        <!-- Use a SAML query if no attributes are supplied during SSO. -->
+        <AttributeResolver type="Query" subjectMatch="true"/>
+
+        <!-- Default filtering policy for recognized attributes, lets other data pass. -->
+        <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
+
+        <!-- Simple file-based resolver for using a single keypair. -->
+        <CredentialResolver type="File" key="sp-key.pem" certificate="sp-cert.pem"/>
+
+    </ApplicationDefaults>
+
+    <!-- Policies that determine how to process and authenticate runtime messages. -->
+    <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
+
+    <!-- Low-level configuration about protocols and bindings available for use. -->
+    <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>
+
+</SPConfig>
