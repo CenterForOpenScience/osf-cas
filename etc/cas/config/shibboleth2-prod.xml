@@ -47,7 +47,7 @@
                           backingFilePath="ugent-prod-idp-metadata.xml"
                           reloadInterval="180000" />
 
-        <!-- East Carolina University (ECU) [Prod] -->
+        <!-- East Carolina University (ECU) -->
         <MetadataProvider type="XML"
                           uri="https://login.microsoftonline.com/17143cbb-385c-4c45-a36a-c65b72e3eae8/federationmetadata/2007-06/federationmetadata.xml?appid=307cd716-765f-4c4d-a8db-be6d3046fa10"
                           backingFilePath="ecu-prod-idp-metadata.xml"
@@ -85,7 +85,7 @@
                           backingFilePath="sc-idp-metadata.xml"
                           reloadInterval="180000" />
 
-        <!-- Vrije Universiteit Amsterdam (VUA) [Prod] -->
+        <!-- Vrije Universiteit Amsterdam (VUA) -->
         <MetadataProvider type="XML"
                           uri="https://stsfed.login.vu.nl/FederationMetadata/2007-06/FederationMetadata.xml"
                           backingFilePath="vua-prod-idp-metadata.xml"
