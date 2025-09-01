@@ -7,6 +7,7 @@ import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingExc
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeParsingException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoDuplicateIdentityException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoMultipleEmailsNotSupportedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoSelectiveLoginDeniedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
@@ -53,6 +54,7 @@ public class OsfCasCoreWebflowConfiguration extends CasCoreWebflowConfiguration 
         errors.add(InstitutionSsoAttributeParsingException.class);
         errors.add(InstitutionSsoDuplicateIdentityException.class);
         errors.add(InstitutionSsoFailedException.class);
+        errors.add(InstitutionSsoMultipleEmailsNotSupportedException.class);
         errors.add(InstitutionSsoOsfApiFailedException.class);
         errors.add(InstitutionSsoSelectiveLoginDeniedException.class);
         errors.add(InvalidOneTimePasswordException.class);

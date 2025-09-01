@@ -12,6 +12,7 @@ import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingExc
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeParsingException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoDuplicateIdentityException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoMultipleEmailsNotSupportedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoSelectiveLoginDeniedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailedException;
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
@@ -790,6 +791,10 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 if (OsfApiPermissionDenied.INSTITUTION_SSO_ACCOUNT_INACTIVE.getId().equals(errorDetail)) {
                     LOGGER.error("[OSF API] Failure - Inactive Account: {}", ssoUser);
                     throw new InstitutionSsoAccountInactiveException("OSF API denies inactive account");
+                }
+                if (OsfApiPermissionDenied.INSTITUTION_SSO_MULTIPLE_EMAILS_NOT_SUPPORTED.getId().equals(errorDetail)) {
+                    LOGGER.error("[OSF API] Failure - Multiple SSO Emails Error: {}", ssoUser);
+                    throw new InstitutionSsoMultipleEmailsNotSupportedException("OSF API can't process multiple SSO emails");
                 }
             }
             // Handle unidentified HTTP 403 FORBIDDEN failures
