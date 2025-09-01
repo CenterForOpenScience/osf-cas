@@ -17,7 +17,6 @@ public class InstitutionSsoMultipleEmailsNotSupportedException extends AccountEx
     /**
      * Serialization metadata.
      */
-
     private static final long serialVersionUID = -7703550523317297865L;
 
     /**
