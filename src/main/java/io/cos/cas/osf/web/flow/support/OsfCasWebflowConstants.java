@@ -76,6 +76,8 @@ public interface OsfCasWebflowConstants {
 
     String VIEW_ID_INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED = "casInstitutionSsoSelectiveLoginDeniedView";
 
+    String VIEW_ID_INSTITUTION_SSO_MULTIPLE_EMAILS_NOT_SUPPORTED = "casInstitutionSsoMultipleEmailsNotSupportedView";
+
     // Exception Views for OAuth 2.0 Authorization Flow
 
     String VIEW_ID_OAUTH_20_ERROR_VIEW = "casOAuth20ErrorView";
