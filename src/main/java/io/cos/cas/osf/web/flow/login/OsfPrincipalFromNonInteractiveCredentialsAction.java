@@ -151,6 +151,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
 
     private static final String VERIFICATION_KEY_PARAMETER_NAME = "verification_key";
 
+    private static final String FORCE_EXCEPTION_PARAMETER_NAME = "forceException";
+
     private static final String OSF_URL_FLOW_PARAMETER = "osfUrl";
 
     private static final String AUTHENTICATION_EXCEPTION = "authnError";
@@ -321,6 +323,20 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             return constructCredentialsFromUsernameAndVerificationKey(username, verificationKey);
         }
         LOGGER.debug("No valid username or verification key found in request parameters.");
+
+        final String forcedException = request.getParameter(FORCE_EXCEPTION_PARAMETER_NAME);
+        if (StringUtils.isNotBlank(forcedException)) {
+            if (OsfApiPermissionDenied.INSTITUTION_SSO_ACCOUNT_INACTIVE.getId().equals(forcedException)) {
+                throw new InstitutionSsoAccountInactiveException();
+            }
+            if (OsfApiPermissionDenied.INSTITUTION_SSO_DUPLICATE_IDENTITY.getId().equals(forcedException)) {
+                throw new InstitutionSsoDuplicateIdentityException();
+            }
+            if (OsfApiPermissionDenied.INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED.getId().equals(forcedException)) {
+                throw new InstitutionSsoSelectiveLoginDeniedException();
+            }
+            // Add more if statement to force throw desired exceptions and displays respective error pages
+        }
 
         // Default when there is no non-interactive authentication available
         // Type 5: return a null credential so that the login webflow will prepare login pages
