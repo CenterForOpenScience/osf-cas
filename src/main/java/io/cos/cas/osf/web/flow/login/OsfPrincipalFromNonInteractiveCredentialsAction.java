@@ -80,6 +80,7 @@ import org.w3c.dom.Element;
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
 import javax.security.auth.login.AccountException;
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -324,18 +325,23 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         }
         LOGGER.debug("No valid username or verification key found in request parameters.");
 
+        // Check 4: check "forceException=" query parameter
         final String forcedException = request.getParameter(FORCE_EXCEPTION_PARAMETER_NAME);
         if (StringUtils.isNotBlank(forcedException)) {
-            if (OsfApiPermissionDenied.INSTITUTION_SSO_ACCOUNT_INACTIVE.getId().equals(forcedException)) {
-                throw new InstitutionSsoAccountInactiveException();
+            setSsoErrorContext(
+                    context,
+                    forcedException,
+                    String.format("This exception was thrown on purpose bypassing standard web flow: %s", Class.forName(forcedException).getSimpleName()),
+                    "N/A",
+                    "N/A",
+                    "N/A",
+                    "N/A"
+            );
+            try {
+                throw (LoginException) Class.forName(forcedException).getConstructor(String.class).newInstance(FORCE_EXCEPTION_PARAMETER_NAME);
+            } catch ( java.lang.ClassCastException e) {
+                throw (RuntimeException) Class.forName(forcedException).getConstructor(String.class).newInstance(FORCE_EXCEPTION_PARAMETER_NAME);
             }
-            if (OsfApiPermissionDenied.INSTITUTION_SSO_DUPLICATE_IDENTITY.getId().equals(forcedException)) {
-                throw new InstitutionSsoDuplicateIdentityException();
-            }
-            if (OsfApiPermissionDenied.INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED.getId().equals(forcedException)) {
-                throw new InstitutionSsoSelectiveLoginDeniedException();
-            }
-            // Add more if statement to force throw desired exceptions and displays respective error pages
         }
 
         // Default when there is no non-interactive authentication available
