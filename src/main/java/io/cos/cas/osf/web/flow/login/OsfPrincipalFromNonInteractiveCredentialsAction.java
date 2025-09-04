@@ -80,6 +80,7 @@ import org.w3c.dom.Element;
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
 import javax.security.auth.login.AccountException;
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -150,6 +151,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     private static final String USERNAME_PARAMETER_NAME = "username";
 
     private static final String VERIFICATION_KEY_PARAMETER_NAME = "verification_key";
+
+    private static final String FORCE_EXCEPTION_PARAMETER_NAME = "forceException";
 
     private static final String OSF_URL_FLOW_PARAMETER = "osfUrl";
 
@@ -321,6 +324,25 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             return constructCredentialsFromUsernameAndVerificationKey(username, verificationKey);
         }
         LOGGER.debug("No valid username or verification key found in request parameters.");
+
+        // Check 4: check "forceException=" query parameter
+        final String forcedException = request.getParameter(FORCE_EXCEPTION_PARAMETER_NAME);
+        if (StringUtils.isNotBlank(forcedException)) {
+            setSsoErrorContext(
+                    context,
+                    forcedException,
+                    String.format("This exception was thrown on purpose bypassing standard web flow: %s", Class.forName(forcedException).getSimpleName()),
+                    "N/A",
+                    "N/A",
+                    "N/A",
+                    "N/A"
+            );
+            try {
+                throw (LoginException) Class.forName(forcedException).getConstructor(String.class).newInstance(FORCE_EXCEPTION_PARAMETER_NAME);
+            } catch ( java.lang.ClassCastException e) {
+                throw (RuntimeException) Class.forName(forcedException).getConstructor(String.class).newInstance(FORCE_EXCEPTION_PARAMETER_NAME);
+            }
+        }
 
         // Default when there is no non-interactive authentication available
         // Type 5: return a null credential so that the login webflow will prepare login pages
