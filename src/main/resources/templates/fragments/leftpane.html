@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title></title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag"/>
+</head>
+
+<body>
+    <div th:fragment="leftpane" class="desktop-only">
+        <aside class="left-pane cas-brand-text">
+            <!-- Logo and brand name -->
+            <div class="left-pane-logo-wrapper">
+                <img class="cas-logo" src="/images/osf-logo-white.png" alt="OSF logo">
+                <div class="cas-brand-text">
+                    <a class="navbar-link" th:href="@{/login(casRedirectSource=tomcat)}">
+                        <span class="cas-brand-name hidden-narrow" >OSF</span>
+                    </a>
+                </div>
+            </div>
+            <nav class="left-pane-nav">
+                <!-- TODO: Icons for each item -->
+                <ul class="left-pane-nav-list">
+                    <!-- Home, Search, and Support Links -->
+                    <li><a class="navbar-link" th:href="@{/home}">Home</a></li>
+                    <li><a class="navbar-link" th:href="@{/search}">Search</a></li>
+                    <li><a class="navbar-link" th:href="@{/support}">Support</a></li>
+                    <br>
+                    <!-- Registries, Preprints, Institutions, Collections, and Meetings -->
+                    <li><a class="navbar-link" th:href="@{/registries}">Registries</a></li>
+                    <li><a class="navbar-link" th:href="@{/preprints}">Preprints</a></li>
+                    <li><a class="navbar-link" th:href="@{/institutions}">Institutions</a></li>
+                    <li><a class="navbar-link" th:href="@{/collections}">Collections</a></li>
+                    <li><a class="navbar-link" th:href="@{/meetings}">Meetings</a></li>
+                    <br>
+                    <!-- Donate -->
+                    <li><a class="navbar-link" th:href="@{/donate}">Donate</a></li>
+                </ul>
+            </nav>
+
+        </aside>
+    </div>
+</body>
+
+</html>
