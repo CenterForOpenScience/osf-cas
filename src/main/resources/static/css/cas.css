@@ -32,8 +32,11 @@ body {
     height: 100vh;
     margin: 0;
     padding: 0;
+    /* flex column for mobile, flex row for desktop */
     flex-direction: column;
-    justify-content: space-between;
+    @media (min-width: 1200px) {
+        flex-direction: row;
+    }
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     background: #EFEFEF;
 }
@@ -100,13 +103,19 @@ aside, section, main {
 }
 
 .mdc-drawer-app-content {
-    flex: auto;
-    overflow: auto;
-    position: relative;
+    /* flex: auto; */
+    /* overflow: auto; */
+    /* position: relative; */
+    flex-direction: column;
+
 }
 
 .main-content {
     display: flex;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
 }
 
 .mdc-top-app-bar {
@@ -652,7 +661,7 @@ button.close {
     --cas-theme-osf-footer: #efefef;
     --cas-theme-osf-grey: #eeeeee;
     --cas-theme-osf-green: #357935;
-    --cas-theme-osf-blue: #1b6d85;
+    --cas-theme-osf-blue: ##337ab7;
     --cas-theme-osf-red: #b52b27;
     --cas-theme-osf-disabled: #eeeeee;
     --cas-theme-osf-disabled-dark: #cccccc;
@@ -663,9 +672,10 @@ button.close {
 }
 
 body {
-    background:
-        linear-gradient(to right, #009574d8, #003f7cd8),
-        url(/images/page-background.png) center center no-repeat;
+    background: #f1f8fd;
+
+        /* linear-gradient(to right, #009574d8, #003f7cd8),
+        url(/images/page-background.png) center center no-repeat; */
     background-size: cover;
     background-blend-mode: normal;
     backdrop-filter: brightness(0.8);
@@ -765,7 +775,7 @@ body {
 
 .form-button .button-osf-blue,
 .form-button-inline .button-osf-blue {
-    background-color: var(--cas-theme-osf-blue, #1b6d85);
+    background-color: var(--cas-theme-osf-blue, #337ab7);
 }
 
 .form-button .button-osf-red,
@@ -963,7 +973,7 @@ body {
 }
 
 .login-section .reveal-password {
-    background-color: var(--cas-theme-osf-blue, #1b6d85);
+    background-color: var(--cas-theme-osf-blue, #337ab7);
 }
 
 .login-section .login-error-list {
@@ -1033,7 +1043,16 @@ body {
 
 .cas-footer-osf {
     text-align: center;
+    flex-direction: column;
     background: var(--cas-theme-osf-footer, #efefef);
+}
+
+.footer-section {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap-reverse;
+    width: 100%;
+    padding: 1rem;
 }
 
 @media all and (min-height: 1199.99px) {
@@ -1264,6 +1283,93 @@ body {
         padding-bottom: 0.625rem!important;
         padding-top: 0.625rem!important;
     }
+}
+/* Left navigation pane */
+.slideout {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #24384a;
+    color: #fff;
+    transition: transform 0.3s ease;
+}
+
+.left-pane {
+    padding: 1.5rem;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    background: #24384a; /* TODO: assign variable */
+    color: #fff; /* TODO: assign variable */
+}
+
+@media all and (max-width: 1199.99px) {
+    .slideout {
+        transform: translateX(-100%);
+    }
+
+    input#toggle-leftnav:checked~.left-pane {
+        transform: translateX(0);
+    }
+
+    .desktop-only {
+        display: none;
+    }
+
+    .small-screen-only {
+        display: block;
+    }
+}
+
+@media all and (min-width: 1200px) {
+    .slideout {
+        transform: translateX(0);
+    }
+
+    .desktop-only {
+        display: block;
+    }
+
+    .small-screen-only {
+        display: none;
+    }
+}
+
+.left-pane .cas-brand-name {
+        font-size: 2rem;
+}
+
+.left-pane-logo-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.left-pane-logo-wrapper .cas-logo {
+    height: 48px;
+    width: 48px;
+}
+
+.left-pane-nav {
+    width: 250px;
+    max-width: 250px;
+}
+
+.left-pane-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.left-pane-nav-list a.navbar-link {
+    display: flex;
+    padding: 0.75rem;
+    width: 100%;
+}
+
+.left-pane-nav-list a.navbar-link:hover {
+    background: #384b5c; /* TODO: assign variable */
 }
 
 /****************************************
