@@ -10,8 +10,9 @@
 </head>
 
 <body>
-    <div th:fragment="headerosf">
+    <div th:fragment="headerosf" class="small-screen-only">
 
+        <!-- Header -->
         <header id="app-bar" class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z4">
             <nav class="mdc-top-app-bar__row">
 
@@ -29,12 +30,38 @@
 
                 <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
                     <div class="form-button form-button-navbar">
-                        <a id="osfRegister" class="mdc-button mdc-button--raised button-osf-green" th:href="@{${osfUrl.register}}">
+                        <a id="osfRegister" class="mdc-button mdc-button--raised button-osf-green desktop-only" th:href="@{${osfUrl.register}}">
                             <span class="mdc-button__label">Sign up</span>
                         </a>
                     </div>
                 </section>
 
+                <!-- TODO: hide and replace with hamburger menu -->
+                <input type="checkbox" id="toggle-leftnav" class="toggle-nav-input" />
+                <label for="toggle-leftnav" class="toggle-nav-label" th:utext="#{cas.header.togglenav}"></label>
+
+                <!-- Replace with LeftPane fragment? -->
+                <aside class="left-pane slideout cas-brand-text">
+                    <nav class="left-pane-nav">
+                        <!-- TODO: Icons for each item -->
+                        <ul class="left-pane-nav-list">
+                            <!-- Home, Search, and Support Links -->
+                            <li><a class="navbar-link" th:href="@{/home}">Home</a></li>
+                            <li><a class="navbar-link" th:href="@{/search}">Search</a></li>
+                            <li><a class="navbar-link" th:href="@{/support}">Support</a></li>
+                            <br>
+                            <!-- Registries, Preprints, Institutions, Collections, and Meetings -->
+                            <li><a class="navbar-link" th:href="@{/registries}">Registries</a></li>
+                            <li><a class="navbar-link" th:href="@{/preprints}">Preprints</a></li>
+                            <li><a class="navbar-link" th:href="@{/institutions}">Institutions</a></li>
+                            <li><a class="navbar-link" th:href="@{/collections}">Collections</a></li>
+                            <li><a class="navbar-link" th:href="@{/meetings}">Meetings</a></li>
+                            <br>
+                            <!-- Donate -->
+                            <li><a class="navbar-link" th:href="@{/donate}">Donate</a></li>
+                        </ul>
+                    </nav>
+                </aside>
             </nav>
         </header>
 
