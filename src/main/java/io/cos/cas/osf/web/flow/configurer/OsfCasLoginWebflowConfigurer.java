@@ -8,6 +8,7 @@ import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingExc
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeParsingException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoDuplicateIdentityException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoMultipleEmailsNotSupportedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoSelectiveLoginDeniedException;
 import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
@@ -272,6 +273,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
         );
         createTransitionForState(
                 handler,
+                InstitutionSsoMultipleEmailsNotSupportedException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_MULTIPLE_EMAILS_NOT_SUPPORTED
+        );
+        createTransitionForState(
+                handler,
                 InvalidUserStatusException.class.getSimpleName(),
                 OsfCasWebflowConstants.VIEW_ID_INVALID_USER_STATUS
         );
@@ -469,6 +475,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 flow,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_MULTIPLE_EMAILS_NOT_SUPPORTED,
+                OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_MULTIPLE_EMAILS_NOT_SUPPORTED
         );
     }
 

@@ -25,6 +25,9 @@ import java.io.Serializable;
 @Slf4j
 public class OsfApiInstitutionAuthenticationResult implements Serializable {
 
+    /**
+     * Serialization metadata.
+     */
     private static final long serialVersionUID = 3971349776123204760L;
 
     /**
@@ -44,10 +47,11 @@ public class OsfApiInstitutionAuthenticationResult implements Serializable {
 
     /**
      * Verify that the SSO email comes from one of the three attributes in Shibboleth SSO headers.
-     *
-     * Note: From OSF API's perspective, the email provided by SSO is stored in {@link #ssoEmail} which doesn't have to be
-     *       the {@code username} f a candidate OSF user. From CAS's perspective, this {@link #ssoEmail} comes from three
-     *       SSO attributes provided by Shibboleth's authn request: {@code eppn}, {@code mail} and {@code mailOther}.
+     * From OSF API's perspective, the email provided by SSO is stored in {@link #ssoEmail} which doesn't have to be
+     * the {@code username} f a candidate OSF user. From CAS's perspective, this {@link #ssoEmail} comes from three
+     * SSO attributes provided by Shibboleth's authn request: {@code eppn}, {@code mail} and {@code mailOther}.
+     * Since {@link #ssoEmail} may have already been deduplicated after successful OSF API request, this method does
+     * substring check instead of equality check.
      *
      * @param eppn the eppn attribute
      * @param mail the mail attribute
@@ -59,6 +63,18 @@ public class OsfApiInstitutionAuthenticationResult implements Serializable {
             LOGGER.error("[CAS XSLT] SSO Email cannot be blank!");
             return false;
         }
-        return ssoEmail.equalsIgnoreCase(eppn) || ssoEmail.equalsIgnoreCase(mail) || ssoEmail.equalsIgnoreCase(mailOther);
+        boolean isPartOfEppn = Boolean.FALSE;
+        boolean isPartOfMail = Boolean.FALSE;
+        boolean isPartOfMailOther = Boolean.FALSE;
+        if (!StringUtils.isBlank(eppn)) {
+            isPartOfEppn =  eppn.toLowerCase().contains(ssoEmail.toLowerCase());
+        }
+        if (!StringUtils.isBlank(mail)) {
+            isPartOfMail = mail.toLowerCase().contains(ssoEmail.toLowerCase());
+        }
+        if (!StringUtils.isBlank(mailOther)) {
+            isPartOfMailOther = mailOther.toLowerCase().contains(ssoEmail.toLowerCase());
+        }
+        return isPartOfEppn || isPartOfMail || isPartOfMailOther;
     }
 }
