@@ -63,6 +63,12 @@
                           backingFilePath="ubc-test-idp-metadata.xml"
                           reloadInterval="180000" />
 
+        <!-- University of London [Test] -->
+        <MetadataProvider type="XML"
+                          uri="https://login.microsoftonline.com/185280ba-7a00-42ea-9408-19eafd13552e/federationmetadata/2007-06/federationmetadata.xml?appid=fdee9711-e824-4693-9f2a-44fdaace6d2c"
+                          backingFilePath="uol-test-idp-metadata.xml"
+                          reloadInterval="180000" />
+
         <!-- University of South Carolina [Test] -->
         <MetadataProvider type="XML"
                           uri="https://cas.auth.sc.edu/cas/idp/metadata"
@@ -124,7 +130,6 @@
         <!-- University of Cincinnati -->
         <!-- University of Colorado Boulder -->
         <!-- University of Edinburgh -->
-        <!-- University of London -->
         <!-- University of Manchester -->
         <!-- University of Maryland -->
         <!-- University of Maryland, Baltimore -->
