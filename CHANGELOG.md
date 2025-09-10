@@ -2,6 +2,13 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+25.0.0 (09-10-2025)
+===================
+
+* Handle duplicate and multiple SSO emails during institution login
+* Add new and sync existing server config files
+* Fix GitHub Action
+
 24.1.0 (08-09-2024)
 ===================
 

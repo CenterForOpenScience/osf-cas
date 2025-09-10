@@ -10,9 +10,11 @@ public enum OsfApiPermissionDenied {
 
     DEFAULT("PermissionDenied"),
 
+    INSTITUTION_SSO_ACCOUNT_INACTIVE("InstitutionSsoAccountInactive"),
+
     INSTITUTION_SSO_DUPLICATE_IDENTITY("InstitutionSsoDuplicateIdentity"),
 
-    INSTITUTION_SSO_ACCOUNT_INACTIVE("InstitutionSsoAccountInactive"),
+    INSTITUTION_SSO_MULTIPLE_EMAILS_NOT_SUPPORTED("InstitutionSsoMultipleEmailsNotSupported"),
 
     INSTITUTION_SSO_SELECTIVE_LOGIN_DENIED("InstitutionSsoSelectiveLoginDenied");
 
