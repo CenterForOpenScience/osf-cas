@@ -139,6 +139,7 @@ public class CasWebAppConfiguration implements WebMvcConfigurer {
                     final HttpServletRequest request,
                     final HttpServletResponse response
             ) throws IOException {
+                // TODO: disable this for production environment
                 var errorCodeString = request.getParameter("code");
                 if (StringUtils.isNotBlank(errorCodeString)) {
                     try {
