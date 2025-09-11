@@ -22,22 +22,68 @@
                 </div>
             </div>
             <nav class="left-pane-nav">
-                <!-- TODO: Icons for each item -->
                 <ul class="left-pane-nav-list">
                     <!-- Home, Search, and Support Links -->
-                    <li><a class="navbar-link" th:href="@{/home}">Home</a></li>
-                    <li><a class="navbar-link" th:href="@{/search}">Search</a></li>
-                    <li><a class="navbar-link" th:href="@{/support}">Support</a></li>
+                    <li>
+                        <a class="navbar-link" th:href="@{/home}">
+                            <img src="/images/home.svg" alt="Home">
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a class="navbar-link" th:href="@{/search}">
+                            <img src="/images/search.svg" alt="Search">
+                            Search
+                        </a>
+                    </li>
+                    <li>
+                        <a class="navbar-link" th:href="@{/support}">
+                            <img src="/images/support.svg" alt="Support">
+                            Support
+                        </a>
+                    </li>
                     <br>
                     <!-- Registries, Preprints, Institutions, Collections, and Meetings -->
-                    <li><a class="navbar-link" th:href="@{/registries}">Registries</a></li>
-                    <li><a class="navbar-link" th:href="@{/preprints}">Preprints</a></li>
-                    <li><a class="navbar-link" th:href="@{/institutions}">Institutions</a></li>
-                    <li><a class="navbar-link" th:href="@{/collections}">Collections</a></li>
-                    <li><a class="navbar-link" th:href="@{/meetings}">Meetings</a></li>
+                    <li>
+                        <a class="navbar-link" th:href="@{/registries}">
+                            <img src="/images/registries.svg" alt="Registries">
+                            Registries
+                            <img class="arrow-icon" src="/images/arrow.svg" alt="Arrow">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="navbar-link" th:href="@{/preprints}">
+                            <img src="/images/preprints.svg" alt="Preprints">
+                            Preprints
+                            <img class="arrow-icon" src="/images/arrow.svg" alt="Arrow">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="navbar-link" th:href="@{/institutions}">
+                            <img src="/images/institutions.svg" alt="Institutions">
+                            Institutions
+                        </a>
+                    </li>
+                    <li>
+                        <a class="navbar-link" th:href="@{/collections}">
+                            <img src="/images/collections.svg" alt="Collections">
+                            Collections
+                        </a>
+                    </li>
+                    <li>
+                        <a class="navbar-link" th:href="@{/meetings}">
+                            <img src="/images/meetings.svg" alt="Meetings">
+                            Meetings
+                        </a>
+                    </li>
                     <br>
                     <!-- Donate -->
-                    <li><a class="navbar-link" th:href="@{/donate}">Donate</a></li>
+                    <li>
+                        <a class="navbar-link" th:href="@{/donate}">
+                            <img src="/images/donate.svg" alt="Donate">
+                            Donate
+                        </a>
+                    </li>
                 </ul>
             </nav>
 
