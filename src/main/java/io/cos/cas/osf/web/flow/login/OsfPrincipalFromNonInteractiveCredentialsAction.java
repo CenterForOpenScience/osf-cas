@@ -12,6 +12,7 @@ import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingExc
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeParsingException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoDuplicateIdentityException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoFailedException;
+import io.cos.cas.osf.authentication.exception.InstitutionSsoMultipleEmailsNotSupportedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoSelectiveLoginDeniedException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailedException;
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
@@ -98,9 +99,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collections;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -167,6 +171,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     private static final String REMOTE_USER = "remote_user";
 
     private static final String ATTRIBUTE_PREFIX = "auth-";
+
+    private static final String MULTIPLE_ATTRIBUTE_DELIMITER = ";";
 
     private static final String SHIBBOLETH_SESSION_HEADER = ATTRIBUTE_PREFIX + "shib-session-id";
 
@@ -741,7 +747,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 // CAS expects OSF API to return HTTP 204 OK with no content if authentication succeeds
                 if (statusCode == HttpStatus.SC_NO_CONTENT) {
                     LOGGER.info("[OSF API] Success - API request succeeded: {}, attempt={}, status={}", ssoUser, retry, statusCode);
-                    return new OsfApiInstitutionAuthenticationResult(institutionId, ssoEmail, ssoIdentity);
+                    return new OsfApiInstitutionAuthenticationResult(institutionId, deduplicateSsoEmail(ssoEmail, ssoUser), ssoIdentity);
                 }
                 if (OSF_API_RETRY_STATUS.contains(statusCode)) {
                     LOGGER.error("[OSF API] Failure - Server Error: {}, attempt={}, status={}", ssoUser, retry, statusCode);
@@ -812,6 +818,10 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 if (OsfApiPermissionDenied.INSTITUTION_SSO_ACCOUNT_INACTIVE.getId().equals(errorDetail)) {
                     LOGGER.error("[OSF API] Failure - Inactive Account: {}", ssoUser);
                     throw new InstitutionSsoAccountInactiveException("OSF API denies inactive account");
+                }
+                if (OsfApiPermissionDenied.INSTITUTION_SSO_MULTIPLE_EMAILS_NOT_SUPPORTED.getId().equals(errorDetail)) {
+                    LOGGER.error("[OSF API] Failure - Multiple SSO Emails Error: {}", ssoUser);
+                    throw new InstitutionSsoMultipleEmailsNotSupportedException("OSF API can't process multiple SSO emails");
                 }
             }
             // Handle unidentified HTTP 403 FORBIDDEN failures
@@ -885,5 +895,33 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 institutionSupportEmail
         );
         context.getFlowScope().put(PARAMETER_SSO_ERROR_CONTEXT, ssoErrorContext);
+    }
+
+    /**
+     * Attempt to deduplicate the {@code ssoEmail} attribute. This method is only called after OSF API has already
+     * successfully deduplicated the attribute and thus should throw {@link InstitutionSsoFailedException} if failed.
+     *
+     * @param ssoEmail the SSO email to deduplicate
+     * @param ssoUser the SSO user information
+     * @return deduplicated SSO email on success
+     * @throws InstitutionSsoFailedException if deduplication failed
+     */
+    private String deduplicateSsoEmail(
+            final String ssoEmail,
+            final String ssoUser
+    ) throws InstitutionSsoFailedException {
+        if (StringUtils.isBlank(ssoEmail)) {
+            LOGGER.error("[OSF CAS] Critical Error: SSO email should not be blank after OSF API success: [{}]", ssoUser);
+            throw new InstitutionSsoFailedException("SSO email should not be blank");
+        }
+        if (!ssoEmail.contains(MULTIPLE_ATTRIBUTE_DELIMITER)) {
+            return ssoEmail;
+        }
+        Set<String> ssoEmailSet = new HashSet<>(Arrays.asList(ssoEmail.split(MULTIPLE_ATTRIBUTE_DELIMITER)));
+        if (ssoEmailSet.size() != 1) {
+            LOGGER.error("[OSF CAS] Critical Error: SSO email should not fail deduplication after OSF API success: [{}]", ssoUser);
+            throw new InstitutionSsoFailedException("SSO email should not fail deduplication");
+        }
+        return ssoEmailSet.iterator().next();
     }
 }
