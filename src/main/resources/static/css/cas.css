@@ -663,6 +663,7 @@ button.close {
 
 :root {
     --cas-theme-osf-navbar: #24384a;
+    --cas-theme-navbar-hover: #384b5c;
     --cas-theme-osf-surface: #f7f7f7;
     --cas-theme-osf-footer: #efefef;
     --cas-theme-osf-grey: #eeeeee;
@@ -1313,7 +1314,7 @@ body {
     left: 0;
     height: 100%;
     background: var(--cas-theme-osf-navbar);
-    color: #fff;
+    color: var(--cas-theme-osf-surface, #f7f7f7);
     transition: transform 0.3s ease;
     margin-left: 0 !important;
 }
@@ -1330,7 +1331,7 @@ body {
     display: flex;
     flex-direction: column;
     background: var(--cas-theme-osf-navbar);
-    color: #fff; /* TODO: assign variable */
+    color: var(--cas-theme-osf-surface, #f7f7f7);
 
     .cas-brand-name {
         font-size: 2rem;
@@ -1408,7 +1409,7 @@ body {
     }
 
     a.navbar-link:hover {
-        background: #384b5c; /* TODO: assign variable */
+        background: var(--cas-theme-navbar-hover);
         border-radius: 0.375rem;
     }
 
