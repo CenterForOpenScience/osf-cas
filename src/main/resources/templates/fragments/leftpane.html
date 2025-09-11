@@ -25,19 +25,19 @@
                 <ul class="left-pane-nav-list">
                     <!-- Home, Search, and Support Links -->
                     <li>
-                        <a class="navbar-link" th:href="@{/home}">
+                        <a class="navbar-link" th:href="@{${osfUrl.home}}">
                             <img src="/images/home.svg" alt="Home">
                             Home
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{/search}">
+                        <a class="navbar-link" th:href="@{${osfUrl.search}}">
                             <img src="/images/search.svg" alt="Search">
                             Search
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{/support}">
+                        <a class="navbar-link" th:href="@{${osfUrl.support}}">
                             <img src="/images/support.svg" alt="Support">
                             Support
                         </a>
@@ -45,33 +45,33 @@
                     <br>
                     <!-- Registries, Preprints, Institutions, Collections, and Meetings -->
                     <li>
-                        <a class="navbar-link" th:href="@{/registries}">
+                        <a class="navbar-link" th:href="@{${osfUrl.registries}}">
                             <img src="/images/registries.svg" alt="Registries">
                             Registries
                             <img class="arrow-icon" src="/images/arrow.svg" alt="Arrow">
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{/preprints}">
+                        <a class="navbar-link" th:href="@{${osfUrl.preprints}}">
                             <img src="/images/preprints.svg" alt="Preprints">
                             Preprints
                             <img class="arrow-icon" src="/images/arrow.svg" alt="Arrow">
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{/institutions}">
+                        <a class="navbar-link" th:href="@{${osfUrl.institutionsHome}}">
                             <img src="/images/institutions.svg" alt="Institutions">
                             Institutions
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{/collections}">
+                        <a class="navbar-link" th:href="@{${osfUrl.collections}}">
                             <img src="/images/collections.svg" alt="Collections">
                             Collections
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{/meetings}">
+                        <a class="navbar-link" th:href="@{${osfUrl.meetings}}">
                             <img src="/images/meetings.svg" alt="Meetings">
                             Meetings
                         </a>
@@ -79,7 +79,7 @@
                     <br>
                     <!-- Donate -->
                     <li>
-                        <a class="navbar-link" th:href="@{/donate}">
+                        <a class="navbar-link" th:href="@{${osfUrl.donate}}">
                             <img src="/images/donate.svg" alt="Donate">
                             Donate
                         </a>
