@@ -756,6 +756,14 @@ body {
     height: 56px;
 }
 
+.form-button .sign-up-button {
+    width: auto;
+    float: right;
+    font-size: 1rem;
+    height: 40px;
+    margin-right: 1rem;
+}
+
 .form-button-inline .mdc-button {
     flex-basis: 48%;
     margin: 0.25rem 0;
