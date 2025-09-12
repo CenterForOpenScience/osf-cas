@@ -332,6 +332,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         LOGGER.debug("No valid username or verification key found in request parameters.");
 
         // Check 4: check "forceException=" query parameter
+        // TODO: disable this for production environment
         final String forcedException = request.getParameter(FORCE_EXCEPTION_PARAMETER_NAME);
         if (StringUtils.isNotBlank(forcedException)) {
             setSsoErrorContext(
