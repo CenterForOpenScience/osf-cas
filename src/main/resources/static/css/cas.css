@@ -1371,17 +1371,10 @@ body {
 }
 
 .left-pane-logo-wrapper {
-    display: flex;
-    align-items: center;
     margin-left: 8px;
 
     .cas-logo {
         height: 36px;
-        width: 36px;
-    }
-
-    .cas-brand-name {
-        margin-left: 0.5em;
     }
 }
 
