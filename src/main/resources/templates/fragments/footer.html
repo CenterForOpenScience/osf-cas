@@ -1,7 +1,16 @@
 <footer class="py-4 d-flex justify-content-center cas-footer cas-footer-osf">
-    <span id="copyright-2"
-          th:with="year=${#dates.year(#dates.createNow())}"
-          th:utext="#{copyright.cos(${year.toString()})}"
-          class="mr-2 d-inline-block copyright">
-    </span>
+    <section>
+        <span id="footer-line-1"
+            th:utext="#{footer.line1}"
+            class="footer-section">
+        </span>
+    </section>
+
+    <section>
+        <span id="footer-line-2"
+            th:with="year=${#dates.year(#dates.createNow())}"
+            th:utext="#{footer.line2(${year.toString()})}"
+            class="footer-section">
+        </span>
+    </section>
 </footer>

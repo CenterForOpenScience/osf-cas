@@ -10,31 +10,92 @@
 </head>
 
 <body>
-    <div th:fragment="headerosf">
+    <div th:fragment="headerosf" class="small-screen-only">
 
+        <!-- Header -->
         <header id="app-bar" class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z4">
             <nav class="mdc-top-app-bar__row">
 
-                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
+                <section class="mdc-top-app-bar__section">
                     <span class="cas-brand mx-auto" >
-                        <img class="cas-logo" src="/images/osf-logo-white.png" alt="OSF logo">
+                        <img class="cas-logo" src="/images/osf-logo-white.svg" alt="OSF logo">
                     </span>
-                    <div class="cas-brand-text">
-                        <a class="navbar-link" th:href="@{${osfUrl.home}}">
-                            <span class="cas-brand-name hidden-narrow" >OSF </span>
-                            <span class="cas-brand-name" >HOME</span>
-                        </a>
-                    </div>
                 </section>
 
                 <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
-                    <div class="form-button form-button-navbar">
+                    <div class="form-button">
                         <a id="osfRegister" class="mdc-button mdc-button--raised button-osf-green" th:href="@{${osfUrl.register}}">
                             <span class="mdc-button__label">Sign up</span>
                         </a>
                     </div>
                 </section>
 
+                <input type="checkbox" id="toggle-leftnav" class="toggle-nav-input" aria-controls='slideout-nav' hidden/>
+                <label for="toggle-leftnav" class="toggle-nav-label" aria-label="Toggle navigation menu">
+                    <img src="/images/menu.svg" alt="Toggle navigation menu">
+                </label>
+
+                <aside id="slideout-nav" class="left-pane slideout cas-brand-text">
+                    <nav class="left-pane-nav">
+                        <ul class="left-pane-nav-list">
+                            <!-- Home, Search, and Support Links -->
+                            <li>
+                                <a class="navbar-link" th:href="@{${osfUrl.home}}">
+                                    <img src="/images/home.svg" alt="Home">
+                                    Home
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-link" th:href="@{${osfUrl.search}}">
+                                    <img src="/images/search.svg" alt="Search">
+                                    Search
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-link" th:href="@{${osfUrl.support}}">
+                                    <img src="/images/support.svg" alt="Support">
+                                    Support
+                                </a>
+                            </li>
+                            <br>
+                            <!-- Registries, Preprints, Institutions, and Meetings -->
+                            <li>
+                                <a class="navbar-link" th:href="@{${osfUrl.registries}}">
+                                    <img src="/images/registries.svg" alt="Registries">
+                                    Registries
+                                    <img class="arrow-icon" src="/images/arrow.svg" alt="Arrow">
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-link" th:href="@{${osfUrl.preprints}}">
+                                    <img src="/images/preprints.svg" alt="Preprints">
+                                    Preprints
+                                    <img class="arrow-icon" src="/images/arrow.svg" alt="Arrow">
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-link" th:href="@{${osfUrl.institutionsHome}}">
+                                    <img src="/images/institutions.svg" alt="Institutions">
+                                    Institutions
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-link" th:href="@{${osfUrl.meetings}}">
+                                    <img src="/images/meetings.svg" alt="Meetings">
+                                    Meetings
+                                </a>
+                            </li>
+                            <br>
+                            <!-- Donate -->
+                            <li>
+                                <a class="navbar-link" th:href="@{${osfUrl.donate}}">
+                                    <img src="/images/donate.svg" alt="Donate">
+                                    Donate
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
             </nav>
         </header>
 

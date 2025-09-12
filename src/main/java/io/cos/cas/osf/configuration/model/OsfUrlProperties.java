@@ -37,6 +37,36 @@ public class OsfUrlProperties implements Serializable {
     private String dashboard;
 
     /**
+     * OSF search page URL.
+     */
+    private String search;
+
+    /**
+     * OSF support page URL.
+     */
+    private String support;
+
+    /**
+     * OSF registries page URL.
+     */
+    private String registries;
+
+    /**
+     * OSF preprints page URL.
+     */
+    private String preprints;
+
+    /**
+     * OSF meetings page URL.
+     */
+    private String meetings;
+
+    /**
+     * OSF donate page URL.
+     */
+    private String donate;
+
+    /**
      * OSF sign-up page URL.
      */
     private String register;
