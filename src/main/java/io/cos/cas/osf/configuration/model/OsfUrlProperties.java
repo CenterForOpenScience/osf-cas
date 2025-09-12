@@ -57,11 +57,6 @@ public class OsfUrlProperties implements Serializable {
     private String preprints;
 
     /**
-     * OSF collections page URL.
-     */
-    private String collections;
-
-    /**
      * OSF meetings page URL.
      */
     private String meetings;
