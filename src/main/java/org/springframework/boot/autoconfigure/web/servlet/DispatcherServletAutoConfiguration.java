@@ -22,7 +22,10 @@ import java.util.List;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletRegistration;
 
+import org.apereo.cas.configuration.CasConfigurationProperties;
+
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -57,18 +60,30 @@ import org.springframework.web.servlet.DispatcherServlet;
  * web server is already present and also for a deployable application using
  * {@link SpringBootServletInitializer}.
  *
+ * <p>OSF CAS Customization: TBD</p>
+ *
  * @author Phillip Webb
  * @author Dave Syer
  * @author Stephane Nicoll
  * @author Brian Clozel
  * @since 2.0.0
+ *
+ * @author Longze Chen
+ * @since osf-cas 25.1.0
  */
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication(type = Type.SERVLET)
 @ConditionalOnClass(DispatcherServlet.class)
 @AutoConfigureAfter(ServletWebServerFactoryAutoConfiguration.class)
+@EnableConfigurationProperties(CasConfigurationProperties.class)
 public class DispatcherServletAutoConfiguration {
+
+    /**
+     * OSF CAS Customization: TBD
+     */
+    @Autowired
+    private CasConfigurationProperties casProperties;
 
     /*
      * The bean name for a DispatcherServlet that will be mapped to the root URL "/"
@@ -83,12 +98,14 @@ public class DispatcherServletAutoConfiguration {
     @Configuration(proxyBeanMethods = false)
     @Conditional(DefaultDispatcherServletCondition.class)
     @ConditionalOnClass(ServletRegistration.class)
-    @EnableConfigurationProperties({ HttpProperties.class, WebMvcProperties.class })
+    @EnableConfigurationProperties({ HttpProperties.class, WebMvcProperties.class, CasConfigurationProperties.class})
     protected static class DispatcherServletConfiguration {
 
         @Bean(name = DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
-        public DispatcherServlet dispatcherServlet(HttpProperties httpProperties, WebMvcProperties webMvcProperties) {
+        public DispatcherServlet dispatcherServlet(HttpProperties httpProperties, WebMvcProperties webMvcProperties, CasConfigurationProperties casProperties) {
             DispatcherServlet dispatcherServlet = new DispatcherServlet();
+            // OSF CAS Customization: TBD
+            dispatcherServlet.setOsfUrlProperties(casProperties.getAuthn().getOsfUrl());
             dispatcherServlet.setDispatchOptionsRequest(webMvcProperties.isDispatchOptionsRequest());
             dispatcherServlet.setDispatchTraceRequest(webMvcProperties.isDispatchTraceRequest());
             dispatcherServlet.setThrowExceptionIfNoHandlerFound(webMvcProperties.isThrowExceptionIfNoHandlerFound());

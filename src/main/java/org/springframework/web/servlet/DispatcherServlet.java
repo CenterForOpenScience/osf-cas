@@ -37,6 +37,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.cos.cas.osf.configuration.model.OsfUrlProperties;
+
+import lombok.Setter;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -150,6 +154,8 @@ import org.springframework.web.util.WebUtils;
  * 3.0+ environments, which support programmatic registration of servlet instances.
  * See the {@link #DispatcherServlet(WebApplicationContext)} javadoc for details.
  *
+ * <p>OSF CAS Customization: TBD</p>
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Rob Harrop
@@ -158,6 +164,9 @@ import org.springframework.web.util.WebUtils;
  * @see org.springframework.web.HttpRequestHandler
  * @see org.springframework.web.servlet.mvc.Controller
  * @see org.springframework.web.context.ContextLoaderListener
+ *
+ * @author Longze Chen
+ * @since osf-cas 25.1.0
  */
 @SuppressWarnings("serial")
 public class DispatcherServlet extends FrameworkServlet {
@@ -347,6 +356,8 @@ public class DispatcherServlet extends FrameworkServlet {
     @Nullable
     private List<ViewResolver> viewResolvers;
 
+    @Setter
+    private OsfUrlProperties osfUrlProperties;
 
     /**
      * Create a new {@code DispatcherServlet} that will create its own internal web
@@ -413,7 +424,6 @@ public class DispatcherServlet extends FrameworkServlet {
         super(webApplicationContext);
         setDispatchOptionsRequest(true);
     }
-
 
     /**
      * Set whether to detect all HandlerMapping beans in this servlet's context. Otherwise,
@@ -1413,6 +1423,13 @@ public class DispatcherServlet extends FrameworkServlet {
             for (ViewResolver viewResolver : this.viewResolvers) {
                 View view = viewResolver.resolveViewName(viewName, locale);
                 if (view != null) {
+                    // OSF CAS Customization: TBD
+                    if (this.osfUrlProperties != null ) {
+                        if (model == null) {
+                            model = new HashMap<>();
+                        }
+                        model.put("dispatcherOsfUrl", this.osfUrlProperties);
+                    }
                     return view;
                 }
             }

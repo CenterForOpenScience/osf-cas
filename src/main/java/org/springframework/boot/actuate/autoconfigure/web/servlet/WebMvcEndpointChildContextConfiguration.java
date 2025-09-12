@@ -16,7 +16,10 @@
 
 package org.springframework.boot.actuate.autoconfigure.web.servlet;
 
+import org.apereo.cas.configuration.CasConfigurationProperties;
+
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration;
 import org.springframework.boot.actuate.autoconfigure.web.ManagementContextType;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -27,6 +30,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletRegistrationBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
@@ -44,15 +48,27 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  * infrastructure when a separate management context with a web server running on a
  * different port is required.
  *
+ * <p>OSF CAS Customization: TBD</p>
+ *
  * @author Stephane Nicoll
  * @author Andy Wilkinson
  * @author Phillip Webb
+ *
+ * @author Longze Chen
+ * @since osf-cas 25.1.0
  */
 @ManagementContextConfiguration(ManagementContextType.CHILD)
 @ConditionalOnWebApplication(type = Type.SERVLET)
 @ConditionalOnClass(DispatcherServlet.class)
 @EnableWebMvc
+@EnableConfigurationProperties(CasConfigurationProperties.class)
 class WebMvcEndpointChildContextConfiguration {
+
+    /**
+     * OSF CAS Customization: TBD
+     */
+    @Autowired
+    private CasConfigurationProperties casProperties;
 
     /*
      * The error controller is present but not mapped as an endpoint in this context
@@ -74,6 +90,8 @@ class WebMvcEndpointChildContextConfiguration {
     @Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
     DispatcherServlet dispatcherServlet() {
         DispatcherServlet dispatcherServlet = new DispatcherServlet();
+        // OSF CAS Customization: TBD
+        dispatcherServlet.setOsfUrlProperties(casProperties.getAuthn().getOsfUrl());
         // Ensure the parent configuration does not leak down to us
         dispatcherServlet.setDetectAllHandlerAdapters(false);
         dispatcherServlet.setDetectAllHandlerExceptionResolvers(false);
