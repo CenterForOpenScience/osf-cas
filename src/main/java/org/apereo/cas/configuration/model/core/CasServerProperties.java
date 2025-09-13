@@ -1,5 +1,7 @@
 package org.apereo.cas.configuration.model.core;
 
+import io.cos.cas.osf.configuration.model.DevModeProperties;
+
 import org.apereo.cas.CasProtocolConstants;
 import org.apereo.cas.configuration.model.core.web.tomcat.CasEmbeddedApacheTomcatProperties;
 import org.apereo.cas.configuration.support.RequiredProperty;
@@ -16,8 +18,13 @@ import java.io.Serializable;
 /**
  * This is {@link CasServerProperties}.
  *
+ * <p>OSF CAS Customization: add configuration settings to set dev mode options.</p>
+ *
  * @author Misagh Moayyed
  * @since 5.0.0
+ *
+ * @author Longze Chen
+ * @since 25.1.0
  */
 @RequiresModule(name = "cas-server-core", automated = true)
 @Getter
@@ -53,6 +60,12 @@ public class CasServerProperties implements Serializable {
      */
     @NestedConfigurationProperty
     private CasEmbeddedApacheTomcatProperties tomcat = new CasEmbeddedApacheTomcatProperties();
+
+    /**
+     * OSF CAS Customization: configuration settings that set dev mode options.
+     */
+    @NestedConfigurationProperty
+    private DevModeProperties devMode = new DevModeProperties();
 
     @JsonIgnore
     public String getLoginUrl() {
