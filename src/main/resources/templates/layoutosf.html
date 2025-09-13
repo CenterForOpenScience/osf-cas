@@ -32,11 +32,13 @@
     <div class="mdc-drawer-scrim"></div>
 
     <div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust d-flex justify-content-center main-background-gradient flex-grow-1">
+
         <div class="form-button desktop-only">
             <a id="osfRegister" class="mdc-button mdc-button--raised button-osf-green sign-up-button" th:href="@{${osfUrl.register}}">
-                <span class="mdc-button__label">Sign up</span>
+                <span class="mdc-button__label" th:text="#{screen.welcome.button.signup}"></span>
             </a>
         </div>
+
         <main id="main-content" class="container-lg py-4 flex-grow-1">
             <div layout:fragment="content" id="content">
             </div>
