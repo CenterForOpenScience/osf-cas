@@ -26,7 +26,7 @@
                 <!-- Sign-up botton for Mobile (narrow screen) view -->
                 <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
                     <div class="form-button">
-                        <a id="osfRegister" class="mdc-button mdc-button--raised button-osf-green" th:href="@{${osfUrl.register}}">
+                        <a id="osfSignUpButtonAlt" class="mdc-button mdc-button--raised button-osf-green" th:href="@{${osfUrl.register}}">
                             <span class="mdc-button__label" th:text="#{screen.welcome.button.signup}"></span>
                         </a>
                     </div>
@@ -107,14 +107,16 @@
         </header>
 
         <script type="text/javascript">
-            function disableSignUpButton() {
-                let signUpButton = document.getElementById("osfRegister");
-                if (signUpButton != null) {
-                    signUpButton.removeAttribute("href");
-                    signUpButton.style.opacity = "0.8";
-                    signUpButton.style.cursor = "not-allowed";
-                    signUpButton.style.visibility = "hidden";
+            function _disableButton(button){
+                if (button != null) {
+                    button.removeAttribute("href");
+                    button.style.cursor = "not-allowed";
+                    button.style.visibility = "hidden";
                 }
+            }
+            function disableSignUpButton() {
+                _disableButton(document.getElementById("osfSignUpButton"));
+                _disableButton(document.getElementById("osfSignUpButtonAlt"));
             }
         </script>
 
