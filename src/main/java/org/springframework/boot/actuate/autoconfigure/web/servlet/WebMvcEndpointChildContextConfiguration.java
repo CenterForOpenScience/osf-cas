@@ -48,7 +48,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  * infrastructure when a separate management context with a web server running on a
  * different port is required.
  *
- * <p>OSF CAS Customization: TBD</p>
+ * <p>OSF CAS Customization: introduce a new field {@link CasConfigurationProperties casProperties} to configuration
+ * class {@link WebMvcEndpointChildContextConfiguration}; this allows the configuration to initiate osf-cas-customized
+ * {@link DispatcherServlet dispatcherServlet} with {@link io.cos.cas.osf.configuration.model.OsfUrlProperties}.</p>
  *
  * @author Stephane Nicoll
  * @author Andy Wilkinson
@@ -64,9 +66,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableConfigurationProperties(CasConfigurationProperties.class)
 class WebMvcEndpointChildContextConfiguration {
 
-    /**
-     * OSF CAS Customization: TBD
-     */
+    // OSF CAS Customization: a new private field casProperties, in which osfUrlProperties is embedded
     @Autowired
     private CasConfigurationProperties casProperties;
 
@@ -90,7 +90,7 @@ class WebMvcEndpointChildContextConfiguration {
     @Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
     DispatcherServlet dispatcherServlet() {
         DispatcherServlet dispatcherServlet = new DispatcherServlet();
-        // OSF CAS Customization: TBD
+        // OSF CAS Customization: set OsfUrlProperties for dispatcherServlet
         dispatcherServlet.setOsfUrlProperties(casProperties.getAuthn().getOsfUrl());
         // Ensure the parent configuration does not leak down to us
         dispatcherServlet.setDetectAllHandlerAdapters(false);

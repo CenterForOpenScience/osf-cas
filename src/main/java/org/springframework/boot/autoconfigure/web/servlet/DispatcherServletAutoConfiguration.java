@@ -60,7 +60,9 @@ import org.springframework.web.servlet.DispatcherServlet;
  * web server is already present and also for a deployable application using
  * {@link SpringBootServletInitializer}.
  *
- * <p>OSF CAS Customization: TBD</p>
+ * <p>OSF CAS Customization: introduce a new field {@link CasConfigurationProperties casProperties} to configuration
+ * class {@link DispatcherServletAutoConfiguration}; this allows the configuration to initiate osf-cas-customized
+ * {@link DispatcherServlet dispatcherServlet} with {@link io.cos.cas.osf.configuration.model.OsfUrlProperties}.</p>
  *
  * @author Phillip Webb
  * @author Dave Syer
@@ -79,9 +81,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 @EnableConfigurationProperties(CasConfigurationProperties.class)
 public class DispatcherServletAutoConfiguration {
 
-    /**
-     * OSF CAS Customization: TBD
-     */
+    // OSF CAS Customization: a new private field casProperties, in which osfUrlProperties is embedded
     @Autowired
     private CasConfigurationProperties casProperties;
 
@@ -104,7 +104,7 @@ public class DispatcherServletAutoConfiguration {
         @Bean(name = DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
         public DispatcherServlet dispatcherServlet(HttpProperties httpProperties, WebMvcProperties webMvcProperties, CasConfigurationProperties casProperties) {
             DispatcherServlet dispatcherServlet = new DispatcherServlet();
-            // OSF CAS Customization: TBD
+            // OSF CAS Customization: set OsfUrlProperties for dispatcherServlet
             dispatcherServlet.setOsfUrlProperties(casProperties.getAuthn().getOsfUrl());
             dispatcherServlet.setDispatchOptionsRequest(webMvcProperties.isDispatchOptionsRequest());
             dispatcherServlet.setDispatchTraceRequest(webMvcProperties.isDispatchTraceRequest());

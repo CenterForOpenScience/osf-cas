@@ -154,7 +154,9 @@ import org.springframework.web.util.WebUtils;
  * 3.0+ environments, which support programmatic registration of servlet instances.
  * See the {@link #DispatcherServlet(WebApplicationContext)} javadoc for details.
  *
- * <p>OSF CAS Customization: TBD</p>
+ * <p>OSF CAS Customization: introduce a new private field {@link OsfUrlProperties osfUrlProperties} to class
+ * {@link DispatcherServlet}; this allows method {@link this#resolveViewName(String, Map, Locale, HttpServletRequest)}
+ * to send OSF URLs down to the view via model if resolved successfully.</p>
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -356,6 +358,7 @@ public class DispatcherServlet extends FrameworkServlet {
     @Nullable
     private List<ViewResolver> viewResolvers;
 
+    // OSF CAS Customization: a new private field osfUrlProperties to store OSF URLs
     @Setter
     private OsfUrlProperties osfUrlProperties;
 
@@ -1423,7 +1426,7 @@ public class DispatcherServlet extends FrameworkServlet {
             for (ViewResolver viewResolver : this.viewResolvers) {
                 View view = viewResolver.resolveViewName(viewName, locale);
                 if (view != null) {
-                    // OSF CAS Customization: TBD
+                    // OSF CAS Customization: add osfUrlProperties to the model map so the view has access to OSF URLs
                     if (this.osfUrlProperties != null ) {
                         if (model == null) {
                             model = new HashMap<>();
