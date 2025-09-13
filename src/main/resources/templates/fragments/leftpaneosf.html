@@ -10,16 +10,18 @@
 </head>
 
 <body>
-<div th:fragment="leftpaneosf" class="desktop-only">
-    <aside class="left-pane cas-brand-text">
-        <!-- Logo and brand name -->
-        <div class="left-pane-logo-wrapper">
-            <img class="cas-logo" src="/images/osf-logo-white.svg" alt="OSF logo">
-            <div class="cas-brand-text">
+    <div th:fragment="leftpaneosf" class="desktop-only">
+        <aside class="left-pane cas-brand-text">
+
+            <!-- OSF Logo -->
+            <div class="left-pane-logo-wrapper">
+                <img class="cas-logo" src="/images/osf-logo-white.svg" alt="OSF logo">
             </div>
+
+            <!-- OSF Navigation Links -->
             <nav class="left-pane-nav">
+                <!-- Home, Search, and Support Links -->
                 <ul class="left-pane-nav-list">
-                    <!-- Home, Search, and Support Links -->
                     <li>
                         <a class="navbar-link" th:href="@{${osfUrl.home}}">
                             <img src="/images/home.svg" alt="Home">
@@ -38,8 +40,9 @@
                             Support
                         </a>
                     </li>
-                    <br>
-                    <!-- Registries, Preprints, Institutions, and Meetings -->
+                </ul>
+                <!-- Registries, Preprints, Institutions and Meetings -->
+                <ul class="left-pane-nav-list">
                     <li>
                         <a class="navbar-link" th:href="@{${osfUrl.registries}}">
                             <img src="/images/registries.svg" alt="Registries">
@@ -66,8 +69,9 @@
                             Meetings
                         </a>
                     </li>
-                    <br>
-                    <!-- Donate -->
+                </ul>
+                <!-- Donate -->
+                <ul class="left-pane-nav-list">
                     <li>
                         <a class="navbar-link" th:href="@{${osfUrl.donate}}">
                             <img src="/images/donate.svg" alt="Donate">
@@ -77,8 +81,9 @@
                 </ul>
             </nav>
 
-    </aside>
-</div>
+        </aside>
+    </div>
+
 </body>
 
 </html>
