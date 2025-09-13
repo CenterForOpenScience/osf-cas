@@ -10,48 +10,97 @@
 </head>
 
 <body>
-    <div th:fragment="header">
+    <div th:fragment="header" class="small-screen-only">
 
+        <!-- Header -->
         <header id="app-bar" class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z4">
             <nav class="mdc-top-app-bar__row">
 
-                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
+                <!-- OSF Logo -->
+                <section class="mdc-top-app-bar__section">
                     <span class="cas-brand mx-auto" >
-                        <img class="cas-logo" src="/images/osf-logo-white.png" alt="OSF logo">
+                        <img class="cas-logo" src="/images/osf-logo-white.svg" alt="OSF logo">
                     </span>
-                    <div class="cas-brand-text">
-                        <a class="navbar-link" th:href="@{/login(casRedirectSource=tomcat)}">
-                            <span class="cas-brand-name hidden-narrow" >OSF </span>
-                            <span class="cas-brand-name" >CAS</span>
-                        </a>
-                    </div>
                 </section>
 
-                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
-                    <div class="form-button form-button-navbar">
-                        <a id="osfRegister" class="mdc-button mdc-button--raised button-osf-disabled">
-                            <span class="mdc-button__label">Sign up</span>
-                        </a>
-                    </div>
-                </section>
+                <!-- Note: Sign-up button only shows up in osf layout -->
+
+                <!-- Menu button for toggle navigation links on/off -->
+                <input type="checkbox" id="toggle-leftnav" class="toggle-nav-input" aria-controls='slideout-nav' hidden/>
+                <label for="toggle-leftnav" class="toggle-nav-label" aria-label="Toggle navigation menu">
+                    <img src="/images/menu.svg" alt="Toggle navigation menu">
+                </label>
+
+                <!-- OSF Navigation Links -->
+                <aside id="slideout-nav" class="left-pane slideout cas-brand-text">
+                    <!-- OSF Navigation Links -->
+                    <nav class="left-pane-nav">
+                        <ul class="left-pane-nav-list" th:if="${dispatcherOsfUrl}">
+                            <!-- Home, Search, and Support Links -->
+                            <li>
+                                <a class="navbar-link" th:href="@{${dispatcherOsfUrl.home}}">
+                                    <img src="/images/home.svg" alt="Home">
+                                    Home
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-link" th:href="@{${dispatcherOsfUrl.search}}">
+                                    <img src="/images/search.svg" alt="Search">
+                                    Search
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-link" th:href="@{${dispatcherOsfUrl.support}}">
+                                    <img src="/images/support.svg" alt="Support">
+                                    Support
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- Registries, Preprints, Institutions and Meetings -->
+                        <ul class="left-pane-nav-list" th:if="${dispatcherOsfUrl}">
+                            <li>
+                                <a class="navbar-link" th:href="@{${dispatcherOsfUrl.registries}}">
+                                    <img src="/images/registries.svg" alt="Registries">
+                                    Registries
+                                    <img class="arrow-icon" src="/images/arrow.svg" alt="Arrow">
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-link" th:href="@{${dispatcherOsfUrl.preprints}}">
+                                    <img src="/images/preprints.svg" alt="Preprints">
+                                    Preprints
+                                    <img class="arrow-icon" src="/images/arrow.svg" alt="Arrow">
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-link" th:href="@{${dispatcherOsfUrl.institutionsHome}}">
+                                    <img src="/images/institutions.svg" alt="Institutions">
+                                    Institutions
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-link" th:href="@{${dispatcherOsfUrl.meetings}}">
+                                    <img src="/images/meetings.svg" alt="Meetings">
+                                    Meetings
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- Donate -->
+                        <ul class="left-pane-nav-list" th:if="${dispatcherOsfUrl}">
+                            <li>
+                                <a class="navbar-link" th:href="@{${dispatcherOsfUrl.donate}}">
+                                    <img src="/images/donate.svg" alt="Donate">
+                                    Donate
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
 
             </nav>
         </header>
 
-        <script type="text/javascript">
-            function disableSignUpButton() {
-                let signUpButton = document.getElementById("osfRegister");
-                if (signUpButton != null) {
-                    signUpButton.removeAttribute("href");
-                    signUpButton.style.opacity = "0.8";
-                    signUpButton.style.cursor = "not-allowed";
-                    signUpButton.style.backgroundColor = "#efefef";
-                    signUpButton.style.color = "#cccccc";
-                    signUpButton.style.visibility = "hidden";
-                }
-            }
-            disableSignUpButton();
-        </script>
+        <!-- Note: No need to define disableSignUpButton() since default layout doesn't have the sign-up button. -->
 
         <script type="text/javascript">
             (function (material) {
