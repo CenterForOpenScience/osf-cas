@@ -12,13 +12,15 @@
 <body>
     <div th:fragment="leftpane" class="desktop-only">
         <aside class="left-pane cas-brand-text">
-            <!-- Logo and brand name -->
+
+            <!-- OSF Logo -->
             <div class="left-pane-logo-wrapper">
-                <img class="cas-logo" src="/images/osf-logo-white.svg" alt="OSF logo">
-                <div class="cas-brand-text">
+                <img class="cas-logo" src="/images/osf-logo-white.svg" alt="OSF logo" />
             </div>
+
+            <!-- OSF Navigation Links -->
             <nav class="left-pane-nav">
-                <ul class="left-pane-nav-list">
+                <ul class="left-pane-nav-list" th:if="${dispatcherOsfUrl}">
                     <!-- Home, Search, and Support Links -->
                     <li>
                         <a class="navbar-link" th:href="@{${dispatcherOsfUrl.home}}">
@@ -38,8 +40,9 @@
                             Support
                         </a>
                     </li>
-                    <br>
-                    <!-- Registries, Preprints, Institutions, and Meetings -->
+                </ul>
+                <!-- Registries, Preprints, Institutions and Meetings -->
+                <ul class="left-pane-nav-list" th:if="${dispatcherOsfUrl}">
                     <li>
                         <a class="navbar-link" th:href="@{${dispatcherOsfUrl.registries}}">
                             <img src="/images/registries.svg" alt="Registries">
@@ -66,8 +69,9 @@
                             Meetings
                         </a>
                     </li>
-                    <br>
-                    <!-- Donate -->
+                </ul>
+                <!-- Donate -->
+                <ul class="left-pane-nav-list" th:if="${dispatcherOsfUrl}">
                     <li>
                         <a class="navbar-link" th:href="@{${dispatcherOsfUrl.donate}}">
                             <img src="/images/donate.svg" alt="Donate">
