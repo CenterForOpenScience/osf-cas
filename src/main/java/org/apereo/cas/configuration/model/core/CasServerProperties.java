@@ -18,13 +18,15 @@ import java.io.Serializable;
 /**
  * This is {@link CasServerProperties}.
  *
- * <p>OSF CAS Customization: add configuration settings to set dev mode options.</p>
+ * <p>OSF CAS Customization: add {@link DevModeProperties devMode} to {@link CasServerProperties}; this allows
+ * dev mode options to be easily accessed from {@link org.apereo.cas.configuration.CasConfigurationProperties}
+ * by calling {@code casProperties.getServer().getDevMode()}.</p>
  *
  * @author Misagh Moayyed
  * @since 5.0.0
  *
  * @author Longze Chen
- * @since 25.1.0
+ * @since osf-cas 25.1.0
  */
 @RequiresModule(name = "cas-server-core", automated = true)
 @Getter
@@ -61,9 +63,7 @@ public class CasServerProperties implements Serializable {
     @NestedConfigurationProperty
     private CasEmbeddedApacheTomcatProperties tomcat = new CasEmbeddedApacheTomcatProperties();
 
-    /**
-     * OSF CAS Customization: configuration settings that set dev mode options.
-     */
+    // OSF CAS Customization: a new private field devMode that stores osf-cas customized dev mode options
     @NestedConfigurationProperty
     private DevModeProperties devMode = new DevModeProperties();
 
