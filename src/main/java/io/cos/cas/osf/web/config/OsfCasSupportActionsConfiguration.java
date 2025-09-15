@@ -101,6 +101,7 @@ public class OsfCasSupportActionsConfiguration extends CasSupportActionsConfigur
                 adaptiveAuthenticationPolicy.getObject(),
                 centralAuthenticationService.getObject(),
                 jpaOsfDao.getObject(),
+                casProperties.getServer().getDevMode(),
                 casProperties.getAuthn().getOsfUrl(),
                 casProperties.getAuthn().getOsfApi(),
                 authnDelegationClients

@@ -164,13 +164,15 @@ public class CasWebAppConfiguration implements WebMvcConfigurer {
         val mapping = new SimpleUrlHandlerMapping();
 
         val root = rootController();
-        val forceHttpError = forceHttpErrorController();
         mapping.setOrder(1);
         mapping.setAlwaysUseFullPath(true);
         mapping.setRootHandler(root);
         val urls = new HashMap<String, Object>();
         urls.put("/", root);
-        urls.put("/forceHttpError", forceHttpError);
+        if (casProperties.getServer().getDevMode().isAllowForceHttpError()) {
+            val forceHttpError = forceHttpErrorController();
+            urls.put("/forceHttpError", forceHttpError);
+        }
 
         mapping.setUrlMap(urls);
         return mapping;
