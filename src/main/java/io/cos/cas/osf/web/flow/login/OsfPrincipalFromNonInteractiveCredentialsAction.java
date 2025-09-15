@@ -18,6 +18,7 @@ import io.cos.cas.osf.authentication.exception.InstitutionSsoOsfApiFailedExcepti
 import io.cos.cas.osf.authentication.support.DelegationProtocol;
 import io.cos.cas.osf.authentication.support.OsfApiPermissionDenied;
 import io.cos.cas.osf.authentication.support.OsfInstitutionUtils;
+import io.cos.cas.osf.configuration.model.DevModeProperties;
 import io.cos.cas.osf.configuration.model.OsfApiProperties;
 import io.cos.cas.osf.configuration.model.OsfUrlProperties;
 import io.cos.cas.osf.dao.JpaOsfDao;
@@ -198,6 +199,9 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
     private final JpaOsfDao jpaOsfDao;
 
     @NotNull
+    private DevModeProperties devModeProperties;
+
+    @NotNull
     private OsfUrlProperties osfUrlProperties;
 
     @NotNull
@@ -214,6 +218,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
             final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy,
             final CentralAuthenticationService centralAuthenticationService,
             final JpaOsfDao jpaOsfDao,
+            final DevModeProperties devModeProperties,
             final OsfUrlProperties osfUrlProperties,
             final OsfApiProperties osfApiProperties,
             final Map<String, List<String>> authnDelegationClients
@@ -225,6 +230,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         );
         this.centralAuthenticationService = centralAuthenticationService;
         this.jpaOsfDao = jpaOsfDao;
+        this.devModeProperties = devModeProperties;
         this.osfUrlProperties = osfUrlProperties;
         this.osfApiProperties = osfApiProperties;
         this.authnDelegationClients = authnDelegationClients;
@@ -331,23 +337,24 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
         }
         LOGGER.debug("No valid username or verification key found in request parameters.");
 
-        // Check 4: check "forceException=" query parameter
-        // TODO: disable this for production environment
-        final String forcedException = request.getParameter(FORCE_EXCEPTION_PARAMETER_NAME);
-        if (StringUtils.isNotBlank(forcedException)) {
-            setSsoErrorContext(
-                    context,
-                    forcedException,
-                    String.format("This exception was thrown on purpose bypassing standard web flow: %s", Class.forName(forcedException).getSimpleName()),
-                    "N/A",
-                    "N/A",
-                    "N/A",
-                    "N/A"
-            );
-            try {
-                throw (LoginException) Class.forName(forcedException).getConstructor(String.class).newInstance(FORCE_EXCEPTION_PARAMETER_NAME);
-            } catch ( java.lang.ClassCastException e) {
-                throw (RuntimeException) Class.forName(forcedException).getConstructor(String.class).newInstance(FORCE_EXCEPTION_PARAMETER_NAME);
+        // Check 4: check "forceException=" query parameter if in dev mode
+        if (devModeProperties.isAllowForceAuthnException()) {
+            final String forcedException = request.getParameter(FORCE_EXCEPTION_PARAMETER_NAME);
+            if (StringUtils.isNotBlank(forcedException)) {
+                setSsoErrorContext(
+                        context,
+                        forcedException,
+                        String.format("This exception was thrown on purpose bypassing standard web flow: %s", Class.forName(forcedException).getSimpleName()),
+                        "N/A",
+                        "N/A",
+                        "N/A",
+                        "N/A"
+                );
+                try {
+                    throw (LoginException) Class.forName(forcedException).getConstructor(String.class).newInstance(FORCE_EXCEPTION_PARAMETER_NAME);
+                } catch (java.lang.ClassCastException e) {
+                    throw (RuntimeException) Class.forName(forcedException).getConstructor(String.class).newInstance(FORCE_EXCEPTION_PARAMETER_NAME);
+                }
             }
         }
 
