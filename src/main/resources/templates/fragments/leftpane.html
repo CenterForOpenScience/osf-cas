@@ -12,64 +12,68 @@
 <body>
     <div th:fragment="leftpane" class="desktop-only">
         <aside class="left-pane cas-brand-text">
-            <!-- Logo and brand name -->
+
+            <!-- OSF Logo -->
             <div class="left-pane-logo-wrapper">
-                <img class="cas-logo" src="/images/osf-logo-white.svg" alt="OSF logo">
-                <div class="cas-brand-text">
+                <img class="cas-logo" src="/images/osf-logo-white.svg" alt="OSF logo" />
             </div>
+
+            <!-- OSF Navigation Links -->
             <nav class="left-pane-nav">
-                <ul class="left-pane-nav-list">
+                <ul class="left-pane-nav-list" th:if="${dispatcherOsfUrl}">
                     <!-- Home, Search, and Support Links -->
                     <li>
-                        <a class="navbar-link" th:href="@{${osfUrl.home}}">
+                        <a class="navbar-link" th:href="@{${dispatcherOsfUrl.home}}">
                             <img src="/images/home.svg" alt="Home">
                             Home
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{${osfUrl.search}}">
+                        <a class="navbar-link" th:href="@{${dispatcherOsfUrl.search}}">
                             <img src="/images/search.svg" alt="Search">
                             Search
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{${osfUrl.support}}">
+                        <a class="navbar-link" th:href="@{${dispatcherOsfUrl.support}}">
                             <img src="/images/support.svg" alt="Support">
                             Support
                         </a>
                     </li>
-                    <br>
-                    <!-- Registries, Preprints, Institutions, and Meetings -->
+                </ul>
+                <!-- Registries, Preprints, Institutions and Meetings -->
+                <ul class="left-pane-nav-list" th:if="${dispatcherOsfUrl}">
                     <li>
-                        <a class="navbar-link" th:href="@{${osfUrl.registries}}">
+                        <a class="navbar-link" th:href="@{${dispatcherOsfUrl.registries}}">
                             <img src="/images/registries.svg" alt="Registries">
                             Registries
                             <img class="arrow-icon" src="/images/arrow.svg" alt="Arrow">
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{${osfUrl.preprints}}">
+                        <a class="navbar-link" th:href="@{${dispatcherOsfUrl.preprints}}">
                             <img src="/images/preprints.svg" alt="Preprints">
                             Preprints
                             <img class="arrow-icon" src="/images/arrow.svg" alt="Arrow">
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{${osfUrl.institutionsHome}}">
+                        <a class="navbar-link" th:href="@{${dispatcherOsfUrl.institutionsHome}}">
                             <img src="/images/institutions.svg" alt="Institutions">
                             Institutions
                         </a>
                     </li>
                     <li>
-                        <a class="navbar-link" th:href="@{${osfUrl.meetings}}">
+                        <a class="navbar-link" th:href="@{${dispatcherOsfUrl.meetings}}">
                             <img src="/images/meetings.svg" alt="Meetings">
                             Meetings
                         </a>
                     </li>
-                    <br>
-                    <!-- Donate -->
+                </ul>
+                <!-- Donate -->
+                <ul class="left-pane-nav-list" th:if="${dispatcherOsfUrl}">
                     <li>
-                        <a class="navbar-link" th:href="@{${osfUrl.donate}}">
+                        <a class="navbar-link" th:href="@{${dispatcherOsfUrl.donate}}">
                             <img src="/images/donate.svg" alt="Donate">
                             Donate
                         </a>
