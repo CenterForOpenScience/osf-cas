@@ -1012,7 +1012,7 @@ body {
 
 .login-section .reveal-password {
     color: #94a3b8;
-    inset-inline-end: 1rem;
+    inset-inline-end: 0rem;
     position: absolute;
 }
 
