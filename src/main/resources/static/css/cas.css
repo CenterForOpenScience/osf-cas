@@ -880,6 +880,10 @@ body {
     flex: 1;
 }
 
+.login-error-card .card-message h1 {
+    text-align: center;
+}
+
 #serviceui {
     background-color: transparent;
 }
@@ -1027,6 +1031,7 @@ body {
 .login-instn-card .card-message,
 .login-error-card .card-message {
     padding: 0;
+    margin-top: 0.5rem
 }
 
 .login-error-card #errorInfo,
