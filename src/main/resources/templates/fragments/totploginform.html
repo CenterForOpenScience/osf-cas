@@ -83,12 +83,12 @@
                                     autocomplete="one-time-code"
                                     autofocus />
                                 <label for="oneTimePassword" class="mdc-floating-label" th:utext="#{screen.twofactor.label.onetimepassword}"></label>
+                                <button class="reveal-password mdc-button mdc-input-group-append" type="button">
+                                    <i class="mdi mdi-eye reveal-password-icon"></i>
+                                    <span class="sr-only">Toggle One-time Password</span>
+                                </button>
                             </div>
                         </div>
-                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append" type="button">
-                            <i class="mdi mdi-eye reveal-password-icon"></i>
-                            <span class="sr-only">Toggle One-time Password</span>
-                        </button>
                     </section>
 
                     <section id="loginformerrorlist" class="login-error-list" th:if="${#fields.hasErrors('*')}">
@@ -125,10 +125,10 @@
                 </section>
 
                 <section class="cas-field-col-2">
-                    <span class="text-with-mdi cas-field-float-left">
+                    <span class="text-with-mdi cas-field-float-left text-bold">
                         <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.twofactor.link.cancel}"></a></span>
                     </span>
-                    <span class="text-without-mdi cas-field-float-right">
+                    <span class="text-without-mdi cas-field-float-right text-bold">
                         <a href="https://help.osf.io/article/239-enable-or-disable-two-factor-authentication" th:utext="#{screen.generic.link.support}"></a>
                     </span>
                 </section>
