@@ -102,12 +102,17 @@ aside, section, main {
     top: 56px;
 }
 
-.mdc-drawer-app-content {
-    /* flex: auto; */
-    /* overflow: auto; */
-    /* position: relative; */
+.flex-column {
     flex-direction: column;
+}
 
+.full-width {
+    width: 100%;
+}
+
+.center-align-text {
+    display: inline-block;
+    text-align: center;
 }
 
 .main-content {
@@ -164,6 +169,7 @@ header>nav .cas-brand .cas-logo {
     border-right: var(--cas-theme-border-light, 1px solid rgba(0, 0, 0, .2));
     padding: 2rem 2.5rem;
     flex: 1;
+    background: #fff;
 }
 
 .login-section:last-child {
@@ -448,7 +454,8 @@ button.close {
 }
 
 .mdc-button--raised:not(:disabled) {
-    background-color: var(--mdc-theme-primary, #153E50);
+    background-color: transparent;
+    font-weight: bold;
 }
 
 .mdc-button--raised.mdc-button-twitter:not(:disabled) {
@@ -668,7 +675,9 @@ button.close {
     --cas-theme-osf-footer: #efefef;
     --cas-theme-osf-grey: #eeeeee;
     --cas-theme-osf-green: #357935;
-    --cas-theme-osf-blue: ##337ab7;
+    --cas-theme-osf-blue: #337ab7;
+    --cas-theme-osf-blue-hover: #0089ff;
+    --cas-theme-grey-hover: #f5f8fb;
     --cas-theme-osf-red: #b52b27;
     --cas-theme-osf-disabled: #eeeeee;
     --cas-theme-osf-disabled-dark: #cccccc;
@@ -747,8 +756,20 @@ body {
     margin: 0.25rem 0;
 }
 
+.form-button-column {
+    display: flex;
+    flex-direction: column;
+    margin: 0.25rem 0;
+
+    .mdc-button {
+        margin: 0.25rem 0;
+        padding: 0 8px;
+    }
+}
+
 .form-button .mdc-button,
-.form-button-inline .mdc-button {
+.form-button-inline .mdc-button,
+.form-button-column .mdc-button {
     width: 100%;
     min-width: fit-content;
     text-transform: none;
@@ -777,8 +798,13 @@ body {
 
 .form-button .button-osf-grey,
 .form-button-inline .button-osf-grey {
-    background-color: var(--cas-theme-osf-grey, #eeeeee);
-    box-shadow: 0px 5px 4px 0px rgba(0, 0, 0, 0.2), 0px 4px 4px 0px rgba(0, 0, 0, 0.14), 0px 3px 8px 0px rgba(0, 0, 0, 0.12);
+    background-color: transparent;
+    box-shadow: 0 0 4px 0 #00000029;
+    display: inline-flex;
+
+    &:hover {
+        background: var(--cas-theme-grey-hover, #f5f8fb);
+    }
 }
 
 .form-button .button-osf-green,
@@ -789,6 +815,10 @@ body {
 .form-button .button-osf-blue,
 .form-button-inline .button-osf-blue {
     background-color: var(--cas-theme-osf-blue, #337ab7);
+
+    &:hover {
+        background-color: var(--cas-theme-osf-blue-hover, #0089ff);
+    }
 }
 
 .form-button .button-osf-red,
@@ -935,25 +965,20 @@ body {
 }
 
 .form-button-inline .delegation-button-logo {
-    position: absolute;
-    left: 4px;
-    top: 12px;
     padding: 6px;
     height: 36px;
 }
 
 .form-button-inline .delegation-button-label {
     font-size: 0.875rem;
-    color: black;
+    font-weight: 700;
+    color: var(--cas-theme-osf-blue, #337ab7);
     white-space: nowrap;
     padding-left: 28px;
     letter-spacing: normal;
 }
 
 .form-button .delegation-button-logo {
-    position: absolute;
-    left: 20px;
-    top: 11px;
     padding: 2px;
     height: 36px;
 }
@@ -986,7 +1011,9 @@ body {
 }
 
 .login-section .reveal-password {
-    background-color: var(--cas-theme-osf-blue, #337ab7);
+    color: #94a3b8;
+    inset-inline-end: 0rem;
+    position: absolute;
 }
 
 .login-section .login-error-list {
