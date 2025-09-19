@@ -94,7 +94,7 @@ public class OsfInstitutionLoginPreparationAction extends OsfAbstractLoginPrepar
         if (institutionId != null) {
             institutionLoginUrlMapSorted = institutionLoginUrlMap;
         } else {
-            institutionLoginUrlMap.put("", " -- select an institution -- ");
+            institutionLoginUrlMap.put("", " Select institution ");
             institutionLoginUrlMapSorted = OsfInstitutionUtils.sortByValue(institutionLoginUrlMap);
         }
         context.getFlowScope().put("institutions", institutionLoginUrlMapSorted);

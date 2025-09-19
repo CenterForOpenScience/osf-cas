@@ -74,7 +74,7 @@
                     </section>
 
                     <section>
-                        <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=true, buttonCustomization='button-osf-disabled', messageKey='screen.tosconsent.button.agree')" />
+                        <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=true, buttonCustomization='button-osf-blue', messageKey='screen.tosconsent.button.agree')" />
                     </section>
 
                 </form>
@@ -82,14 +82,15 @@
                 <hr class="my-4" />
 
                 <section class="text-with-mdi">
-                    <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.tosconsent.link.cancel}"></a></span>
+                    <span class="full-width center-align-text text-bold">
+                        <a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.tosconsent.link.cancel}"></a>
+                    </span>
                 </section>
 
                 <script type="text/javascript">
                     function checkTosConsent(checkbox) {
                         let submitButton = document.getElementById("primarySubmitButton");
                         submitButton.disabled = !checkbox.checked;
-                        submitButton.style.backgroundColor = checkbox.checked ? "#1b6d85": "#efefef";
                     }
                 </script>
 

@@ -14,7 +14,7 @@
             <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
                 <section class="login-section login-form login-instn-card">
 
-                    <section class="card-message">
+                    <section class="card-message full-width center-align-text">
                         <h1 th:utext="#{screen.institutionlogin.heading}"></h1>
                         <p th:unless=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.message.select}"></p>
                         <p th:if=${osfCasLoginContext.institutionId} th:utext="#{screen.institutionlogin.message.auto}"></p>
@@ -35,31 +35,35 @@
                         <span th:if="${osfCasLoginContext.institutionId}">
                             <a th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}" th:utext="#{screen.institutionlogin.link.select}"></a>
                         </span>
-                        <span th:unless="${osfCasLoginContext.institutionId}">
+                        <span class="full-width center-align-text text-bold" th:unless="${osfCasLoginContext.institutionId}">
                             <a th:href="@{/login(campaign=unsupportedinstitution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}" th:utext="#{screen.institutionlogin.link.unsupported}"></a>
                         </span>
                     </section>
 
                     <section class="form-button">
-                        <button type="button" id="institutionSubmit" class="mdc-button mdc-button--raised" name="submit" onclick="institutionLogin()"
-                                th:classappend="${osfCasLoginContext.institutionId == null ? 'button-osf-disabled' : 'button-osf-blue'}"
+                        <button type="button" id="institutionSubmit" class="mdc-button mdc-button--raised button-osf-blue" name="submit" onclick="institutionLogin()"
                                 th:disabled="${osfCasLoginContext.institutionId == null}" >
                             <span class="mdc-button__label" th:text="#{screen.institutionlogin.button.submit}"></span>
                         </button>
                     </section>
 
-                    <hr class="my-4" />
-
                     <section class="text-with-mdi">
-                        <span>
+                        <span class="full-width center-align-text text-bold">
                             <a href="https://help.osf.io/article/272-sign-in-to-osf" th:utext="#{screen.generic.link.support}"></a>
                         </span>
                     </section>
 
-                    <section class="text-with-mdi">
-                        <span>
-                            <a th:href="@{/login(service=${service?.originalUrl ?: ''})}" th:utext="#{screen.institutionlogin.osf}"></a>
-                        </span>
+                    <hr class="my-4" />
+
+                    <section class="form-button" th:if="${osfCasLoginContext.orcidLoginUrl}">
+                        <a class="mdc-button mdc-button--raised button-osf-grey" id="orcidlogin" th:href="@{${osfCasLoginContext.orcidLoginUrl}}">
+                            <img class="delegation-button-logo" src="/images/orcid-logo.png" alt="ORCiD logo">
+                            <span class="delegation-button-label" th:utext="#{screen.welcome.button.orcidlogin}"></span>
+                        </a>
+                        <a class="mdc-button mdc-button--raised button-osf-grey margin-large-vertical" id="emailLogin" th:href="@{/login(service=${service?.originalUrl ?: ''})}">
+                            <img class="delegation-button-logo" src="/images/email.svg" alt="Email icon">
+                            <span class="delegation-button-label" th:utext="#{screen.institutionlogin.osf}"></span>
+                        </a>
                     </section>
 
                 </section>
@@ -102,10 +106,8 @@
                     let institutionLoginUrl = selectDropdownList.options[selectDropdownList.selectedIndex].value;
                     if (institutionLoginUrl == null || institutionLoginUrl === "") {
                         submitButton.disabled = true;
-                        submitButton.style.backgroundColor = "#efefef";
                     } else {
                         submitButton.disabled = false;
-                        submitButton.style.backgroundColor = "#1b6d85";
                     }
                 }
             </script>

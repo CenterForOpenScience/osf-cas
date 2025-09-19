@@ -453,7 +453,7 @@ button.close {
     color: var(--cas-theme-primary, #153e50);
 }
 
-.mdc-button--raised:not(:disabled) {
+.mdc-button--raised {
     background-color: transparent;
     font-weight: bold;
 }
@@ -818,6 +818,12 @@ body {
 
     &:hover {
         background-color: var(--cas-theme-osf-blue-hover, #0089ff);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        background-color: var(--cas-theme-osf-blue, #337ab7) !important; /* override mdc styles */
+        color: white;
     }
 }
 
