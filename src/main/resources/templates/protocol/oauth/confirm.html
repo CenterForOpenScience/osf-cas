@@ -14,12 +14,6 @@
 
         <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
             <section class="login-section">
-                <section>
-                    <div th:replace="fragments/osfbannerui :: osfBannerUI">
-                        <a href="fragments/osfbannerui.html"></a>
-                    </div>
-                </section>
-                <hr class="my-4" />
                 <section class="card-message">
                     <h1 th:text="#{screen.oauth.confirm.header}" />
                     <h2 class="downsize-to-h3" th:text="#{screen.oauth.confirm.message}" />

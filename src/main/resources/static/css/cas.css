@@ -679,6 +679,7 @@ button.close {
     --cas-theme-osf-blue-hover: #0089ff;
     --cas-theme-grey-hover: #f5f8fb;
     --cas-theme-osf-red: #b52b27;
+    --cas-theme-osf-red-hover: #E40303;
     --cas-theme-osf-disabled: #eeeeee;
     --cas-theme-osf-disabled-dark: #cccccc;
     --cas-theme-primary: var(--cas-theme-osf-navbar, #263947);
@@ -830,6 +831,10 @@ body {
 .form-button .button-osf-red,
 .form-button-inline .button-osf-red {
     background-color: var(--cas-theme-osf-red, #b52b27);
+
+    &:hover {
+        background-color: var(--cas-theme-osf-red-hover, #E40303);
+    }
 }
 
 .form-button .button-osf-disabled,
