@@ -890,6 +890,7 @@ body {
     flex: 1;
 }
 
+.login-section .card-message h1,
 .login-error-card .card-message h1 {
     text-align: center;
 }
@@ -972,7 +973,8 @@ body {
     font-size: 1rem;
 }
 
-.login-error-card .pre-formatted-small pre {
+.login-error-card .pre-formatted-small pre,
+.login-section .card-message .pre-formatted-small pre {
     font-size: 0.75rem;
     white-space: pre-wrap;
 }
@@ -1002,8 +1004,11 @@ body {
 }
 
 .login-error-card #errorInfo,
-.login-error-card #authnAttr {
+.login-error-card #authnAttr,
+.login-error-card .text-with-border,
+.login-section .text-with-border {
     margin-top: 1rem;
+    margin-bottom: 1rem;
     padding: 0 1rem;
     border: solid #e7e7e7;
 }

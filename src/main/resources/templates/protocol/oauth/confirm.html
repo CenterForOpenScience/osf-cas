@@ -16,10 +16,19 @@
             <section class="login-section">
                 <section class="card-message">
                     <h1 th:text="#{screen.oauth.confirm.header}" />
-                    <h2 class="downsize-to-h3" th:text="#{screen.oauth.confirm.message}" />
-                    <p th:text="#{screen.oauth.confirm.service(${serviceName})}" />
-                    <p th:text="#{screen.oauth.confirm.description(${serviceDescription})}" />
-                    <p th:text="#{screen.oauth.confirm.scopes(${scope})}" />
+                    <p class="downsize-to-h3" th:text="#{screen.oauth.confirm.message}" />
+                    <h2 th:text="#{screen.oauth.confirm.service.name}" />
+                    <section class="text-with-border pre-formatted-small">
+                        <pre th:text="${serviceName}"></pre>
+                    </section>
+                    <h2 th:text="#{screen.oauth.confirm.service.description}" />
+                    <section class="text-with-border pre-formatted-small">
+                        <pre th:text="${serviceDescription}"></pre>
+                    </section>
+                    <h2 th:text="#{screen.oauth.confirm.service.scopes}" />
+                    <section class="text-with-border pre-formatted-small">
+                        <pre th:text="${scope}"></pre>
+                    </section>
                 </section>
                 <section class="form-button-inline">
                     <a class="mdc-button mdc-button--raised button-osf-blue" id="allow" name="allow"  th:href="@{${callbackUrl}}">
