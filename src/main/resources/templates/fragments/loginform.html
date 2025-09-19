@@ -16,12 +16,6 @@
         <!-- Login form template begins here -->
         <div th:fragment="loginform" class="d-flex flex-column justify-content-between m-auto">
 
-            <section th:if="${delegatedAuthenticationProviderPrimary == null}">
-                <div class="service-ui" th:replace="fragments/serviceui :: serviceUI">
-                    <a href="fragments/serviceui.html"></a>
-                </div>
-            </section>
-
             <section class="text-without-mdi text-center text-bold text-large margin-large-vertical">
                 <span th:utext="#{screen.welcome.tips}"></span>
             </section>
