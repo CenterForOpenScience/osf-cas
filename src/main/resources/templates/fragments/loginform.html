@@ -16,22 +16,16 @@
         <!-- Login form template begins here -->
         <div th:fragment="loginform" class="d-flex flex-column justify-content-between m-auto">
 
-            <section th:if="${delegatedAuthenticationProviderPrimary == null}">
-                <div class="service-ui" th:replace="fragments/serviceui :: serviceUI">
-                    <a href="fragments/serviceui.html"></a>
-                </div>
-            </section>
-
             <section class="text-without-mdi text-center text-bold text-large margin-large-vertical">
                 <span th:utext="#{screen.welcome.tips}"></span>
             </section>
 
-            <section class="form-button-inline" th:if="${osfCasLoginContext.orcidLoginUrl}">
+            <section class="form-button" th:if="${osfCasLoginContext.orcidLoginUrl}">
                 <a class="mdc-button mdc-button--raised button-osf-grey" id="orcidlogin" th:href="@{${osfCasLoginContext.orcidLoginUrl}}">
                     <img class="delegation-button-logo" src="/images/orcid-logo.png" alt="ORCiD logo">
                     <span class="delegation-button-label" th:utext="#{screen.welcome.button.orcidlogin}"></span>
                 </a>
-                <a class="mdc-button mdc-button--raised button-osf-grey" id="instnLogin" th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}">
+                <a class="mdc-button mdc-button--raised button-osf-grey margin-large-vertical" id="instnLogin" th:href="@{/login(campaign=institution, institutionId=${institutionId ?: ''}, service=${service?.originalUrl ?: ''})}">
                     <img class="delegation-button-logo" src="/images/institution-logo.png" alt="Institution logo">
                     <span class="delegation-button-label" th:utext="#{screen.welcome.button.institutionlogin}"></span>
                 </a>
@@ -103,6 +97,10 @@
                                     th:field="*{password}"
                                     autocomplete="current-password" />
                                 <label for="password" class="mdc-floating-label" th:utext="#{screen.welcome.label.password}"></label>
+                                <button class="reveal-password mdc-button mdc-input-group-append" type="button">
+                                    <i class="mdi mdi-eye reveal-password-icon"></i>
+                                    <span class="sr-only">Toggle Password</span>
+                                </button>
                             </div>
                             <div class="mdc-text-field-helper-line caps-warn">
                                 <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg text-danger">
@@ -110,10 +108,6 @@
                                 </p>
                             </div>
                         </div>
-                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append" type="button">
-                            <i class="mdi mdi-eye reveal-password-icon"></i>
-                            <span class="sr-only">Toggle Password</span>
-                        </button>
                     </section>
 
                     <section id="loginformerrorlist" class="login-error-list" th:if="${#fields.hasErrors('*')}">
@@ -122,6 +116,11 @@
                                 <p class="login-error-inline" th:utext="${err + ' '}"></p>
                             </div>
                         </div>
+                    </section>
+                    <section class="cas-field cas-field-primary cas-field-col-2 my-3">
+                        <span class="cas-field-float-right text-bold">
+                            <a th:href="@{${osfUrl.forgotPassword}}" th:utext="#{screen.welcome.link.resetpassword}"></a>
+                        </span>
                     </section>
 
                     <section class="cas-field">
@@ -138,19 +137,19 @@
                             </span>
                         </p>
                     </section>
+                    <section>
+                        <span class="cas-field-float-left margin-large-vertical" th:if="${rememberMeAuthenticationEnabled}">
+                            <input type="checkbox" name="rememberMe" id="rememberMe" value="true"/>&nbsp;
+                            <label for="rememberMe" th:text="#{screen.welcome.checkbox.rememberme}"></label>
+                        </span>
+                    </section>
 
                     <section>
                         <div th:replace="fragments/submitbutton :: submitButton (buttonDisabled=false, buttonCustomization='button-osf-blue', messageKey='screen.welcome.button.login')" />
                     </section>
 
                     <section class="cas-field cas-field-primary cas-field-col-2">
-                        <span class="cas-field-float-left" th:if="${rememberMeAuthenticationEnabled}">
-                            <input type="checkbox" name="rememberMe" id="rememberMe" value="true"/>&nbsp;
-                            <label for="rememberMe" th:text="#{screen.welcome.checkbox.rememberme}"></label>
-                        </span>
-                        <span class="cas-field-float-right">
-                            <a th:href="@{${osfUrl.forgotPassword}}" th:utext="#{screen.welcome.link.resetpassword}"></a>
-                            <br>
+                        <span class="center-align-text full-width text-bold">
                             <a href="https://help.osf.io/article/272-sign-in-to-osf" th:utext="#{screen.generic.link.support}"></a>
                         </span>
                     </section>

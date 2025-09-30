@@ -14,21 +14,13 @@
 
     <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
         <section class="login-error-card">
-            <section>
-                <div th:replace="fragments/osfbannerui :: osfBannerUI">
-                    <a href="fragments/osfbannerui.html"></a>
-                </div>
-            </section>
-            <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
-                <span th:utext="#{screen.authnerror.tips}"></span>
-            </section>
-            <hr class="my-4" />
             <section class="card-message">
                 <h1 th:utext="#{screen.oauth.error.heading}"></h1>
                 <p th:utext="#{${errorMsg}}"></p>
-                <p class="pre-formatted-small word-break-all">
+                <h2 th:text="#{screen.oauth.error.detail}" />
+                <section class="text-with-border pre-formatted-small word-break-all">
                     <pre class="wrap" th:utext="#{${errorCode + ': ' + errorParam}}"></pre>
-                </p>
+                </section>
             </section>
             <hr class="my-4" />
             <section class="text-with-mdi">

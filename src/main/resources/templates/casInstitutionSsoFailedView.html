@@ -14,15 +14,6 @@
 
         <div class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
             <section class="login-error-card">
-                <section>
-                    <div th:replace="fragments/osfbannerui :: osfBannerUI">
-                        <a href="fragments/osfbannerui.html"></a>
-                    </div>
-                </section>
-                <section class="text-without-mdi text-center text-bold text-large margin-large-vertical title-danger">
-                    <span th:utext="#{screen.authnerror.tips}"></span>
-                </section>
-                <hr class="my-4" />
                 <section class="card-message">
                     <h1 th:utext="#{screen.institutionssofailed.heading}"></h1>
                     <p th:utext="#{screen.institutionssofailed.message}"></p>

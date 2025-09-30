@@ -25,18 +25,24 @@
         <a href="fragments/header.html"></a>
     </div>
 
-    <div class="mdc-drawer-scrim"></div>
+    <div th:replace="fragments/leftpane :: leftpane">
+        <a href="fragments/leftpane.html"></a>
+    </div>
 
-    <div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust d-flex justify-content-center">
-        <main id="main-content" class="container-lg py-4">
+    <div class="flex-column mdc-top-app-bar--fixed-adjust d-flex justify-content-center main-background-gradient flex-grow-1">
+
+        <!-- Note: Sign-up button only shows up in osf layout -->
+
+        <main id="main-content" class="container-lg py-4 flex-grow-1">
             <div layout:fragment="content" id="content">
             </div>
         </main>
+
+        <div th:replace="fragments/footer :: footer">
+            <a href="fragments/footer.html"></a>
+        </div>
     </div>
 
-    <div th:replace="fragments/footer :: footer">
-        <a href="fragments/footer.html"></a>
-    </div>
 </body>
 
 </html>
