@@ -55,6 +55,13 @@
             <MetadataFilter type="Signature" certificate="ecu-prod-idp-cert.cer" />
         </MetadataProvider>
 
+        <!-- Harvard University -->
+        <MetadataProvider type="XML"
+                          uri="https://login.harvard.edu/app/exk1xrjz6q65XDb2J1d8/sso/saml/metadata"
+                          backingFilePath="harvard-prod-idp-metadata.xml"
+                          reloadInterval="180000">
+        </MetadataProvider>
+
         <!-- Macquarie University (MQ) -->
         <MetadataProvider type="XML"
                           uri="https://mq.okta.com/app/exk2dzwun7KebsDIV2p7/sso/saml/metadata"
@@ -107,7 +114,6 @@
         <!-- George Mason University -->
         <!-- George Washington University -->
         <!-- Georgia Institute of Technology -->
-        <!-- Harvard University -->
         <!-- James Madison University -->
         <!-- KU Leuven -->
         <!-- Massachusetts Institute of Technology -->

@@ -250,7 +250,7 @@
                         </user>
                     </xsl:when>
                     <!-- Harvard University (HARVARD) -->
-                    <xsl:when test="$idp='https://fed.huit.harvard.edu/idp/shibboleth'">
+                    <xsl:when test="$idp='http://www.okta.com/exk1xrjz6q65XDb2J1d8 '">
                         <id>harvard</id>
                         <user>
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
