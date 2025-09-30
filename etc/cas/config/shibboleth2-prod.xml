@@ -60,7 +60,6 @@
                           uri="https://login.harvard.edu/app/exk1xrjz6q65XDb2J1d8/sso/saml/metadata"
                           backingFilePath="harvard-prod-idp-metadata.xml"
                           reloadInterval="180000">
-            <MetadataFilter type="Signature" certificate="harvard-prod-idp.cert" />
         </MetadataProvider>
 
         <!-- Macquarie University (MQ) -->
