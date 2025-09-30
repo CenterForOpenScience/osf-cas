@@ -151,7 +151,7 @@
     -->
 
     <!-- Active Directory Federation Services (ADFS 2.x) -->
-    <!-- University of Cape Town (UCT), Boys Town (BT) and East Carolina University (ECU) -->
+    <Attribute name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/eppn" nameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" id="eppn" />
     <Attribute name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress" nameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" id="mail" />
     <Attribute name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name" nameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" id="displayName" />
     <Attribute name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname" nameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" id="givenName" />
