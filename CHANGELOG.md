@@ -2,6 +2,14 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+
+25.1.0 (09-30-2025)
+===================
+
+* CAS FE rework for angular OSF release
+* Add dev-mode to reach pages directly bypassing required web/authn flow
+* SSO config sync
+
 25.0.0 (09-10-2025)
 ===================
 
