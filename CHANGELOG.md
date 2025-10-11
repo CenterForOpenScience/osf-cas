@@ -3,6 +3,12 @@
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
 
+25.1.1 (10-11-2025)
+===================
+
+* Enable CAS to use custom CSS file
+* Rename default CSS to break browser cache
+
 25.1.0 (09-30-2025)
 ===================
 
