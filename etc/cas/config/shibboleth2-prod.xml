@@ -98,6 +98,12 @@
                           backingFilePath="vua-prod-idp-metadata.xml"
                           reloadInterval="180000" />
 
+        <!-- Washington State University (WSU) -->
+        <MetadataProvider type="XML"
+                          uri="https://wsu.okta.com/app/exk196cuygihbtIwD2p8/sso/saml/metadata"
+                          backingFilePath="wsu-prod-idp-metadata.xml"
+                          reloadInterval="180000" />
+
         <!-- Here is the end of non-InCommon/eduGAIN IdPs. Current total: 9 unique provider and 9 institutions. -->
 
         <!-- Here goes all InCommon/eduGAIN IdPs, all of which are production IdP server using the MDQ service -->

@@ -895,6 +895,18 @@
                             <eduPerson>false</eduPerson>
                         </user>
                     </xsl:when>
+                    <!-- Washington State University (WSU) -->
+                    <xsl:when test="$idp='http://www.okta.com/exk196cuygihbtIwD2p8'">
+                        <id>wsu</id>
+                        <user>
+                            <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
+                            <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <middleNames/>
+                            <suffix/>
+                        </user>
+                    </xsl:when>
                     <!-- Washington University in St. Louis (WUSTL) -->
                     <xsl:when test="$idp='https://login.wustl.edu/idp/shibboleth'">
                         <id>wustl</id>
