@@ -46,6 +46,9 @@ public class OsfInstitution extends AbstractOsfModel {
     @Column(name = "is_deleted")
     private Boolean deleted;
 
+    @Column(name = "sso_in_progress")
+    private Boolean sso_in_progress;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "deactivated")
     private Date dateDeactivated;
