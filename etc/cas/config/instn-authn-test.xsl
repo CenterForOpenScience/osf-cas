@@ -309,6 +309,18 @@
                             <suffix/>
                         </user>
                     </xsl:when>
+                    <!-- Texas A&M (TAMU)-->
+                    <xsl:when test="$idp='urn:mace:incommon:tamu.edu'">
+                        <id>tamu</id>
+                        <user>
+                            <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
+                            <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
+                            <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
+                            <middleNames/>
+                            <suffix/>
+                        </user>
+                    </xsl:when>
                     <!-- University of Arizona (UA) -->
                     <xsl:when test="$idp='urn:mace:incommon:arizona.edu'">
                         <id>ua</id>
