@@ -40,6 +40,33 @@ A legacy version can be found at [CAS Overlay](https://github.com/CenterForOpenS
 - PostgreSQL  `9.6`
 - JDK         `11`
 
+
+# Local Development
+
+For local development, replace the default Dockerfile with Dockerfile-local.
+This is required to ensure proper loading and usage of cas-local.properties.
+```bash
+cp Dockerfile-local Dockerfile
+```
+
+# Special Instructions for Apple Silicon (M1, M2, M3) and Other ARM64 Architectures
+
+If you are running Docker on ARM64 architecture (Apple Silicon or similar), you must explicitly set the platform to linux/amd64 when using OpenJDK 11 images.
+Without this, the CAS container may fail to build or run correctly.
+
+Update the Dockerfile as follows:
+```dockerfile
+# Dockerfile
+
+FROM --platform=linux/amd64 adoptopenjdk/openjdk11:alpine-slim AS overlay
+...
+...
+
+FROM --platform=linux/amd64 adoptopenjdk/openjdk11:alpine-jre AS cas
+...
+```
+This forces Docker to use an amd64 image via emulation and ensures compatibility with CAS and OpenJDK 11 on ARM-based machines.
+
 # Configure, Build and Run OSF CAS
 
 It is recommended to use the provided scripts to [build](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-build.sh) and [run](https://github.com/CenterForOpenScience/osf-cas/blob/develop/docker-run.sh) CAS. Refer to Apereo [README.md](https://github.com/apereo/cas-overlay-template/tree/6.2#cas-overlay-template-) for more options.
@@ -70,15 +97,15 @@ cas.authn.osf-postgres.jpa.dialect=io.cos.cas.osf.hibernate.dialect.OsfPostgresD
 
 The implementation of OSF CAS uses the [JPA Ticket Registry](https://apereo.github.io/cas/6.2.x/ticketing/Configuring-Ticketing-Components.html#ticket-registry) for durable ticket storage and thus requires a relational database. Set up a `PostgreSQL@9.6` server and review [JPA Ticket Registry settings](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L127-L173). In most cases, only [Database connections](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L139-L143) need to be updated. Other JDBC and JPA settings can be adjusted if necessary.
 
-Here is an example for local development. Use `192.168.168.167` to access host outside the docker container. Use the port `54321` since the default `5432` one has been used by OSF DB. Update `pg_hba.conf` to grant proper access permission depending on the setup.
+Here is an example for local development. Use `192.168.168.167` to access host outside the docker container. Update `pg_hba.conf` to grant proper access permission depending on the setup.
 
 ```yaml
 # In `cas.properties` or `cas-local.properties`
 
-cas.ticket.registry.jpa.user=longzechen
+cas.ticket.registry.jpa.user=postgres
 cas.ticket.registry.jpa.password=
 cas.ticket.registry.jpa.driver-class=org.postgresql.Driver
-cas.ticket.registry.jpa.url=jdbc:postgresql://192.168.168.167:54321/osf-cas?targetServerType=master
+cas.ticket.registry.jpa.url=jdbc:postgresql://192.168.168.167:5432/osf?targetServerType=master
 cas.ticket.registry.jpa.dialect=org.hibernate.dialect.PostgreSQL95Dialect
 ```
 
@@ -86,7 +113,7 @@ cas.ticket.registry.jpa.dialect=org.hibernate.dialect.PostgreSQL95Dialect
 # In `pg_hba.conf`
 
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
-host    osf-cas         longzechen      192.168.168.167/24      trust
+host    osf         postgres      192.168.168.167/24      trust
 ```
 
 ## Signing and Encryption Keys
