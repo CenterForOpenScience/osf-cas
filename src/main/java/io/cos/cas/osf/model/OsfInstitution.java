@@ -47,7 +47,7 @@ public class OsfInstitution extends AbstractOsfModel {
     private Boolean deleted;
 
     @Column(name = "sso_in_progress")
-    private Boolean sso_in_progress;
+    private Boolean ssoInProgress;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "deactivated")
