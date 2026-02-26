@@ -105,7 +105,7 @@ Here is an example for local development. Use `192.168.168.167` to access host o
 cas.ticket.registry.jpa.user=postgres
 cas.ticket.registry.jpa.password=
 cas.ticket.registry.jpa.driver-class=org.postgresql.Driver
-cas.ticket.registry.jpa.url=jdbc:postgresql://192.168.168.167:5432/osf_cas?targetServerType=master
+cas.ticket.registry.jpa.url=jdbc:postgresql://192.168.168.167:5432/osf-cas?targetServerType=master
 cas.ticket.registry.jpa.dialect=org.hibernate.dialect.PostgreSQL95Dialect
 ```
 
