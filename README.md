@@ -27,7 +27,7 @@ OSF CAS is the centralized authentication and authorization service for the [OSF
 
 # Implementations
 
-The implementation of OSF CAS is based on [Apereo CAS 6.2.8](https://github.com/apereo/cas/tree/v6.2.8) via [CAS Overlay Template 6.2.x](https://github.com/apereo/cas-overlay-template/tree/6.2). Refer to [CAS Documentation 6.2.x](https://apereo.github.io/cas/6.2.x/) for more details.
+The implementation of OSF CAS is based on [Apereo CAS 6.2.8](https://github.com/apereo/cas/tree/v6.2.8) via [CAS Overlay Template 6.2.x](https://github.com/apereo/cas-overlay-template/tree/6.2). Refer to [CAS Documentation 6.2.x](https://github.com/apereo/cas/blob/6.2.x/docs/cas-server-documentation/) for more details.
 
 ## Legacy Implementations
 
@@ -95,7 +95,7 @@ cas.authn.osf-postgres.jpa.dialect=io.cos.cas.osf.hibernate.dialect.OsfPostgresD
 
 ## CAS DB
 
-The implementation of OSF CAS uses the [JPA Ticket Registry](https://apereo.github.io/cas/6.2.x/ticketing/Configuring-Ticketing-Components.html#ticket-registry) for durable ticket storage and thus requires a relational database. Set up a `PostgreSQL@9.6` server and review [JPA Ticket Registry settings](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L127-L173). In most cases, only [Database connections](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L139-L143) need to be updated. Other JDBC and JPA settings can be adjusted if necessary.
+The implementation of OSF CAS uses the [JPA Ticket Registry](https://github.com/apereo/cas/blob/6.2.x/docs/cas-server-documentation/ticketing/Configuring-Ticketing-Components.md#ticket-registry) for durable ticket storage and thus requires a relational database. Set up a `PostgreSQL@9.6` server and review [JPA Ticket Registry settings](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L127-L173). In most cases, only [Database connections](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L139-L143) need to be updated. Other JDBC and JPA settings can be adjusted if necessary.
 
 Here is an example for local development. Use `192.168.168.167` to access host outside the docker container. Update `pg_hba.conf` to grant proper access permission depending on the setup.
 
