@@ -97,7 +97,7 @@ cas.authn.osf-postgres.jpa.dialect=io.cos.cas.osf.hibernate.dialect.OsfPostgresD
 
 The implementation of OSF CAS uses the [JPA Ticket Registry](https://github.com/apereo/cas/blob/6.2.x/docs/cas-server-documentation/ticketing/Configuring-Ticketing-Components.md#ticket-registry) for durable ticket storage and thus requires a relational database. Set up a `PostgreSQL@9.6` server and review [JPA Ticket Registry settings](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L127-L173). In most cases, only [Database connections](https://github.com/CenterForOpenScience/osf-cas/blob/d0a03b51c9b1ce7795a210223c1ce38d5b2742de/etc/cas/config/cas.properties#L139-L143) need to be updated. Other JDBC and JPA settings can be adjusted if necessary.
 
-Here is an example for local development. Use `192.168.168.167` to access host outside the docker container. Update `pg_hba.conf` to grant proper access permission depending on the setup.
+Here is an example for local development. Use `192.168.168.167` to access host outside the docker container.
 
 ```yaml
 # In `cas.properties` or `cas-local.properties`
@@ -105,15 +105,8 @@ Here is an example for local development. Use `192.168.168.167` to access host o
 cas.ticket.registry.jpa.user=postgres
 cas.ticket.registry.jpa.password=
 cas.ticket.registry.jpa.driver-class=org.postgresql.Driver
-cas.ticket.registry.jpa.url=jdbc:postgresql://192.168.168.167:5432/osf?targetServerType=master
+cas.ticket.registry.jpa.url=jdbc:postgresql://192.168.168.167:5432/osf_cas?targetServerType=master
 cas.ticket.registry.jpa.dialect=org.hibernate.dialect.PostgreSQL95Dialect
-```
-
-```yaml
-# In `pg_hba.conf`
-
-# TYPE  DATABASE        USER            ADDRESS                 METHOD
-host    osf         postgres      192.168.168.167/24      trust
 ```
 
 ## Signing and Encryption Keys
