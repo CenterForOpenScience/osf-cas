@@ -102,7 +102,7 @@
         <MetadataProvider type="XML"
                           uri="https://login.wsu.edu/app/exk196cuygihbtIwD2p8/sso/saml/metadata"
                           backingFilePath="wsu-prod-idp-metadata.xml"
-                          reloadInterval="180000" />
+                          reloadInterval="86400" />
 
         <!-- Here is the end of non-InCommon/eduGAIN IdPs. Current total: 9 unique provider and 9 institutions. -->
 
