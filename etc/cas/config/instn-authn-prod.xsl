@@ -902,7 +902,7 @@
                             <username><xsl:value-of select="//attribute[@name='mail']/@value"/></username>
                             <fullname><xsl:value-of select="//attribute[@name='displayname']/@value"/></fullname>
                             <familyName><xsl:value-of select="//attribute[@name='sn']/@value"/></familyName>
-                            <givenName><xsl:value-of select="//attribute[@name='givename']/@value"/></givenName>
+                            <givenName><xsl:value-of select="//attribute[@name='givenname']/@value"/></givenName>
                             <middleNames/>
                             <suffix/>
                             <departmentRaw><xsl:value-of select="//attribute[@name='department']/@value"/></departmentRaw>
