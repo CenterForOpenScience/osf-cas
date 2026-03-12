@@ -457,7 +457,7 @@
                             <suffix/>
                         </user>
                     </xsl:when>
-                    <!-- Texas A&M (TAMU)-->
+                    <!-- Texas A&M University (TAMU) -->
                     <xsl:when test="$idp='urn:mace:incommon:tamu.edu'">
                         <id>tamu</id>
                         <user>
