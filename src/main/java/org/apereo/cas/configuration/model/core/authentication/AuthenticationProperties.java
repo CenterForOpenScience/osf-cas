@@ -1,6 +1,7 @@
 package org.apereo.cas.configuration.model.core.authentication;
 
 import io.cos.cas.osf.configuration.model.OsfApiProperties;
+import io.cos.cas.osf.configuration.model.OsfOrcidRevocationProperties;
 import io.cos.cas.osf.configuration.model.OsfPostgresAuthenticationProperties;
 import io.cos.cas.osf.configuration.model.OsfUrlProperties;
 
@@ -118,6 +119,12 @@ public class AuthenticationProperties implements Serializable {
      */
     @NestedConfigurationProperty
     private OsfPostgresAuthenticationProperties osfPostgres = new OsfPostgresAuthenticationProperties();
+
+    /**
+     * OSF ORCID token revocation settings.
+     */
+    @NestedConfigurationProperty
+    private OsfOrcidRevocationProperties osfOrcidRevocation = new OsfOrcidRevocationProperties();
 
     /**
      * Groovy authentication settings.
