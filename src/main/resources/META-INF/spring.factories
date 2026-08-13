@@ -1,11 +1,9 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   io.cos.cas.oauth.config.OsfPostgresServiceRegistryConfiguration,\
   io.cos.cas.osf.config.JpaOsfDaoConfiguration,\
-  io.cos.cas.osf.config.OrcidTokenJpaConfiguration,\
   io.cos.cas.osf.config.OsfCasCoreAuthenticationMetadataConfiguration,\
   io.cos.cas.osf.config.OsfPostgresAuthenticationEventExecutionPlanConfiguration,\
   io.cos.cas.osf.config.OrcidTokenCaptureAuthenticationEventExecutionPlanConfiguration,\
   io.cos.cas.osf.web.config.OsfCasSupportActionsConfiguration,\
-  io.cos.cas.osf.web.config.OrcidTokenRevocationWebConfiguration,\
   io.cos.cas.osf.web.flow.config.OsfCasCoreWebflowConfiguration,\
   io.cos.cas.osf.web.flow.config.OsfCasWebflowContextConfiguration
