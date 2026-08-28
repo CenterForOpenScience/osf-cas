@@ -11,6 +11,8 @@ import org.pac4j.scribe.model.OrcidToken;
 import com.github.scribejava.core.exceptions.OAuthException;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * This class is the Orcid profile definition.
  *
@@ -19,6 +21,7 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
  * @since 1.6.0
  * @version 4.0.3
  */
+@Slf4j
 public class OrcidProfileDefinition extends OAuth20ProfileDefinition<OrcidProfile, OAuth20Configuration> {
 
     public static final String ORCID = "common:path";
@@ -41,6 +44,13 @@ public class OrcidProfileDefinition extends OAuth20ProfileDefinition<OrcidProfil
     @Override
     public String getProfileUrl(final OAuth2AccessToken accessToken, final OAuth20Configuration configuration) {
         if (accessToken instanceof OrcidToken) {
+            LOGGER.debug(">>>> access token object = {}", accessToken);
+            LOGGER.debug(">>>> ---- at = {}", accessToken.getAccessToken());
+            LOGGER.debug(">>>> ---- rt = {}", accessToken.getRefreshToken());
+            LOGGER.debug(">>>> ---- exp = {}", accessToken.getExpiresIn());
+            LOGGER.debug(">>>> ---- scope = {}", accessToken.getScope());
+            LOGGER.debug(">>>> ---- type = {}", accessToken.getTokenType());
+
             return String.format("https://pub.orcid.org/v2.0/%s/record", ((OrcidToken) accessToken).getOrcid());
         } else {
             throw new OAuthException("Token in getProfileUrl is not an OrcidToken");

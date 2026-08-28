@@ -70,6 +70,8 @@ import org.apereo.cas.web.support.WebUtils;
 import org.json.JSONObject;
 import org.json.XML;
 
+import org.pac4j.oauth.profile.orcid.OrcidProfile;
+
 import org.springframework.util.ResourceUtils;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -255,7 +257,18 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                             clientName,
                             credential.getId()
                     );
-                    return credential;
+                    LOGGER.debug(">>>> credential = {}", ((ClientCredential) credential).getCredentials().toString());
+                    LOGGER.debug(">>>> profile = {}", ((ClientCredential) credential).getUserProfile().toString());
+                    final OrcidProfile orcidUserProfile = (OrcidProfile) ((ClientCredential) credential).getUserProfile();
+                    final String orcidId = orcidUserProfile.getId();
+                    final String accessToken = (String) orcidUserProfile.getAttribute("access_token");
+                    LOGGER.debug(">>>> orcidId = {}", orcidId);
+                    LOGGER.debug(">>>> orcidAccessToken = {}", accessToken);
+                    OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
+                    osfPostgresCredential.setOrcidAccessToken(accessToken);
+                    osfPostgresCredential.setOrcidId(orcidId);
+                    osfPostgresCredential.setUsername("OrcidProfile#" + orcidId);
+                    return osfPostgresCredential;
                 }
                 // Type 2: institution SSO via pac4j authentication delegation using the CAS protocol
                 if (authnDelegationClients.get(INSTITUTION_CLIENTS_PARAMETER_NAME).contains(clientName)) {
