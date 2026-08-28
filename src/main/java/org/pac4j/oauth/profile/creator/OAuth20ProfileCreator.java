@@ -2,6 +2,9 @@ package org.pac4j.oauth.profile.creator;
 
 import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth20Service;
+
+import org.apache.commons.lang3.StringUtils;
+
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.oauth.config.OAuth20Configuration;
@@ -12,11 +15,17 @@ import org.pac4j.oauth.profile.OAuth20Profile;
 /**
  * OAuth 2.0 profile creator.
  *
+ * OSF CAS Customization: modified {@code addAccessTokenToProfile} to include refresh token in profile attributes.
+ *
  * @author Jerome Leleu
+ * @author Longze Chen
  * @since 2.0.0
+ * @version 4.1.0
  */
 public class OAuth20ProfileCreator<U extends OAuth20Profile>
         extends OAuthProfileCreator<OAuth20Credentials, U, OAuth20Configuration, OAuth2AccessToken, OAuth20Service> {
+
+    private static final String REFRESH_TOKEN = "refresh_token";
 
     public OAuth20ProfileCreator(final OAuth20Configuration configuration, final IndirectClient client) {
         super(configuration, client);
@@ -33,6 +42,11 @@ public class OAuth20ProfileCreator<U extends OAuth20Profile>
             final String token = accessToken.getAccessToken();
             logger.debug("add access_token: {} to profile", token);
             profile.setAccessToken(token);
+            final String refreshToken = accessToken.getRefreshToken();
+            if (StringUtils.isNoneBlank(refreshToken)) {
+                logger.debug("add refresh_token: {} to profile", token);
+                profile.addAttribute(REFRESH_TOKEN, refreshToken);
+            }
         }
     }
 
