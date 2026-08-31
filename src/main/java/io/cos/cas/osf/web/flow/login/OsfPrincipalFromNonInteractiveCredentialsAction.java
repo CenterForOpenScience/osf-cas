@@ -267,7 +267,7 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                     LOGGER.debug(">>>> orcidId = {}", orcidId);
                     LOGGER.debug(">>>> orcidAccessToken = {}", orcidAccessToken);
                     LOGGER.debug(">>>> orcidRefreshToken = {}", orcidRefreshToken);
-                    return new OsfOrcidSsoCredential(orcidId, orcidAccessToken);
+                    return new OsfOrcidSsoCredential(orcidId, orcidAccessToken, orcidRefreshToken);
                 }
                 // Type 2: institution SSO via pac4j authentication delegation using the CAS protocol
                 if (authnDelegationClients.get(INSTITUTION_CLIENTS_PARAMETER_NAME).contains(clientName)) {

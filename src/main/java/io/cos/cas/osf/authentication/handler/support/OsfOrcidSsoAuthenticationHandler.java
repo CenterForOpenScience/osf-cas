@@ -63,21 +63,25 @@ public class OsfOrcidSsoAuthenticationHandler extends AbstractPreAndPostProcessi
         final String credentialId = credential.getId();
         final String orcidId = credential.getOrcidId();
         final String orcidAccessToken = credential.getOrcidAccessToken();
+        final String orcidRefreshToken = credential.getOrcidRefreshToken();
 
         LOGGER.debug(">>>> credential = {}", credential);
         LOGGER.debug(">>>> ---- credentialId = {}", credentialId);
         LOGGER.debug(">>>> ---- orcidId = {}", orcidId);
         LOGGER.debug(">>>> ---- orcidAccessToken = {}", orcidAccessToken);
+        LOGGER.debug(">>>> ---- orcidRefreshToken = {}", orcidRefreshToken);
 
         LOGGER.debug(
-                "Credential metadata: id=[{}], orcidId=[{}], orcidAccessToken=[{}],",
+                "Credential metadata: id=[{}], orcidId=[{}], orcidAccessToken=[{}], orcidRefreshToken=[{}]",
                 credentialId,
                 orcidId,
-                StringUtils.isNoneBlank(orcidAccessToken)
+                StringUtils.isNoneBlank(orcidAccessToken),
+                StringUtils.isNoneBlank(orcidRefreshToken)
         );
 
         final Map<String, List<Object>> attributes = new LinkedHashMap<>();
         attributes.put("orcidAccessToken", Collections.singletonList(orcidAccessToken));
+        attributes.put("orcidRefreshToken", Collections.singletonList(orcidRefreshToken));
         final Principal principal = this.principalFactory.createPrincipal(credentialId, attributes);
         final List<MessageDescriptor> warnings = new ArrayList<>();
         return createHandlerResult(credential, principal, warnings);

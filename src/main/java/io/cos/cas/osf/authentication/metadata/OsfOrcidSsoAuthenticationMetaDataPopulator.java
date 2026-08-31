@@ -20,11 +20,12 @@ public class OsfOrcidSsoAuthenticationMetaDataPopulator implements Authenticatio
     public void populateAttributes(final AuthenticationBuilder builder, final AuthenticationTransaction transaction) {
         transaction.getPrimaryCredential().ifPresent(r -> {
             final OsfOrcidSsoCredential credential = (OsfOrcidSsoCredential) r;
-            LOGGER.debug(
-                    "Credential is of type [{}], thus adding attributes [{}, {}]",
+            LOGGER.info(
+                    "[ORCiD SSO] Credential is of type [{}], thus adding attributes [{}, {}, {}]",
                     OsfOrcidSsoCredential.class.getSimpleName(),
                     OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ID,
-                    OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ACCESS_TOKEN
+                    OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ACCESS_TOKEN,
+                    OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_REFRESH_TOKEN
             );
             builder.addAttribute(
                     OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ID,
@@ -33,6 +34,10 @@ public class OsfOrcidSsoAuthenticationMetaDataPopulator implements Authenticatio
             builder.addAttribute(
                     OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ACCESS_TOKEN,
                     credential.getOrcidAccessToken()
+            );
+            builder.addAttribute(
+                    OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_REFRESH_TOKEN,
+                    credential.getOrcidRefreshToken()
             );
         });
     }
