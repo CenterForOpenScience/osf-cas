@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
+import io.cos.cas.osf.authentication.credential.OsfOrcidSsoCredential;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAccountInactiveException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingException;
@@ -261,14 +262,12 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                     LOGGER.debug(">>>> profile = {}", ((ClientCredential) credential).getUserProfile().toString());
                     final OrcidProfile orcidUserProfile = (OrcidProfile) ((ClientCredential) credential).getUserProfile();
                     final String orcidId = orcidUserProfile.getId();
-                    final String accessToken = (String) orcidUserProfile.getAttribute("access_token");
+                    final String orcidAccessToken = (String) orcidUserProfile.getAttribute("access_token");
+                    final String orcidRefreshToken = (String) orcidUserProfile.getAttribute("refresh_token");
                     LOGGER.debug(">>>> orcidId = {}", orcidId);
-                    LOGGER.debug(">>>> orcidAccessToken = {}", accessToken);
-                    OsfPostgresCredential osfPostgresCredential = new OsfPostgresCredential();
-                    osfPostgresCredential.setOrcidAccessToken(accessToken);
-                    osfPostgresCredential.setOrcidId(orcidId);
-                    osfPostgresCredential.setUsername("OrcidProfile#" + orcidId);
-                    return osfPostgresCredential;
+                    LOGGER.debug(">>>> orcidAccessToken = {}", orcidAccessToken);
+                    LOGGER.debug(">>>> orcidRefreshToken = {}", orcidRefreshToken);
+                    return new OsfOrcidSsoCredential(orcidId, orcidAccessToken);
                 }
                 // Type 2: institution SSO via pac4j authentication delegation using the CAS protocol
                 if (authnDelegationClients.get(INSTITUTION_CLIENTS_PARAMETER_NAME).contains(clientName)) {
