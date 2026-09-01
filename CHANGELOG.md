@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+26.1.1 (2026-09-01)
+===================
+
+* Hotfix to add OCI CI/CD build spec
+
 26.1.0 (2026-05-07)
 ===================
 
