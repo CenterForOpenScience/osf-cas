@@ -44,6 +44,8 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
 
     private static DelegationProtocol DEFAULT_DELEGATION_PROTOCOL = DelegationProtocol.NONE;
 
+    public static String AUTHENTICATION_ATTRIBUTE_ORCID_ACCESS_TOKEN = "orcidAccessToken";
+
     /**
      * The one-time and ephemeral OSF verification key.
      */
@@ -83,6 +85,10 @@ public class OsfPostgresCredential extends RememberMeUsernamePasswordCredential 
      * The authentication attributes that are parsed from raw authentication response.
      */
     private Map<String, String> delegationAttributes = new LinkedHashMap<>();
+
+    private String orcidId;
+
+    private String orcidAccessToken;
 
     @Override
     public String getId() {

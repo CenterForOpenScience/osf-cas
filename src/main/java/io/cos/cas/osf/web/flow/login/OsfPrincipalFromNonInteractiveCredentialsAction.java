@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
+import io.cos.cas.osf.authentication.credential.OsfOrcidSsoCredential;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAccountInactiveException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingException;
@@ -69,6 +70,8 @@ import org.apereo.cas.web.support.WebUtils;
 
 import org.json.JSONObject;
 import org.json.XML;
+
+import org.pac4j.oauth.profile.orcid.OrcidProfile;
 
 import org.springframework.util.ResourceUtils;
 import org.springframework.webflow.action.AbstractAction;
@@ -255,7 +258,16 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                             clientName,
                             credential.getId()
                     );
-                    return credential;
+                    LOGGER.debug(">>>> credential = {}", ((ClientCredential) credential).getCredentials().toString());
+                    LOGGER.debug(">>>> profile = {}", ((ClientCredential) credential).getUserProfile().toString());
+                    final OrcidProfile orcidUserProfile = (OrcidProfile) ((ClientCredential) credential).getUserProfile();
+                    final String orcidId = orcidUserProfile.getId();
+                    final String orcidAccessToken = (String) orcidUserProfile.getAttribute("access_token");
+                    final String orcidRefreshToken = (String) orcidUserProfile.getAttribute("refresh_token");
+                    LOGGER.debug(">>>> orcidId = {}", orcidId);
+                    LOGGER.debug(">>>> orcidAccessToken = {}", orcidAccessToken);
+                    LOGGER.debug(">>>> orcidRefreshToken = {}", orcidRefreshToken);
+                    return new OsfOrcidSsoCredential(orcidId, orcidAccessToken, orcidRefreshToken);
                 }
                 // Type 2: institution SSO via pac4j authentication delegation using the CAS protocol
                 if (authnDelegationClients.get(INSTITUTION_CLIENTS_PARAMETER_NAME).contains(clientName)) {
