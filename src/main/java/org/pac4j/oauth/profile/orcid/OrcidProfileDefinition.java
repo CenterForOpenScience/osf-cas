@@ -2,6 +2,8 @@ package org.pac4j.oauth.profile.orcid;
 
 import static org.pac4j.core.profile.AttributeLocation.PROFILE_ATTRIBUTE;
 
+import org.apache.commons.lang3.StringUtils;
+
 import org.pac4j.core.profile.converter.Converters;
 import org.pac4j.core.util.CommonHelper;
 import org.pac4j.oauth.config.OAuth20Configuration;
@@ -44,15 +46,17 @@ public class OrcidProfileDefinition extends OAuth20ProfileDefinition<OrcidProfil
     @Override
     public String getProfileUrl(final OAuth2AccessToken accessToken, final OAuth20Configuration configuration) {
         if (accessToken instanceof OrcidToken) {
-            LOGGER.debug(">>>> access token object = {}", accessToken);
-            LOGGER.debug(">>>> ---- at = {}", accessToken.getAccessToken());
-            LOGGER.debug(">>>> ---- rt = {}", accessToken.getRefreshToken());
-            LOGGER.debug(">>>> ---- exp = {}", accessToken.getExpiresIn());
-            LOGGER.debug(">>>> ---- scope = {}", accessToken.getScope());
-            LOGGER.debug(">>>> ---- type = {}", accessToken.getTokenType());
-
+            LOGGER.debug(
+                    "[ORCiD SSO] Access token object: [type=\"{}\", scope=\"{}\", exp=\"{}\", at=\"{}\", rt=\"{}\"]",
+                    accessToken.getTokenType(),
+                    accessToken.getScope(),
+                    accessToken.getExpiresIn(),
+                    StringUtils.isNotBlank(accessToken.getAccessToken()),
+                    StringUtils.isNotBlank(accessToken.getRefreshToken())
+            );
             return String.format("https://pub.orcid.org/v2.0/%s/record", ((OrcidToken) accessToken).getOrcid());
         } else {
+            LOGGER.error("[ORCiD SSO] Token in getProfileUrl is not an OrcidToken");
             throw new OAuthException("Token in getProfileUrl is not an OrcidToken");
         }
     }
