@@ -23,11 +23,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is {@link OsfOrcidSsoAuthenticationHandler}.
+ *
+ * @author Longze Chen
+ * @since 26.2.0
+ */
 @Getter
 @Setter
 @Slf4j
 public class OsfOrcidSsoAuthenticationHandler extends AbstractPreAndPostProcessingAuthenticationHandler {
 
+    /** Constructor for all required args. */
     public OsfOrcidSsoAuthenticationHandler(
             final String name,
             final ServicesManager servicesManager,
@@ -37,6 +44,7 @@ public class OsfOrcidSsoAuthenticationHandler extends AbstractPreAndPostProcessi
         super(name, servicesManager, principalFactory, order);
     }
 
+    /** Authenticate with no-op credential transform. */
     @Override
     protected final AuthenticationHandlerExecutionResult doAuthentication(
             Credential credential
@@ -46,42 +54,52 @@ public class OsfOrcidSsoAuthenticationHandler extends AbstractPreAndPostProcessi
         return authenticateOsfOrcidSsoInternal(osfOrcidSsoCredential);
     }
 
+    /** {@link OsfOrcidSsoAuthenticationHandler} only supports {@link OsfOrcidSsoCredential} */
     @Override
     public boolean supports(final Class<? extends Credential> clazz) {
         return OsfOrcidSsoCredential.class.isAssignableFrom(clazz);
     }
 
+    /** {@link OsfOrcidSsoAuthenticationHandler} only supports {@link OsfOrcidSsoCredential} */
     @Override
     public boolean supports(final Credential credential) {
         return credential instanceof OsfOrcidSsoCredential;
     }
 
+    /** Create {@link AuthenticationHandlerExecutionResult} from {@link OsfOrcidSsoCredential}. */
     protected final AuthenticationHandlerExecutionResult authenticateOsfOrcidSsoInternal(
             final OsfOrcidSsoCredential credential
     ) throws GeneralSecurityException {
+
+        if (credential == null) {
+            LOGGER.error("[ORCiD SSO] Null/Empty ORCiD Credential.");
+            throw new GeneralSecurityException("Null/Empty ORCiD Credential.");
+        }
 
         final String credentialId = credential.getId();
         final String orcidId = credential.getOrcidId();
         final String orcidAccessToken = credential.getOrcidAccessToken();
         final String orcidRefreshToken = credential.getOrcidRefreshToken();
 
-        LOGGER.debug(">>>> credential = {}", credential);
-        LOGGER.debug(">>>> ---- credentialId = {}", credentialId);
-        LOGGER.debug(">>>> ---- orcidId = {}", orcidId);
-        LOGGER.debug(">>>> ---- orcidAccessToken = {}", orcidAccessToken);
-        LOGGER.debug(">>>> ---- orcidRefreshToken = {}", orcidRefreshToken);
+        if (StringUtils.isBlank(orcidId)) {
+            LOGGER.error("[ORCiD SSO] Null/Empty ORCiD ID.");
+            throw new GeneralSecurityException("Null/Empty ORCiD ID.");
+        } else if (StringUtils.isBlank(orcidAccessToken)) {
+            LOGGER.error("[ORCiD SSO] Null/Empty ORCiD Access Token, orcidId=[{}]", orcidId);
+            throw new GeneralSecurityException("Null/Empty ORCiD Access Token.");
+        }
 
-        LOGGER.debug(
-                "Credential metadata: id=[{}], orcidId=[{}], orcidAccessToken=[{}], orcidRefreshToken=[{}]",
+        LOGGER.info(
+                "Credential metadata: id=[{}], orcidId=[{}], hasAccessToken=[{}], hasRefreshToken=[{}]",
                 credentialId,
                 orcidId,
-                StringUtils.isNoneBlank(orcidAccessToken),
-                StringUtils.isNoneBlank(orcidRefreshToken)
+                StringUtils.isNotBlank(orcidAccessToken),
+                StringUtils.isNotBlank(orcidRefreshToken)
         );
 
         final Map<String, List<Object>> attributes = new LinkedHashMap<>();
-        attributes.put("orcidAccessToken", Collections.singletonList(orcidAccessToken));
-        attributes.put("orcidRefreshToken", Collections.singletonList(orcidRefreshToken));
+        attributes.put(OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ACCESS_TOKEN, Collections.singletonList(orcidAccessToken));
+        attributes.put(OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_REFRESH_TOKEN, Collections.singletonList(orcidRefreshToken));
         final Principal principal = this.principalFactory.createPrincipal(credentialId, attributes);
         final List<MessageDescriptor> warnings = new ArrayList<>();
         return createHandlerResult(credential, principal, warnings);

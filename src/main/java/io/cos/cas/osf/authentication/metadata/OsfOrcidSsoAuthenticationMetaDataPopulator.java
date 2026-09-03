@@ -11,11 +11,18 @@ import org.apereo.cas.authentication.AuthenticationMetaDataPopulator;
 import org.apereo.cas.authentication.AuthenticationTransaction;
 import org.apereo.cas.authentication.Credential;
 
+/**
+ * This is {@link OsfOrcidSsoAuthenticationMetaDataPopulator}.
+ *
+ * @author Longze Chen
+ * @since 26.1.0
+ */
 @Getter
 @ToString(callSuper = true)
 @Slf4j
 public class OsfOrcidSsoAuthenticationMetaDataPopulator implements AuthenticationMetaDataPopulator {
 
+    /** Add attribute to authentication metadata. */
     @Override
     public void populateAttributes(final AuthenticationBuilder builder, final AuthenticationTransaction transaction) {
         transaction.getPrimaryCredential().ifPresent(r -> {
@@ -42,6 +49,7 @@ public class OsfOrcidSsoAuthenticationMetaDataPopulator implements Authenticatio
         });
     }
 
+    /** {@link OsfOrcidSsoAuthenticationMetaDataPopulator} only supports {@link OsfOrcidSsoCredential} */
     @Override
     public boolean supports(final Credential credential) {
         return credential instanceof OsfOrcidSsoCredential;
