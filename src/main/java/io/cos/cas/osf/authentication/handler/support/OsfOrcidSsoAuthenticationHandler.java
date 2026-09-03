@@ -50,7 +50,7 @@ public class OsfOrcidSsoAuthenticationHandler extends AbstractPreAndPostProcessi
             Credential credential
     ) throws GeneralSecurityException {
         OsfOrcidSsoCredential osfOrcidSsoCredential = (OsfOrcidSsoCredential) credential;
-        LOGGER.debug("Attempting authentication internally for transformed credential [{}]", osfOrcidSsoCredential);
+        LOGGER.debug("[ORCiD SSO] Attempting authentication internally for transformed credential [{}]", osfOrcidSsoCredential);
         return authenticateOsfOrcidSsoInternal(osfOrcidSsoCredential);
     }
 
@@ -90,7 +90,7 @@ public class OsfOrcidSsoAuthenticationHandler extends AbstractPreAndPostProcessi
         }
 
         LOGGER.info(
-                "Credential metadata: id=[{}], orcidId=[{}], hasAccessToken=[{}], hasRefreshToken=[{}]",
+                "[ORCiD SSO] Credential metadata: id=[{}], orcidId=[{}], hasAccessToken=[{}], hasRefreshToken=[{}]",
                 credentialId,
                 orcidId,
                 StringUtils.isNotBlank(orcidAccessToken),

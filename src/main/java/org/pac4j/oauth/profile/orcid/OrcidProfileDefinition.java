@@ -47,7 +47,7 @@ public class OrcidProfileDefinition extends OAuth20ProfileDefinition<OrcidProfil
     public String getProfileUrl(final OAuth2AccessToken accessToken, final OAuth20Configuration configuration) {
         if (accessToken instanceof OrcidToken) {
             LOGGER.debug(
-                    "[ORCiD SSO] ORCiD SSO Access Token Info: [type=\"{}\", scope=\"{}\", exp=\"{}\", at=\"{}\", rt=\"{}\"]",
+                    "[ORCiD SSO] Access token object: [type=\"{}\", scope=\"{}\", exp=\"{}\", at=\"{}\", rt=\"{}\"]",
                     accessToken.getTokenType(),
                     accessToken.getScope(),
                     accessToken.getExpiresIn(),
@@ -56,6 +56,7 @@ public class OrcidProfileDefinition extends OAuth20ProfileDefinition<OrcidProfil
             );
             return String.format("https://pub.orcid.org/v2.0/%s/record", ((OrcidToken) accessToken).getOrcid());
         } else {
+            LOGGER.error("[ORCiD SSO] Token in getProfileUrl is not an OrcidToken");
             throw new OAuthException("Token in getProfileUrl is not an OrcidToken");
         }
     }

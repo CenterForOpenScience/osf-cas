@@ -42,7 +42,7 @@ public class OAuth20ProfileCreator<U extends OAuth20Profile>
         if (profile != null) {
             // Add access token
             final String access_token = accessToken.getAccessToken();
-            logger.debug("[OAuth20 SSO] Add access token to profile: isAccessTokenNotBlank=[{}]", StringUtils.isNotBlank(access_token));
+            logger.debug("[OAuth20 SSO] Add access token to profile: hasAccessToken=[{}]", StringUtils.isNotBlank(access_token));
             profile.setAccessToken(access_token);
 
             // Add refresh token manually instead of war-overlaying and customizing org.pac4j.oauth.profile.OAuth20Profile
