@@ -20,6 +20,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * This is {@link OsfOrcidSsoAuthenticationEventExecutionPlanConfiguration}.
+ *
+ * @author Longze Chen
+ * @since 26.2.0
+ */
 @Configuration("osfOrcidSsoAuthenticationEventExecutionPlanConfiguration")
 @EnableConfigurationProperties(CasConfigurationProperties.class)
 public class OsfOrcidSsoAuthenticationEventExecutionPlanConfiguration {
