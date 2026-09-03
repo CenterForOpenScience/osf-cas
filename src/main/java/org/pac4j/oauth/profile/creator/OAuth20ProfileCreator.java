@@ -15,7 +15,8 @@ import org.pac4j.oauth.profile.OAuth20Profile;
 /**
  * OAuth 2.0 profile creator.
  *
- * OSF CAS Customization: modified {@code addAccessTokenToProfile} to include refresh token in profile attributes.
+ * <p>OSF CAS Customizations: modified {@link #addAccessTokenToProfile(OAuth20Profile, OAuth2AccessToken)} to include
+ * refresh token in profile attributes.</p>
  *
  * @author Jerome Leleu
  * @author Longze Chen
@@ -39,13 +40,19 @@ public class OAuth20ProfileCreator<U extends OAuth20Profile>
     @Override
     protected void addAccessTokenToProfile(final U profile, final OAuth2AccessToken accessToken) {
         if (profile != null) {
-            final String token = accessToken.getAccessToken();
-            logger.debug("add access_token: {} to profile", token);
-            profile.setAccessToken(token);
+            // Add access token
+            final String access_token = accessToken.getAccessToken();
+            logger.debug("[OAuth20 SSO] Add access token to profile: isAccessTokenNotBlank=[{}]", StringUtils.isNotBlank(access_token));
+            profile.setAccessToken(access_token);
+
+            // Add refresh token manually instead of war-overlaying and customizing org.pac4j.oauth.profile.OAuth20Profile
             final String refreshToken = accessToken.getRefreshToken();
             if (StringUtils.isNoneBlank(refreshToken)) {
-                logger.debug("add refresh_token: {} to profile", token);
+                logger.debug("[OAuth20 SSO] Refresh token found, adding it to profile");
                 profile.addAttribute(REFRESH_TOKEN, refreshToken);
+            } else {
+                logger.debug("[OAuth20 SSO] Refresh token not found, adding empty value to profile");
+                profile.addAttribute(REFRESH_TOKEN, StringUtils.EMPTY);
             }
         }
     }
