@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
+import io.cos.cas.osf.authentication.credential.OsfOrcidSsoCredential;
 import io.cos.cas.osf.authentication.credential.OsfPostgresCredential;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAccountInactiveException;
 import io.cos.cas.osf.authentication.exception.InstitutionSsoAttributeMissingException;
@@ -69,6 +70,8 @@ import org.apereo.cas.web.support.WebUtils;
 
 import org.json.JSONObject;
 import org.json.XML;
+
+import org.pac4j.oauth.profile.orcid.OrcidProfile;
 
 import org.springframework.util.ResourceUtils;
 import org.springframework.webflow.action.AbstractAction;
@@ -181,6 +184,8 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
 
     private static final String LDAP_DN_OU_PREFIX = "ou=";
 
+    private static final String ORCiD_CLIENT_NAME = "orcid";
+
     private static final int OSF_API_RETRY_LIMIT = 3;
 
     private static final List<Integer> OSF_API_RETRY_STATUS = List.of(
@@ -250,12 +255,22 @@ public class OsfPrincipalFromNonInteractiveCredentialsAction extends AbstractNon
                 final String clientName = ((ClientCredential) credential).getClientName();
                 // Type 1: non-institution SSO (i.e. ORCiD) via pac4j authentication delegation using the OAuth protocol
                 if (authnDelegationClients.get(NON_INSTITUTION_CLIENTS_PARAMETER_NAME).contains(clientName)) {
-                    LOGGER.debug(
-                            "Valid non-institution authn delegation client [{}] found with principal [{}]",
+                    LOGGER.info(
+                            "[PAC4J SSO] Valid non-institution authn delegation client [{}] found with principal [{}]",
                             clientName,
                             credential.getId()
                     );
-                    return credential;
+                    if (clientName.equalsIgnoreCase(ORCiD_CLIENT_NAME)) {
+                        // Case 1: ORCiD Client will be handled by our customized credential and authn handler
+                        final OrcidProfile orcidUserProfile = (OrcidProfile) ((ClientCredential) credential).getUserProfile();
+                        final String orcidId = orcidUserProfile.getId();
+                        final String orcidAccessToken = (String) orcidUserProfile.getAttribute("access_token");
+                        final String orcidRefreshToken = (String) orcidUserProfile.getAttribute("refresh_token");
+                        return new OsfOrcidSsoCredential(orcidId, orcidAccessToken, orcidRefreshToken);
+                    } else {
+                        // Case 2: Other Client will use built-in credential and authn handler by apereo/pac4j
+                        return credential;
+                    }
                 }
                 // Type 2: institution SSO via pac4j authentication delegation using the CAS protocol
                 if (authnDelegationClients.get(INSTITUTION_CLIENTS_PARAMETER_NAME).contains(clientName)) {

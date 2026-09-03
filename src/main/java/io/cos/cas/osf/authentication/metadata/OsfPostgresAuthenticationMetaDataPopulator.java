@@ -27,13 +27,14 @@ public class OsfPostgresAuthenticationMetaDataPopulator implements Authenticatio
         transaction.getPrimaryCredential().ifPresent(r -> {
             final OsfPostgresCredential credential = (OsfPostgresCredential) r;
             LOGGER.debug(
-                    "Credential is of type [{}], thus adding attributes [{}, {}, {}, {}, {}]",
+                    "Credential is of type [{}], thus adding attributes [{}, {}, {}, {}, {} {}]",
                     OsfPostgresCredential.class.getSimpleName(),
                     OsfPostgresCredential.AUTHENTICATION_ATTRIBUTE_REMEMBER_ME,
                     OsfPostgresCredential.AUTHENTICATION_ATTRIBUTE_REMOTE_PRINCIPAL,
                     OsfPostgresCredential.AUTHENTICATION_ATTRIBUTE_DELEGATION_PROTOCOL,
                     OsfPostgresCredential.AUTHENTICATION_ATTRIBUTE_INSTITUTION_ID,
-                    OsfPostgresCredential.AUTHENTICATION_ATTRIBUTE_TOS_CONSENT
+                    OsfPostgresCredential.AUTHENTICATION_ATTRIBUTE_TOS_CONSENT,
+                    OsfPostgresCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ACCESS_TOKEN
             );
             builder.addAttribute(
                     OsfPostgresCredential.AUTHENTICATION_ATTRIBUTE_REMEMBER_ME,
@@ -54,6 +55,10 @@ public class OsfPostgresAuthenticationMetaDataPopulator implements Authenticatio
             builder.addAttribute(
                     OsfPostgresCredential.AUTHENTICATION_ATTRIBUTE_INSTITUTION_ID,
                     credential.getInstitutionId()
+            );
+            builder.addAttribute(
+                    OsfPostgresCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ACCESS_TOKEN,
+                    credential.getOrcidAccessToken()
             );
         });
     }

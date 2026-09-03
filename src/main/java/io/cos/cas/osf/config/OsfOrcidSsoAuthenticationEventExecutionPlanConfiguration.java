@@ -1,8 +1,7 @@
 package io.cos.cas.osf.config;
 
-import io.cos.cas.osf.authentication.handler.support.OsfPostgresAuthenticationHandler;
-import io.cos.cas.osf.configuration.model.OsfPostgresAuthenticationProperties;
-import io.cos.cas.osf.dao.JpaOsfDao;
+import io.cos.cas.osf.authentication.handler.support.OsfOrcidSsoAuthenticationHandler;
+import io.cos.cas.osf.configuration.model.OsfOrcidSsoAuthenticationProperties;
 
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
 import org.apereo.cas.authentication.AuthenticationHandler;
@@ -22,14 +21,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * This is {@link OsfPostgresAuthenticationEventExecutionPlanConfiguration}.
+ * This is {@link OsfOrcidSsoAuthenticationEventExecutionPlanConfiguration}.
  *
  * @author Longze Chen
- * @since 20.0.0
+ * @since 26.2.0
  */
-@Configuration("osfPostgresAuthenticationEventExecutionPlanConfiguration")
+@Configuration("osfOrcidSsoAuthenticationEventExecutionPlanConfiguration")
 @EnableConfigurationProperties(CasConfigurationProperties.class)
-public class OsfPostgresAuthenticationEventExecutionPlanConfiguration {
+public class OsfOrcidSsoAuthenticationEventExecutionPlanConfiguration {
 
     @Autowired
     private ConfigurableApplicationContext applicationContext;
@@ -45,35 +44,31 @@ public class OsfPostgresAuthenticationEventExecutionPlanConfiguration {
     @Qualifier("defaultPrincipalResolver")
     private ObjectProvider<PrincipalResolver> defaultPrincipalResolver;
 
-    @Autowired
-    private ObjectProvider<JpaOsfDao> jpaOsfDao;
-
     @ConditionalOnMissingBean(name = "jsonPrincipalFactory")
     @Bean
     public PrincipalFactory jsonPrincipalFactory() {
         return PrincipalFactoryUtils.newPrincipalFactory();
     }
 
-    @ConditionalOnMissingBean(name = "osfPostgresAuthenticationHandler")
+    @ConditionalOnMissingBean(name = "osfOrcidSsoAuthenticationHandler")
     @Bean
-    public AuthenticationHandler osfPostgresAuthenticationHandler() {
-        OsfPostgresAuthenticationProperties jsonProps = casProperties.getAuthn().getOsfPostgres();
-        return new OsfPostgresAuthenticationHandler(
+    public AuthenticationHandler osfOrcidSsoAuthenticationHandler() {
+        OsfOrcidSsoAuthenticationProperties jsonProps = casProperties.getAuthn().getOsfOrcidSso();
+        return new OsfOrcidSsoAuthenticationHandler(
                 jsonProps.getName(),
                 servicesManager.getObject(),
                 jsonPrincipalFactory(),
-                jsonProps.getOrder(),
-                jpaOsfDao.getObject()
+                jsonProps.getOrder()
         );
     }
 
-    @ConditionalOnMissingBean(name = "osfPostgresAuthenticationEventExecutionPlanConfigurer")
+    @ConditionalOnMissingBean(name = "osfOrcidSsoAuthenticationEventExecutionPlanConfigurer")
     @Bean
-    public AuthenticationEventExecutionPlanConfigurer osfPostgresAuthenticationEventExecutionPlanConfigurer() {
+    public AuthenticationEventExecutionPlanConfigurer OsfOrcidSsoAuthenticationEventExecutionPlanConfigurer() {
         return plan -> {
-            if (casProperties.getAuthn().getOsfPostgres().isEnabled()) {
+            if (casProperties.getAuthn().getOsfOrcidSso().isEnabled()) {
                 plan.registerAuthenticationHandlerWithPrincipalResolver(
-                        osfPostgresAuthenticationHandler(),
+                        osfOrcidSsoAuthenticationHandler(),
                         defaultPrincipalResolver.getObject()
                 );
             }

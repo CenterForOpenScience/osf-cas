@@ -80,7 +80,7 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
     ) throws GeneralSecurityException {
         OsfPostgresCredential osfPostgresCredential = (OsfPostgresCredential) credential;
         transformUsername(osfPostgresCredential);
-        if (osfPostgresCredential.isRemotePrincipal()) {
+        if (osfPostgresCredential.isRemotePrincipal() || osfPostgresCredential.getOrcidId() != null) {
             osfPostgresCredential.setPassword(null);
             osfPostgresCredential.setVerificationKey(null);
         } else {
@@ -114,6 +114,8 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
         final boolean isTermsOfServiceChecked = credential.isTermsOfServiceChecked();
         final boolean isRemotePrincipal = credential.isRemotePrincipal();
         final DelegationProtocol delegationProtocol = credential.getDelegationProtocol();
+        final String orcidId = credential.getOrcidId();
+        final String orcidAccessToken = credential.getOrcidAccessToken();
 
         LOGGER.debug(
                 "Credential metadata: username=[{}], password=[{}], verificationKey=[{}], oneTimePassword=[{}], " +
@@ -127,6 +129,22 @@ public class OsfPostgresAuthenticationHandler extends AbstractPreAndPostProcessi
                 institutionId,
                 delegationProtocol
         );
+
+        if (StringUtils.isNoneBlank(orcidId)) {
+            final String principalId = "OrcidProfile#" + orcidId;
+            final Map<String, List<Object>> attributes = new LinkedHashMap<>();
+            attributes.put("orcidAccessToken", Collections.singletonList(orcidAccessToken));
+            LOGGER.debug(">>>> Authenticating credential for ORCiD SSO");
+            LOGGER.debug(">>>> ---- username from credential = {}", username);
+            credential.setUsername(principalId);
+            LOGGER.debug(">>>> ---- username from credential updated = {}", credential.getUsername());
+            LOGGER.debug(">>>> ---- orcidId = {}", orcidId);
+            LOGGER.debug(">>>> ---- orcidAccessToken = {}", orcidAccessToken);
+            LOGGER.debug(">>>> ---- principalId = {}", principalId);
+            final Principal principal = this.principalFactory.createPrincipal(principalId, attributes);
+            final List<MessageDescriptor> warnings = new ArrayList<>();
+            return createHandlerResult(credential, principal, warnings);
+        }
 
         final OsfUser osfUser = jpaOsfDao.findOneUserByEmail(username);
         if (osfUser == null) {
