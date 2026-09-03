@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang3.StringUtils;
+
 import org.apereo.cas.authentication.AuthenticationBuilder;
 import org.apereo.cas.authentication.AuthenticationMetaDataPopulator;
 import org.apereo.cas.authentication.AuthenticationTransaction;
@@ -28,7 +30,7 @@ public class OsfOrcidSsoAuthenticationMetaDataPopulator implements Authenticatio
         transaction.getPrimaryCredential().ifPresent(r -> {
             final OsfOrcidSsoCredential credential = (OsfOrcidSsoCredential) r;
             LOGGER.info(
-                    "[ORCiD SSO] Credential is of type [{}], thus adding attributes [{}, {}, {}]",
+                    "[ORCiD SSO] Credential is of type [{}], thus adding attributes [{}, {}, and optionally {} if not null/blank)]",
                     OsfOrcidSsoCredential.class.getSimpleName(),
                     OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ID,
                     OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ACCESS_TOKEN,
@@ -42,10 +44,13 @@ public class OsfOrcidSsoAuthenticationMetaDataPopulator implements Authenticatio
                     OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ACCESS_TOKEN,
                     credential.getOrcidAccessToken()
             );
-            builder.addAttribute(
-                    OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_REFRESH_TOKEN,
-                    credential.getOrcidRefreshToken()
-            );
+            final String refreshToken = credential.getOrcidRefreshToken();
+            if (StringUtils.isNotBlank(refreshToken)) {
+                builder.addAttribute(
+                        OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_REFRESH_TOKEN,
+                        refreshToken
+                );
+            }
         });
     }
 

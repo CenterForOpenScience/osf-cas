@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,8 +97,6 @@ public class OsfOrcidSsoAuthenticationHandler extends AbstractPreAndPostProcessi
         );
 
         final Map<String, List<Object>> attributes = new LinkedHashMap<>();
-        attributes.put(OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_ACCESS_TOKEN, Collections.singletonList(orcidAccessToken));
-        attributes.put(OsfOrcidSsoCredential.AUTHENTICATION_ATTRIBUTE_ORCID_REFRESH_TOKEN, Collections.singletonList(orcidRefreshToken));
         final Principal principal = this.principalFactory.createPrincipal(credentialId, attributes);
         final List<MessageDescriptor> warnings = new ArrayList<>();
         return createHandlerResult(credential, principal, warnings);
