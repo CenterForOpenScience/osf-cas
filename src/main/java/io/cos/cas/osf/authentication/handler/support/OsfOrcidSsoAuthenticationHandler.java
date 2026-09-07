@@ -1,6 +1,7 @@
 package io.cos.cas.osf.authentication.handler.support;
 
 import io.cos.cas.osf.authentication.credential.OsfOrcidSsoCredential;
+import io.cos.cas.osf.authentication.exception.OrcidSsoFailedException;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.Getter;
@@ -71,8 +72,8 @@ public class OsfOrcidSsoAuthenticationHandler extends AbstractPreAndPostProcessi
     ) throws GeneralSecurityException {
 
         if (credential == null) {
-            LOGGER.error("[ORCiD SSO] Null/Empty ORCiD Credential.");
-            throw new GeneralSecurityException("Null/Empty ORCiD Credential.");
+            LOGGER.error("[ORCiD SSO] ERROR: Null/Empty ORCiD Credential.");
+            throw new OrcidSsoFailedException("Null/Empty ORCiD Credential.");
         }
 
         final String credentialId = credential.getId();
@@ -81,11 +82,12 @@ public class OsfOrcidSsoAuthenticationHandler extends AbstractPreAndPostProcessi
         final String orcidRefreshToken = credential.getOrcidRefreshToken();
 
         if (StringUtils.isBlank(orcidId)) {
-            LOGGER.error("[ORCiD SSO] Null/Empty ORCiD ID.");
-            throw new GeneralSecurityException("Null/Empty ORCiD ID.");
+            LOGGER.error("[ORCiD SSO] ERROR: Null/Empty ORCiD ID.");
+            throw new OrcidSsoFailedException("Null/Empty ORCiD ID.");
         } else if (StringUtils.isBlank(orcidAccessToken)) {
-            LOGGER.error("[ORCiD SSO] Null/Empty ORCiD Access Token, orcidId=[{}]", orcidId);
-            throw new GeneralSecurityException("Null/Empty ORCiD Access Token.");
+            // TODO: should we only log error but let authentication pass?
+            LOGGER.error("[ORCiD SSO] ERROR: Null/Empty ORCiD Access Token, orcidId=[{}]", orcidId);
+            throw new OrcidSsoFailedException("Null/Empty ORCiD Access Token.");
         }
 
         LOGGER.info(

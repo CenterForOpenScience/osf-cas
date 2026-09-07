@@ -15,6 +15,7 @@ import io.cos.cas.osf.authentication.exception.InvalidOneTimePasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
 import io.cos.cas.osf.authentication.exception.InvalidVerificationKeyException;
 import io.cos.cas.osf.authentication.exception.OneTimePasswordRequiredException;
+import io.cos.cas.osf.authentication.exception.OrcidSsoFailedException;
 import io.cos.cas.osf.authentication.exception.TermsOfServiceConsentRequiredException;
 import io.cos.cas.osf.web.flow.support.OsfCasWebflowConstants;
 
@@ -301,6 +302,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 TermsOfServiceConsentRequiredException.class.getSimpleName(),
                 OsfCasWebflowConstants.VIEW_ID_TERMS_OF_SERVICE_CONSENT_REQUIRED
         );
+        createTransitionForState(
+                handler,
+                OrcidSsoFailedException.class.getSimpleName(),
+                OsfCasWebflowConstants.VIEW_ID_ORCID_SSO_FAILED
+        );
 
         // The default transition
         createStateDefaultTransition(handler, CasWebflowConstants.STATE_ID_INIT_LOGIN_FORM);
@@ -480,6 +486,11 @@ public class OsfCasLoginWebflowConfigurer extends DefaultLoginWebflowConfigurer 
                 flow,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_MULTIPLE_EMAILS_NOT_SUPPORTED,
                 OsfCasWebflowConstants.VIEW_ID_INSTITUTION_SSO_MULTIPLE_EMAILS_NOT_SUPPORTED
+        );
+        createViewState(
+                flow,
+                OsfCasWebflowConstants.VIEW_ID_ORCID_SSO_FAILED,
+                OsfCasWebflowConstants.VIEW_ID_ORCID_SSO_FAILED
         );
     }
 
