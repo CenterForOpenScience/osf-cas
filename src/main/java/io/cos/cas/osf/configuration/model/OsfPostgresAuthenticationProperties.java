@@ -23,36 +23,25 @@ import java.util.List;
 @Accessors(chain = true)
 public class OsfPostgresAuthenticationProperties implements Serializable {
 
+    /** Serial version UID. */
     private static final long serialVersionUID = -6126944686676618138L;
 
-    /**
-     * The name of the authentication handler.
-     */
+    /** The name of the authentication handler. */
     private String name = OsfPostgresAuthenticationHandler.class.getSimpleName();
 
-    /**
-     * The flag to enable / disable the authentication handler.
-     */
+    /** The flag to enable / disable the authentication handler. */
     private boolean enabled = Boolean.TRUE;
 
-    /**
-     * The order of the authentication handler.
-     */
+    /** The order of the authentication handler. */
     private int order;
 
-    /**
-     * Institution authentication delegation clients.
-     */
+    /** Institution authentication delegation clients. */
     private List<String> institutionClients = new LinkedList<>();
 
-    /**
-     * Non-institution authentication delegation clients.
-     */
+    /** Non-institution authentication delegation clients. */
     private List<String> nonInstitutionClients = new LinkedList<>();
 
-    /**
-     * Nested JPA properties for OSF PostgreSQL database.
-     */
+    /** Nested JPA properties for OSF PostgreSQL database. */
     @NestedConfigurationProperty
     private OsfPostgresJpaProperties jpa = new OsfPostgresJpaProperties();
 }
