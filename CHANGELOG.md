@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+26.2.0 (2026-09-08)
+===================
+
+* Rewrite ORCiD SSO to support GDPR Delete / ORCiD Revoke
+
 26.1.1 (2026-09-01)
 ===================
 
