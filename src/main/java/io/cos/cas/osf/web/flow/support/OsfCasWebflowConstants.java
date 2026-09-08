@@ -60,6 +60,10 @@ public interface OsfCasWebflowConstants {
 
     String VIEW_ID_INVALID_VERIFICATION_KEY = "casInvalidVerificationKeyView";
 
+    // Exception Views for ORCiD SSO
+
+    String VIEW_ID_ORCID_SSO_FAILED = "casOrcidSsoFailedView";
+
     // Exception Views for Institution SSO
 
     String VIEW_ID_INSTITUTION_SSO_ACCOUNT_INACTIVE = "casInstitutionSsoAccountInactiveView";

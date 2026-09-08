@@ -15,6 +15,7 @@ import io.cos.cas.osf.authentication.exception.InvalidPasswordException;
 import io.cos.cas.osf.authentication.exception.InvalidUserStatusException;
 import io.cos.cas.osf.authentication.exception.InvalidVerificationKeyException;
 import io.cos.cas.osf.authentication.exception.OneTimePasswordRequiredException;
+import io.cos.cas.osf.authentication.exception.OrcidSsoFailedException;
 import io.cos.cas.osf.authentication.exception.TermsOfServiceConsentRequiredException;
 
 import org.apereo.cas.configuration.CasConfigurationProperties;
@@ -62,6 +63,7 @@ public class OsfCasCoreWebflowConfiguration extends CasCoreWebflowConfiguration 
         errors.add(InvalidUserStatusException.class);
         errors.add(InvalidVerificationKeyException.class);
         errors.add(OneTimePasswordRequiredException.class);
+        errors.add(OrcidSsoFailedException.class);
         errors.add(TermsOfServiceConsentRequiredException.class);
 
         // Add built-in exceptions after OSF-specific exceptions since order matters
