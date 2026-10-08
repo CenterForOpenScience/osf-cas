@@ -18,6 +18,12 @@
                     <h1 th:utext="#{screen.accountnotconfirmedosf.heading}"></h1>
                     <p th:utext="#{screen.accountnotconfirmedosf.message}"></p>
                 </section>
+                <section class="form-button">
+                    <a class="mdc-button mdc-button--raised button-osf-blue" th:href="@{${osfUrl.resendConfirmation}}">
+                        <span class="mdc-button__label"
+                              th:utext="#{screen.authnerror.button.resendosfconfirmation}"></span>
+                    </a>
+                </section>
                 <hr class="my-4" />
                 <section class="text-with-mdi">
                     <span><a th:href="@{/logout(service=${osfUrl.logout})}" th:utext="#{screen.authnerror.button.backtoosf}"></a></span>
