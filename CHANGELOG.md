@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+26.3.0 (2026-10-08)
+===================
+
+* PBS-26-19
+
 26.2.0 (2026-09-08)
 ===================
 
